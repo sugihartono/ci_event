@@ -38,6 +38,7 @@
                           <li><a  href="calendar.html">aaa</a></li>
                       </ul>
                   </li-->
+	<!--			  
                   <li class="sub-menu">
                       <a href="javascript:;" class="<?php if (isset($trans_active)){echo $trans_active;}else echo ""; ?>">
                           <i class="fa fa-book"></i>
@@ -78,7 +79,7 @@
                   </li>
 
               </ul>
-              <!-- sidebar menu end-->
+    -->
           </div>
       </aside>
       <!--sidebar end-->

@@ -64,7 +64,11 @@ $route['home/(:any)'] = 'Home_Controller/$1';
 $route['brand'] = 'Brand_Controller';
 $route['brand/(:any)'] = 'Brand_Controller/$1';
 
+$route['supplier'] = 'Supplier_Controller';
+$route['supplier/(:any)'] = 'Supplier_Controller/$1';
 
+$route['tillcode'] = 'Tillcode_Controller';
+$route['tillcode/(:any)'] = 'Tillcode_Controller/$1';
 
 
 
