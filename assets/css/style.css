@@ -1751,8 +1751,12 @@ label {
 
 .form-horizontal.style-form .form-group {
 	/*border-bottom: 1px solid #eff2f7; */
-	padding-bottom: 0px;
-	margin-bottom: 0px;
+	padding-bottom: 10px;
+	margin-bottom: 10px;
+}
+
+.pad-right{
+	padding-right:20px;
 }
 
 .divider {
@@ -1770,6 +1774,12 @@ label {
 		.form-horizontal .control-label {
 		text-align: left;
 	}
+	
+	.form-horizontal .control-label-right {
+		text-align: right;
+		padding-top:3px;
+	}
+	
 }
 
 #focusedInput {

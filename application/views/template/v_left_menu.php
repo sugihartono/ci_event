@@ -38,19 +38,20 @@
                           <li><a  href="calendar.html">aaa</a></li>
                       </ul>
                   </li-->
-	<!--			  
+				  
                   <li class="sub-menu">
                       <a href="javascript:;" class="<?php if (isset($trans_active)){echo $trans_active;}else echo ""; ?>">
                           <i class="fa fa-book"></i>
                           <span>Transaksi</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="#" style="<?php if (isset($menu_jual_active)){echo $menu_jual_active;}else echo ""; ?>">Penjualan</a></li>
-                          <li><a  href="#" style="<?php if (isset($menu_upload_active)){echo $menu_upload_active;}else echo ""; ?>">Upload Master</a></li>
-					      <li><a  href="#" style="<?php if (isset($menu_validasi_active)){echo $menu_validasi_active;}else echo ""; ?>">Validasi Harga</a></li>
+                          <li><a  href="<?php echo base_url(); ?>acara/add_new" style="<?php if (isset($menu_input_active)){echo $menu_input_active;}else echo ""; ?>">Input Acara</a></li>
+                          <li><a  href="#" style="<?php if (isset($menu_daftar_active)){echo $menu_daftar_active;}else echo ""; ?>">Daftar Acara</a></li>
+					    <!--  <li><a  href="#" style="<?php //if (isset($menu_validasi_active)){echo $menu_validasi_active;}else echo ""; ?>">Validasi Harga</a></li>
+						-->
 					  </ul>
                   </li>
-                  <li class="sub-menu">
+    <!--              <li class="sub-menu">
                       <a href="javascript:;" >
                           <i class="fa fa-tasks"></i>
                           <span>Forms</span>
@@ -77,7 +78,7 @@
                           <li><a  href="morris.html">eee</a></li>
                       </ul>
                   </li>
-
+					
               </ul>
     -->
           </div>

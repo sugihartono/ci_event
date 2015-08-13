@@ -70,6 +70,9 @@ $route['supplier/(:any)'] = 'Supplier_Controller/$1';
 $route['tillcode'] = 'Tillcode_Controller';
 $route['tillcode/(:any)'] = 'Tillcode_Controller/$1';
 
+$route['acara'] = 'Acara_Controller';
+$route['acara/(:any)'] = 'Acara_Controller/$1';
+
 
 
 

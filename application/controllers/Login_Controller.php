@@ -7,9 +7,11 @@
 		}
 		
 		
-		function index() {
+		function index($to = 'World') {
 			
 			$this->load->view('login/v_login');
+			//echo "Hello {$to}!".PHP_EOL." xx";
+			
 		}
 		
 		function do_login(){
