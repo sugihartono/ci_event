@@ -4,7 +4,7 @@
 		
 		<h3><i class="fa fa-angle-right"></i> Data Brand</h3>
 		
-		<a href="<?php echo base_url(); ?>brand/all_list" class="btn_add btn btn-default btn-sm">
+		<a href="<?php echo base_url(); ?>brand/list" class="btn_add btn btn-default btn-sm">
 		<i class="fa fa-backward "></i> <?php echo BACK_CAPTION; ?></a>
 		
 		<div class="row mt">

@@ -5,7 +5,7 @@
 		
 		<h3><i class="fa fa-angle-right"></i> Data Brand</h3>
 		
-		<a href="<?php echo base_url(); ?>brand/add_new" class="btn_add btn btn-default btn-sm">
+		<a href="<?php echo base_url(); ?>brand/add" class="btn_add btn btn-default btn-sm">
 		<i class="fa fa-plus-square"></i> <?php echo ADD_CAPTION; ?></a>
 		
 		<div class="row mt">

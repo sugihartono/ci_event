@@ -35,7 +35,7 @@
 			$this->load->view('brand/v_brand', $data);
 		}
 		
-		function add_new() {
+		function add() {
 			$data['menu_active'] = 'dcjq-parent active';
 			$data['menu_brand_active'] = 'color:#FFF';
 

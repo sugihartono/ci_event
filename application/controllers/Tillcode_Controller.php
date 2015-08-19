@@ -35,7 +35,7 @@
 			$this->load->view('tillcode/v_tillcode', $data);
 		}
 		
-		function add_new() {
+		function add() {
 			$data['menu_active'] = 'dcjq-parent active';
 			$data['menu_tillcode_active'] = 'color:#FFF';
 

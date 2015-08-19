@@ -34,7 +34,7 @@
 			$this->load->view('acara/v_acara', $data);
 		}
 		
-		function add_new() {
+		function add() {
 			$data['menu_active'] = 'dcjq-parent active';
 			$data['menu_acara_active'] = 'color:#FFF';
 			

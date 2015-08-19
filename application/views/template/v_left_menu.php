@@ -23,9 +23,9 @@
                           <span>Master</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="<?php echo base_url(); ?>brand/all_list" style="<?php if (isset($menu_brand_active)){echo $menu_brand_active;}else echo ""; ?>">Brand</a></li>
-                          <li><a  href="<?php echo base_url(); ?>supplier/all_list" style="<?php if (isset($menu_supplier_active)){echo $menu_supplier_active;}else echo ""; ?>">Supplier</a></li>
-                          <li><a  href="<?php echo base_url(); ?>tillcode/all_list" style="<?php if (isset($menu_tillcode_active)){echo $menu_tillcode_active;}else echo ""; ?>">Tillcode</a></li>
+                          <li><a  href="<?php echo base_url(); ?>brand/list" style="<?php if (isset($menu_brand_active)){echo $menu_brand_active;}else echo ""; ?>">Brand</a></li>
+                          <li><a  href="<?php echo base_url(); ?>supplier/list" style="<?php if (isset($menu_supplier_active)){echo $menu_supplier_active;}else echo ""; ?>">Supplier</a></li>
+                          <li><a  href="<?php echo base_url(); ?>tillcode/list" style="<?php if (isset($menu_tillcode_active)){echo $menu_tillcode_active;}else echo ""; ?>">Tillcode</a></li>
 					  </ul>
                   </li>
 
@@ -45,7 +45,7 @@
                           <span>Transaksi</span>
                       </a>
                       <ul class="sub">
-                          <li><a  href="<?php echo base_url(); ?>acara/add_new" style="<?php if (isset($menu_input_active)){echo $menu_input_active;}else echo ""; ?>">Input Acara</a></li>
+                          <li><a  href="<?php echo base_url(); ?>acara/add" style="<?php if (isset($menu_input_active)){echo $menu_input_active;}else echo ""; ?>">Input Acara</a></li>
                           <li><a  href="#" style="<?php if (isset($menu_daftar_active)){echo $menu_daftar_active;}else echo ""; ?>">Daftar Acara</a></li>
 					    <!--  <li><a  href="#" style="<?php //if (isset($menu_validasi_active)){echo $menu_validasi_active;}else echo ""; ?>">Validasi Harga</a></li>
 						-->

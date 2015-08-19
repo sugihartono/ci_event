@@ -62,15 +62,19 @@ $route['home'] = 'Home_Controller';
 $route['home/(:any)'] = 'Home_Controller/$1';
 
 $route['brand'] = 'Brand_Controller';
+$route['brand/list'] = 'Brand_Controller/all_list';
 $route['brand/(:any)'] = 'Brand_Controller/$1';
 
 $route['supplier'] = 'Supplier_Controller';
+$route['supplier/list'] = 'Supplier_Controller/all_list';
 $route['supplier/(:any)'] = 'Supplier_Controller/$1';
 
 $route['tillcode'] = 'Tillcode_Controller';
+$route['tillcode/list'] = 'Tillcode_Controller/all_list';
 $route['tillcode/(:any)'] = 'Tillcode_Controller/$1';
 
 $route['acara'] = 'Acara_Controller';
+$route['acara/list'] = 'Acara_Controller/all_list';
 $route['acara/(:any)'] = 'Acara_Controller/$1';
 
 

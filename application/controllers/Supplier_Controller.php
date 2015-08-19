@@ -35,7 +35,7 @@
 			$this->load->view('supplier/v_supplier', $data);
 		}
 		
-		function add_new() {
+		function add() {
 			$data['menu_active'] = 'dcjq-parent active';
 			$data['menu_supplier_active'] = 'color:#FFF';
 
