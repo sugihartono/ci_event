@@ -27,10 +27,7 @@ create table event (
 );
 
 alter table event add primary key (id);
---alter sequence event_seq owned by event.id;
-alter table event add foreign key(division_code) references mst_division(division_code);
-alter table event add foreign key(template_code) references mst_template(tmpl_code);
-alter table event add is_manual_setting integer default 0; -- 0/1
+
 
 create table event_item (
     event_id integer not null,
@@ -51,10 +48,7 @@ create table event_item (
 create index event_item_idx on event_item(event_id);
 create index event_item_idx2 on event_item(tillcode);
 create index event_item_idx3 on event_item(category_code);
-alter table event_item add foreign key(event_id) references event(id);
-alter table event_item add foreign key(tillcode) references mst_tillcode(tillcode);
-alter table event_item add foreign key(category_code) references mst_category(category_code);
-alter table event_item add foreign key(supp_code) references mst_supplier(supp_code);
+
 
 create table event_location (
     event_id integer not null,
@@ -65,10 +59,6 @@ create table event_location (
 
 create index event_location_idx on event_location(event_id);
 create index event_location_idx2 on event_location(tillcode);
-alter table event_location add foreign key(event_id) references event(id);
-alter table event_location add foreign key(tillcode) references mst_tillcode(tillcode);
-alter table event_location add foreign key(store_code) references mst_store(store_code);
-alter table event_location add foreign key(location_code) references mst_location(loc_code);
 
 create table event_date (
     event_id integer not null,
@@ -79,8 +69,6 @@ create table event_date (
 
 create index event_date_idx on event_date(event_id);
 create index event_date_idx2 on event_date(tillcode);
-alter table event_date add foreign key(event_id) references event(id);
-alter table event_date add foreign key(tillcode) references mst_tillcode(tillcode);
 
 create table event_same_location (
     event_id integer not null,
@@ -89,9 +77,6 @@ create table event_same_location (
 );
 
 create index event_same_location_idx on event_same_location(event_id);
-alter table event_same_location add foreign key(event_id) references event(id);
-alter table event_same_location add foreign key(store_code) references mst_store(store_code);
-alter table event_same_location add foreign key(location_code) references mst_location(loc_code);
 
 create table event_same_date (
     event_id integer not null,
@@ -212,4 +197,31 @@ create table mst_location (
 );
 
 alter table mst_location add primary key (loc_code);
+
+--alter sequence event_seq owned by event.id;
+alter table event add foreign key(division_code) references mst_division(division_code);
+alter table event add foreign key(template_code) references mst_template(tmpl_code);
+alter table event add is_manual_setting integer default 0; -- 0/1
+
+
+alter table event_item add foreign key(event_id) references event(id);
+alter table event_item add foreign key(tillcode) references mst_tillcode(tillcode);
+alter table event_item add foreign key(category_code) references mst_category(category_code);
+alter table event_item add foreign key(supp_code) references mst_supplier(supp_code);
+
+alter table event_location add foreign key(event_id) references event(id);
+alter table event_location add foreign key(tillcode) references mst_tillcode(tillcode);
+alter table event_location add foreign key(store_code) references mst_store(store_code);
+alter table event_location add foreign key(location_code) references mst_location(loc_code);
+
+alter table event_date add foreign key(event_id) references event(id);
+alter table event_date add foreign key(tillcode) references mst_tillcode(tillcode);
+
+alter table event_same_location add foreign key(event_id) references event(id);
+alter table event_same_location add foreign key(store_code) references mst_store(store_code);
+alter table event_same_location add foreign key(location_code) references mst_location(loc_code);
+
+
+
+
 
