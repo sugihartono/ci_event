@@ -33,7 +33,7 @@
 				$("#frm").submit();
 			}
 		});
-
+		
 		$(document).ready(function() {
 			
 			// validate signup form on keyup and submit
@@ -75,8 +75,6 @@
 	  	
 	  	</div>
 	  </div>
-
-
 
   </body>
 </html>
