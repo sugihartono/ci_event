@@ -73,6 +73,10 @@ $route['supplier'] = 'Supplier_Controller';
 $route['supplier/list'] = 'Supplier_Controller/all_list';
 $route['supplier/(:any)'] = 'Supplier_Controller/$1';
 
+$route['template'] = 'Template_Controller';
+$route['template/list'] = 'Template_Controller/all_list';
+$route['template/(:any)'] = 'Template_Controller/$1';
+
 $route['tillcode'] = 'Tillcode_Controller';
 $route['tillcode/list'] = 'Tillcode_Controller/all_list';
 $route['tillcode/(:any)'] = 'Tillcode_Controller/$1';

@@ -20,8 +20,8 @@
 		}
 		
 		function all_list() {
-			$data['menu_active'] = 'dcjq-parent active';
-			$data['menu_acara_active'] = 'color:#FFF';
+			$data['trans_active'] = 'dcjq-parent active';
+			$data['menu_input_active'] = 'color:#FFF';
 			
 			$data['head'] = 'acara/v_head';
 			$data['top_menu'] = 'template/v_top_menu';
@@ -35,8 +35,8 @@
 		}
 		
 		function add() {
-			$data['menu_active'] = 'dcjq-parent active';
-			$data['menu_acara_active'] = 'color:#FFF';
+			$data['trans_active'] = 'dcjq-parent active';
+			$data['menu_input_active'] = 'color:#FFF';
 			
 			$data['head'] = 'acara/v_head';
 			$data['top_menu'] = 'template/v_top_menu';
