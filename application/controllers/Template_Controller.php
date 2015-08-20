@@ -20,7 +20,7 @@
 			
 			// attach xinha editor
 			$this->load->file(APPPATH.'third_party/xinha_pi.php');
-			$data['xinha_java']= javascript_xinha(array('txt_isi')); // this line for the xinha
+			$data['xinha_java']= javascript_xinha(array('txt_header', 'txt_footer', 'txt_notes')); // this line for the xinha
 			
 			$this->load->view('template_master/v_template', $data);
 		}
