@@ -19,28 +19,20 @@
                             <table class="table table-bordered table-striped table-condensed" id="datatable">
 								<thead>
 									<tr>
-										<th class="sequence">No.</th>
-										<th>Till Code</th>
-										<th>Article Code</th>
-										<th>Description</th>
-										<th>Art</th>
-										<th>Cat</th>
+										<th>username</th>
+										<th>pass</th>
 										<th class="action">Action</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php 
 									
-									for ($i=1; $i<=15; $i++){
+									foreach ($list as $r){
 									
 									?>
 								    <tr>
-										<td><?=$i;?></td>
-										<td>93036573</td>
-										<td>677234</td>
-										<td>FELIX VERGUSO, DISCOUNT HUT YOGYA</td>
-										<td>NORMAL</td>
-										<td>D1</td>
+										<td><?php echo $r->username; ?></td>
+										<td><?php echo $r->password; ?></td>
 										<td>
 											<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs'>
 												<i class='fa fa-pencil'></i> <?php echo UPDATE_CAPTION; ?>

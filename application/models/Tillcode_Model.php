@@ -8,7 +8,7 @@
 		
 		function all_list(){	
 			$this->db->select('*'); 
-			$this->db->from('mst_tillcode'); 
+			$this->db->from('mst_user'); 
 
 			$ambil = $this->db->get();
 			if ($ambil->num_rows() > 0){

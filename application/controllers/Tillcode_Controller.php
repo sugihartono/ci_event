@@ -31,7 +31,7 @@
 			$data['right_menu'] = 'tillcode/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			//$data['list'] = $this->Tillcode_Model->all_list();
+			$data['list'] = $this->Tillcode_Model->all_list();
 			$this->load->view('tillcode/v_tillcode', $data);
 		}
 		
