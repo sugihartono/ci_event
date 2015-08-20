@@ -5,43 +5,38 @@
 		
 		<h3><i class="fa fa-angle-right"></i> Data Tillcode</h3>
 		
-		<a href="<?php echo base_url(); ?>tillcode/add" class="btn_add btn btn-default btn-sm">
-		<i class="fa fa-plus-square"></i> <?php echo ADD_CAPTION; ?></a>
-		
+	<!--	<a href="<?php //echo base_url(); ?>tillcode/add" class="btn_add btn btn-default btn-sm">
+		<i class="fa fa-plus-square"></i> <?php //echo ADD_CAPTION; ?></a>
+	-->	
 		<div class="row mt">
 			<div class="col-lg-12" style="padding-left:5px;padding-left:5px">
 				<div class="form-panel" style="padding:10px;">
-					
-					
-					
 					<section id="unseen">
 						<div class="table-responsive">
                             <table class="table table-bordered table-striped table-condensed" id="datatable">
 								<thead>
 									<tr>
-										<th>username</th>
-										<th>pass</th>
-										<th class="action">Action</th>
+										<th>Tilcode</th>
+										<th>Artcode</th>
+										<th>Description</th>
+										<th>Brand</th>
+										<th>Created Date</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php 
-									
-									foreach ($list as $r){
-									
+										
+										foreach ($list as $r):
 									?>
 								    <tr>
-										<td><?php echo $r->username; ?></td>
-										<td><?php echo $r->password; ?></td>
-										<td>
-											<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs'>
-												<i class='fa fa-pencil'></i> <?php echo UPDATE_CAPTION; ?>
-											</a>
-										</td>
+										<td><?php echo $r->tillcode; ?></td>
+										<td><?php echo $r->article_code; ?></td>
+										<td><?php echo $r->disc_label; ?></td>
+										<td><?php echo $r->brand_desc; ?></td>
+										<td><?php echo $r->created_date; ?></td>
 	                                </tr>
 									<?php
-									
-									}
+										endforeach;
 									?>
 								</tbody>
 							</table>

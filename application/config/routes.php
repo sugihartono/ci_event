@@ -65,6 +65,10 @@ $route['brand'] = 'Brand_Controller';
 $route['brand/list'] = 'Brand_Controller/all_list';
 $route['brand/(:any)'] = 'Brand_Controller/$1';
 
+$route['store'] = 'Store_Controller';
+$route['store/list'] = 'Store_Controller/all_list';
+$route['store/(:any)'] = 'Store_Controller/$1';
+
 $route['supplier'] = 'Supplier_Controller';
 $route['supplier/list'] = 'Supplier_Controller/all_list';
 $route['supplier/(:any)'] = 'Supplier_Controller/$1';

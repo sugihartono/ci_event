@@ -3,7 +3,7 @@
 <section id="main-content">
 	<section class="wrapper">
 		
-		<h3><i class="fa fa-angle-right"></i> Data Supplier</h3>
+		<h3><i class="fa fa-angle-right"></i> Data Store</h3>
 		
 	<!--	<a href="<?php //echo base_url(); ?>supplier/add" class="btn_add btn btn-default btn-sm">
 		<i class="fa fa-plus-square"></i> <?php //echo ADD_CAPTION; ?></a>
@@ -29,8 +29,8 @@
 										foreach ($list as $r) :
 									?>
 								    <tr>
-										<td><?php echo $r->supp_code; ?></td>
-										<td><?php echo $r->supp_desc; ?></td>
+										<td><?php echo $r->store_init; ?></td>
+										<td><?php echo $r->store_desc; ?></td>
 										<td><?php echo $r->city; ?></td>
 										<td><?php echo $r->created_date; ?></td>
 	                                </tr>

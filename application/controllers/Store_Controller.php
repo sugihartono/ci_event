@@ -1,10 +1,10 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 	
-	class Brand_Controller extends MY_Controller {
+	class Store_Controller extends MY_Controller {
 		
 		function __construct(){
 			parent::__construct();
-			$this->load->model("Brand_Model");
+			$this->load->model("Store_Model");
 		}
 		
 		
@@ -13,40 +13,40 @@
 			$data['head'] = 'template/v_head';
 			$data['top_menu'] = 'template/v_top_menu';
 			$data['left_menu'] = 'template/v_left_menu';
-			$data['content'] = 'brand/v_content';
-			$data['right_menu'] = 'brand/v_right_menu';
-			$data['footer'] = 'brand/v_footer';
-		
-			$this->load->view('brand/v_brand', $data);
+			$data['content'] = 'store/v_content';
+			$data['right_menu'] = 'store/v_right_menu';
+			$data['footer'] = 'store/v_footer';
+			
+			$this->load->view('store/v_store', $data);
 		}
 		
 		function all_list() {
 			$data['menu_active'] = 'dcjq-parent active';
-			$data['menu_brand_active'] = 'color:#FFF';
+			$data['menu_store_active'] = 'color:#FFF';
 
-			$data['head'] = 'brand/v_head';
+			$data['head'] = 'store/v_head';
 			$data['top_menu'] = 'template/v_top_menu';
 			$data['left_menu'] = 'template/v_left_menu';
-			$data['content'] = 'brand/v_all_list';
-			$data['right_menu'] = 'brand/v_right_menu';
+			$data['content'] = 'store/v_all_list';
+			$data['right_menu'] = 'store/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			$data['list'] = $this->Brand_Model->all_list();
-			$this->load->view('brand/v_brand', $data);
+			$data['list'] = $this->Store_Model->all_list();
+			$this->load->view('store/v_store', $data);
 		}
 		
 		function add() {
 			$data['menu_active'] = 'dcjq-parent active';
-			$data['menu_brand_active'] = 'color:#FFF';
+			$data['menu_store_active'] = 'color:#FFF';
 
-			$data['head'] = 'brand/v_head';
+			$data['head'] = 'store/v_head';
 			$data['top_menu'] = 'template/v_top_menu';
 			$data['left_menu'] = 'template/v_left_menu';
-			$data['content'] = 'brand/v_add_new';
-			$data['right_menu'] = 'brand/v_right_menu';
+			$data['content'] = 'store/v_add_new';
+			$data['right_menu'] = 'store/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			$this->load->view('brand/v_brand', $data);
+			$this->load->view('store/v_store', $data);
 		}
 		
 		

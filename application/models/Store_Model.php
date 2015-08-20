@@ -1,18 +1,17 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 	
-	class Tillcode_Model extends CI_Model {
+	class Store_Model extends CI_Model {
 		
 		function __construct(){
 			date_default_timezone_set("Asia/Jakarta");
 		}
 		
 		function all_list(){	
-			$sql = "SELECT a.tillcode, a.disc_label, a.created_date, a.article_code, b.brand_desc
-					FROM mst_tillcode a JOIN mst_brand b ON(a.brand_code=b.brand_code)
-					WHERE a.is_active='1' 
-				";
-
-			$ambil = $this->db->query($sql);
+			$this->db->select('*'); 
+			$this->db->from('mst_store'); 
+			$this->db->where('is_active', '1'); 
+			
+			$ambil = $this->db->get();
 			if ($ambil->num_rows() > 0){
 				foreach ($ambil->result() as $data){
 					$hasil[] = $data;
@@ -22,29 +21,21 @@
 			
 		}
 		
-		function all_list_ajx(){	
-			$this->db->select('kode_brand, tillcode, description, diskon_supplier, diskon_yogya'); 
-			$this->db->from('mst_tillcode'); 
-
-			$ambil = $this->db->get();
-			if ($ambil->num_rows() > 0){
-				/* foreach ($ambil->result() as $data){
-					$hasil[] = $data;
-				} */
-				return $ambil;
-			}
-			
-		}
-		
 		function add_new($username){
-			$kode = $this->input->post('txt_kode');
+            $txt_kode = $this->input->post('txt_kode');
+            $txt_gold = $this->input->post('txt_gold');
 			$nama = $this->input->post('txt_nama');
+			$txt_alamat = $this->input->post('txt_alamat');
+			$txt_kontak = $this->input->post('txt_kontak');
 			$active = '1';
 			$date = date("Y-m-d H:i:s");
 			
 			$data = array(
-					   'kode' => $kode ,
+					   'kode' => $txt_kode ,
+					   'init' => $txt_gold,
 					   'nama' => $nama,
+					   'alamat' => $txt_alamat,
+					   'kontak' => $txt_kontak,
 					   'active' => $active,
 					   'create_by' => $username,
 					   'create_at' => $date,
@@ -56,9 +47,8 @@
 			
 		}
 
-		function cek_tillcode($kode){
-			$q = $this->db->query("select tillcode from mst_tillcode where tillcode='$kode' ");
-			
+		function cek_kode($kode){
+            $q = $this->db->query("select kode from mst_supplier where LOWER(kode)='".strtolower($kode)."' ");
 			if ($q->num_rows() >= 1){
 				$ada = 1;
 			}else $ada = 0;
@@ -66,8 +56,18 @@
 			return $ada;
 		}
 
+        function cek_kode_gold($init){
+            $q = $this->db->query("select init from mst_supplier where LOWER(init)='".strtolower($init)."' ");
+
+            if ($q->num_rows() >= 1){
+                $ada = 1;
+            }else $ada = 0;
+
+            return $ada;
+        }
+
 		function show_modal($kode){
-			$sql = "SELECT kode, nama, active from mst_supplier WHERE kode='$kode' ";
+			$sql = "SELECT kode, init, nama, alamat, kontak, active from mst_supplier WHERE kode='$kode' ";
 			$query = $this->db->query($sql);
 			if ($query->num_rows() > 0){
 				return $query;
@@ -77,12 +77,16 @@
 		function edit($username){
 			$kode = $this->input->post('txt_kode_show');
 			$nama = $this->input->post('txt_nama_show');
+			$alamat = $this->input->post('txt_alamat_show');
+			$kontak = $this->input->post('txt_kontak_show');
 			$active = $this->input->post('rb_active_show');
 
 			$update_at = date("Y-m-d H:i:s");
 
 			$data = array(
 						'nama' => $nama,
+						'alamat' => $alamat,
+						'kontak' => $kontak,
 						'active' => $active,
 						'update_by' => $username,
 						'update_at' => $update_at
@@ -91,21 +95,6 @@
 			$this->db->update('mst_supplier',$data);
 		}
 
-		function get_nextval(){
-			$this->db->select("nextval('mst_tillcode_id_seq') as next_value");
-			$q = $this->db->get()->row();
-			$r = $q->next_value;
-			return $r;
-		}
-
-		function get_currval(){
-			$this->db->select("currval('mst_tillcode_id_seq') as curr_value");
-			$q = $this->db->get()->row();
-			$r = $q->curr_value;
-			return $r;
-		}
-
-		
 
 
 	}

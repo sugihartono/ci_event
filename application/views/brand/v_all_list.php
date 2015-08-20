@@ -5,9 +5,9 @@
 		
 		<h3><i class="fa fa-angle-right"></i> Data Brand</h3>
 		
-		<a href="<?php echo base_url(); ?>brand/add" class="btn_add btn btn-default btn-sm">
-		<i class="fa fa-plus-square"></i> <?php echo ADD_CAPTION; ?></a>
-		
+		<!-- <a href="<?php // echo base_url(); ?>brand/add" class="btn_add btn btn-default btn-sm">
+		<i class="fa fa-plus-square"></i> <?php //echo ADD_CAPTION; ?></a>
+		 -->
 		<div class="row mt">
 			<div class="col-lg-12" style="padding-left:5px;padding-left:5px">
 				<div class="form-panel" style="padding:10px;">
@@ -16,33 +16,24 @@
                             <table class="table table-bordered table-striped table-condensed" id="datatable">
 								<thead>
 									<tr>
-										<th class="sequence">No.</th>
-										<th>Kode</th>
-										<th>Nama</th>
-										<th>Create At</th>
-										<th class="action">Action</th>
+										<th>Code</th>
+										<th>Description</th>
+										<th>Created Date</th>
 									</tr>
 								</thead>
 								<tbody>
 									<?php 
 										
-										for ($i=1; $i<=15; $i++){
-											
-										?>
+										foreach ($list as $r):
+									?>
 									<tr>
-										<td><?=$i;?></td>
-										<td>AB</td>
-										<td>Nama</td>
-										<td>Create At</td>
-										<td>
-											<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs'>
-												<i class='fa fa-pencil'></i> <?php echo UPDATE_CAPTION; ?>
-											</a>
-										</td>
+										<td><?php echo $r->brand_code; ?></td>
+										<td><?php echo $r->brand_desc; ?></td>
+										<td><?php echo $r->created_date; ?></td>
+										
 	                                </tr>
 									<?php
-									
-									}
+										endforeach;
 									?>
 								</tbody>
 							</table>
