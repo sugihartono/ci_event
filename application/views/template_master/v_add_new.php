@@ -2,7 +2,7 @@
 	
 	$msg = $this->session->flashdata('msg');
 	if ($msg){
-		echo "<script>success_msg('$add_success');</script>";
+		echo "<script>success_msg('$msg');</script>";
 	} 
 	
 ?>

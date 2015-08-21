@@ -39,10 +39,9 @@
 		}
 		
 		function logout() {
-			session_start(); 
 			$this->session->unset_userdata('event_logged_in');
 			session_destroy();
-			//redirect('login', 'refresh');
+			redirect('login', 'refresh');
 		}
 		
 		
