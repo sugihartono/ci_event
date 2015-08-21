@@ -51,28 +51,7 @@
         // jika form disubmit
         $.validator.setDefaults({
             submitHandler: function() {
-                
-                kode = $("#txt_kode").val();
-                $.ajax({
-                    type    : "POST",
-                    url     : "<?php echo base_url(); ?>brand/cek_kode/",
-                    data    : "p_kode="+kode,
-                    cache   : false,
-                    success : function(msg){
-                        data = msg;
-                       
-                        if (data=='1'){
-                             $("#txt_kode-error").html("kode sudah ada");
-                        }else {
-                            $("#txt_kode-error").html("");
-                            document.frm.submit();
-                        }
-                        
-                        
-                        
-                    }
-
-                });//end ajax
+                $("#frm").submit();
 
             }
         });
@@ -82,12 +61,10 @@
             // validate form on keyup and submit
             $("#frm").validate({
                 rules: {
-                    txt_kode: "required",
-                    txt_nama: "required"
+                    txt_name: "required"
                 },
                 messages: {
-                    txt_kode: "kode harus di isi",
-                    txt_nama: "nama harus di isi"
+                    txt_name: "nama harus di isi"
                 }
 
             });
@@ -96,13 +73,6 @@
 
         });
 
-       function cek_edit_form(){
-            var nama = document.getElementById("txt_nama_show").value;
-            if ((nama=="") || (nama=null)){
-                alert("Nama harus di isi");
-                document.getElementById("txt_nama_show").focus();
-            }else document.frm_edit.submit();
-        }
 
     </script>
 

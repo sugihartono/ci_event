@@ -4,7 +4,7 @@
 		
 		function __construct(){
 			parent::__construct();
-			
+			$this->is_logged_in();
 		}
 		
 		

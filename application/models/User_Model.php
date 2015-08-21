@@ -1,14 +1,14 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 	
-	class User_Nodel extends CI_Model {
+	class User_Model extends CI_Model {
 		
 		function __construct(){
 			date_default_timezone_set("Asia/Jakarta");
 		}
 		
 		function login($username, $pass) {
-			$this->db->select('id, username, init_cabang, role, id_dept, id_jbt');
-			$this->db->from('mst_karyawan');
+			$this->db->select('username, store_code, role, division_code');
+			$this->db->from('mst_user');
 			$this->db->where('username', $username);
 			$this->db->where('password', md5($pass));
 			$this->db->where('active', '1');

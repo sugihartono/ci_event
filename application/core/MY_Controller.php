@@ -9,11 +9,11 @@
 
 		function __construct(){
 			parent::__construct();
-			//$this->is_logged_in();
+			
 		}
 		
 		function is_logged_in(){
-			if(!isset($this->session->userdata['event_logged_in']['id']) || $this->session->userdata['event_logged_in']['id'] != true) {
+			if(!isset($this->session->userdata['event_logged_in']['username']) || $this->session->userdata['event_logged_in']['username'] != true) {
 				show_404();
 				//echo 'silakan login dahulu .	';
 			}

@@ -70,7 +70,7 @@
 			];
 			
 			xinha_config = xinha_config ? xinha_config() : new HTMLArea.Config();
-			xinha_config.pageStyle = 'body { font-family: verdana,arial,sans-serif; font-size: .9em; }';
+			xinha_config.pageStyle = 'body { font-family: ruda,sans-serif; font-size: 13px; }';
 			xinha_editors = HTMLArea.makeEditors( xinha_editors, xinha_config, xinha_plugins);
 			
 			HTMLArea.startEditors(xinha_editors);

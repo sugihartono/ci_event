@@ -7,45 +7,42 @@
 		}
 		
 		
-		function index($to = 'World') {
-			
+		function index() {
 			$this->load->view('login/v_login');
-			//echo "Hello {$to}!".PHP_EOL." xx";
 			
 		}
 		
 		function do_login(){
-			/* $this->load->model('User_model');
+			$this->load->model('User_Model');
 			$username = $this->input->post('txt_username');
 			$pass = $this->input->post('txt_pass');
-			$res = $this->User_model->login($username, $pass);
+			$res = $this->User_Model->login($username, $pass);
 			
 			if ($res){
 				$sess_array = array();
 				foreach($res as $row){
 					$sess_array = array(
-						'id' => $row->id,
 						'username' => $row->username,
 						'role' => $row->role,
-						'init_cabang' => $row->init_cabang
+						'store_code' => $row->store_code,
+						'division_code' => $row->division_code
 					);
 					$this->session->set_userdata('event_logged_in', $sess_array);
 				}
-				$this->User_model->add_log($this->session->userdata['event_logged_in']['id'], $this->session->userdata['event_logged_in']['username']);
+				
 				redirect('home');
 				
 			} else {
 				redirect('login');
-			} */
+			}
 			
-			redirect('home/');
 		}
 		
 		function logout() {
 			session_start(); 
-			//$this->session->unset_userdata('event_logged_in');
+			$this->session->unset_userdata('event_logged_in');
 			session_destroy();
-			redirect('login', 'refresh');
+			//redirect('login', 'refresh');
 		}
 		
 		

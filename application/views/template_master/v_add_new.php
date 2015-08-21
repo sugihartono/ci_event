@@ -1,3 +1,11 @@
+<?php 
+	
+	$msg = $this->session->flashdata('msg');
+	if ($msg){
+		echo "<script>success_msg('$add_success');</script>";
+	} 
+	
+?>
 
 <section id="main-content">
 	<section class="wrapper">
@@ -11,19 +19,18 @@
 					
 					<?php echo $xinha_java; ?>
 					
-					<form action="<?php echo base_url(); ?>template/do_add_new" id="frm" name="frm" class="form-horizontal style-form" method="post">
+					<form action="<?php echo base_url(); ?>template/do_add_new" id="frm" name="frm" class="form-horizontal style-form" method="post" enctype="multipart/form-data">
 						
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Event Source</label>
-							<div class="col-sm-3">
-								<select class="form-control" name="cb_source">
-									<option value="Y">Yogya</option>
-									<option value="S">Supplier</option>
-								</select>
+							<div class="col-sm-2">
+								
+								<label><input type="radio" name="rb_source" checked value="Y">YOGYA</input></label>&nbsp;&nbsp;&nbsp;
+								<label><input type="radio" name="rb_source" value="S">Supplier</input></label>
 							</div>
 							
 							<label class="col-sm-1 col-sm-1 control-label-right">Name</label>
-							<div class="col-sm-6 pad-right">
+							<div class="col-sm-7 pad-right">
 								<input type="text" class="form-control" id="txt_name" name="txt_name">
 								<label id="txt_name-error" for="txt_name" style="color:red"></label>
 							</div>
@@ -33,11 +40,11 @@
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Header</label>
 							<div class="col-sm-10">
-								<textarea class="form-control" name="txt_header" id="txt_header" rows="24">
+								<textarea class="form-control" name="txt_header" id="txt_header" rows="18">
 									<img src="<?php echo base_url(); ?>assets/img/yg_red.png" /><br>
 									<p align='left'>Bandung, #TGL_SURAT</p>
 									<p align='left'>
-										<table border='0'>
+										<table border='0' style="font-size:13px;">
 											<tr>
 												<td>Nomor</td>
 												<td>:</td>
@@ -61,7 +68,7 @@
 										#NAMA_SUPPLIER</br>
 										#KOTA - #FAX
 									</p>
-									<br>
+									
 									
 									<p align='left'>
 										Dengan hormat,<br>
@@ -77,13 +84,13 @@
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Footer</label>
 							<div class="col-sm-10">
-								<textarea class="form-control" name="txt_footer" id="txt_footer" rows="15">
+								<textarea class="form-control" name="txt_footer" id="txt_footer" rows="13">
 									<p align='left'>
 										Demikian informasi ini kami sampaikan, atas perhatian dan kerjasamanya yang baik
 										kami ucapkan terima kasih.
 									</p>
 									<br>
-									<table border='0'>
+									<table border='0' style="font-size:13px;">
 										<tr>
 											<td width="30%">Hormat kami</td>
 											<td width="30%">Mengetahui,</td>

@@ -8,7 +8,7 @@
               <ul class="sidebar-menu" id="nav-accordion">
               
               	  <p class="centered"><a href="#"><img src="<?php echo base_url(); ?>assets/img/yg_red.png"  ></a></p>
-              	  <h5 class="centered">Welcome, <?php // echo $this->session->userdata['shop_ass_logged_in']['username']; ?></h5>
+              	  <h5 class="centered">Welcome, <?php echo $this->session->userdata['event_logged_in']['username']; ?></h5>
               	  	
                   <!-- <li class="mt">
                       <a class="active" href="index.html">

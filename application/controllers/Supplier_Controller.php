@@ -4,6 +4,7 @@
 		
 		function __construct(){
 			parent::__construct();
+			$this->is_logged_in();
 			$this->load->model("Supplier_Model");
 		}
 		

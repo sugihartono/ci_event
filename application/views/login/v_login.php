@@ -18,7 +18,7 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="<?php echo base_url(); ?>assets/js/jquery-1.10.2.js"></script>
+    <script src="<?php echo base_url(); ?>assets/js/jquery-1.8.3.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
 
     <!-- jquery validate -->

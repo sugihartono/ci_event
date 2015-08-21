@@ -76,7 +76,9 @@
 .htmlarea iframe.xinha_iframe, .htmlarea textarea.xinha_textarea
 {
   border: none; /*1px solid;*/
+  
 }
+
 
 .htmlarea .statusBar {
   border: 1px solid;
