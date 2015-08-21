@@ -64,10 +64,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'postgres',
-	'password' => 'root',
-	'database' => 'event_db',
+	'hostname' => '172.16.9.58',
+	'username' => 'eventdb',
+	'password' => 'eventdbteam',
+	'database' => 'eventdb',
 	'dbdriver' => 'postgre',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
