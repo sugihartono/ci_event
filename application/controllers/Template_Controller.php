@@ -27,7 +27,7 @@
 		}
 		
 		function do_add_new(){
-			//$this->Template_Model->do_add_new($this->session->userdata['event_logged_in']['username']);
+			$this->Template_Model->do_add_new($this->session->userdata['event_logged_in']['username']);
 			
 			$this->session->set_flashdata('msg', ' Data berhasil di simpan.');
 			

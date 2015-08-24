@@ -32,24 +32,14 @@
 		xinha_config  = null;
 		xinha_plugins = null;
 		
+		
 		xinha_init = xinha_init ? xinha_init : function()
 		{
 			
 			xinha_plugins = xinha_plugins ? xinha_plugins :
 			[
-			
-			<?php
-				/*
-					$plugin_names="";
 					
-					foreach ($plugins as $plugin){
-					$plugin_names.= "'$plugin',";
-					}
-					
-					$plugin_names = substr($plugin_names,0,-1);
-					echo $plugin_names;
-				*/
-			?>
+						
 			];
 			
 			if(!HTMLArea.loadPlugins(xinha_plugins, xinha_init)) return;
@@ -68,9 +58,23 @@
 				echo $area;
 			?>
 			];
-			
+
+ 
 			xinha_config = xinha_config ? xinha_config() : new HTMLArea.Config();
 			xinha_config.pageStyle = 'body { font-family: ruda,sans-serif; font-size: 13px; }';
+			
+			//xinha_config.showLoading = true ;
+			
+			xinha_config.toolbar =[
+									["separator","formatblock","fontname","fontsize","bold","italic","underline","strikethrough"],
+									["separator","subscript","superscript"],
+									["linebreak","separator","justifyleft","justifycenter","justifyright","justifyfull"],
+									["separator","insertorderedlist","insertunorderedlist","outdent","indent"],
+									["separator","inserthorizontalrule","insertimage","inserttable"],
+									["linebreak","separator","undo","redo","selectall","print"],
+									["separator","htmlmode"]
+								];
+ 
 			xinha_editors = HTMLArea.makeEditors( xinha_editors, xinha_config, xinha_plugins);
 			
 			HTMLArea.startEditors(xinha_editors);

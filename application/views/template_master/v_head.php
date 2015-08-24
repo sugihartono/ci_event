@@ -46,6 +46,11 @@
     <!-- jquery validate -->
     <script src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
 
+<!--	<link href="<?php //echo base_url(); ?>assets/css/date/datepicker.css" rel="stylesheet">
+
+    <script src="<?php //echo base_url(); ?>assets/date/bootstrap-datepicker.js"></script>
+  -->   
+	
     <script>
        
         // jika form disubmit
@@ -106,6 +111,7 @@
             $('#datatable').dataTable({                
                 //"order": [[ 3, "desc" ]]
             });
+			
         });
 
         //get and show modal data tobe edited
@@ -142,7 +148,6 @@
     </script>
     
     
-    
-    
+     
 
   </head>
