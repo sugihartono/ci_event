@@ -27,7 +27,7 @@ create table event (
 );
 
 alter table event add primary key (id);
-
+alter table event add letter_date date;
 
 create table event_item (
     event_id integer not null,
