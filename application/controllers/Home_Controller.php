@@ -8,7 +8,8 @@
 		}
 		
 		
-		function index() {
+		function index(){
+			
 			$data['head'] = 'template/v_head';
 			$data['top_menu'] = 'template/v_top_menu';
 			$data['left_menu'] = 'template/v_left_menu';
