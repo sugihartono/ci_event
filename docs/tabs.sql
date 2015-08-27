@@ -1,4 +1,8 @@
---create sequence event_no_seq;
+create sequence letter_no_a_seq;
+create sequence letter_no_b_seq;
+create sequence letter_no_c_seq;
+create sequence letter_no_d_seq;
+create sequence letter_no_e_seq;
 
 create sequence event_seq;
 

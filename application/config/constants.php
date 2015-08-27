@@ -92,6 +92,14 @@ define('UPDATE_CAPTION', 'Update');
 define('DELETE_CAPTION', 'Delete');
 define('BACK_CAPTION', 'Back');
 define('CANCEL_CAPTION', 'Cancel');
+
+define('PRINT_CAPTION', 'Print');
+define('PREVIEW_CAPTION', 'Print');
+
+define('NEXT_CAPTION', 'Next');
+define('ADD_DATE_CAPTION', 'Add Date');
+define('ADD_LOCATION_CAPTION', 'Add Location');
+define('POOL_TILLCODE_CAPTION', 'Pool Tillcode');
 define('PRINT_CAPTION', 'Print');
 define('PREVIEW_CAPTION', 'Print');
 // ---------------- end 
