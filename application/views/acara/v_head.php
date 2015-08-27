@@ -16,6 +16,10 @@
     <link href="<?php echo base_url(); ?>assets/css/style.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/style-responsive.css" rel="stylesheet">
 
+    <!-- bootstrap datepicker style -->
+    <link rel="stylesheet" media="screen" href="<?php echo base_url(); ?>assets/js/bootstrap-datepicker/css/datepicker.css">
+    <link rel="stylesheet" media="screen" href="<?php echo base_url(); ?>assets/js/bootstrap-datepicker/css/datepicker.fixes.css">
+    
     <script src="<?php echo base_url(); ?>assets/js/chart-master/Chart.js"></script>
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -24,7 +28,6 @@
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <script src="<?php echo base_url(); ?>assets/js/jquery.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/jquery-1.8.3.min.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
     <script class="include" type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.dcjqaccordion.2.7.js"></script>
@@ -45,134 +48,29 @@
     
     <!-- jquery validate -->
     <script src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
-
-    <script>
-       
-        // jika form disubmit
-        $.validator.setDefaults({
-            submitHandler: function() {
-                
-                kode = $("#txt_kode").val();
-                $.ajax({
-                    type    : "POST",
-                    url     : "<?php echo base_url(); ?>brand/cek_kode/",
-                    data    : "p_kode="+kode,
-                    cache   : false,
-                    success : function(msg){
-                        data = msg;
-                       
-                        if (data=='1'){
-                             $("#txt_kode-error").html("kode sudah ada");
-                        }else {
-                            $("#txt_kode-error").html("");
-                            document.frm.submit();
-                        }
-                        
-                        
-                        
-                    }
-
-                });//end ajax
-
-            }
-        });
-
-        $(document).ready(function() {
-
-            // validate form on keyup and submit
-            $("#frm").validate({
-                rules: {
-                    txt_kode: "required",
-                    txt_nama: "required"
-                },
-                messages: {
-                    txt_kode: "kode harus di isi",
-                    txt_nama: "nama harus di isi"
-                }
-
-            });
-
-            
-
-        });
-
-       function cek_edit_form(){
-            var nama = document.getElementById("txt_nama_show").value;
-            if ((nama=="") || (nama=null)){
-                alert("Nama harus di isi");
-                document.getElementById("txt_nama_show").focus();
-            }else document.frm_edit.submit();
-        }
-
-    </script>
-
+    
+    <!-- bootstrap datepicker -->
+    <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    
     <script type="text/javascript">
-        //show message flow
-        function success_msg(msg){
-            var unique_id = $.gritter.add({
-                // (string | mandatory) the heading of the notification
-                title: 'Notification',
+        var baseUrl = "<?php echo base_url(); ?>"; 
 
-                // (string | mandatory) the text inside the notification
-                text: '<i class="fa fa-check"></i>'+msg,
-               
-                // (string | optional) the image to display on the left
-                image: '',
-               
-                // (bool | optional) if you want it to fade out on its own or just sit there
-                sticky: false,//harus false jika ingin difade out
-                
-                // (int | optional) the time you want it to be alive for before fading out
-                time: '3000',
-               
-                // (string | optional) the class name you want to apply to that specific message
-                class_name: 'my-sticky-class'
+        $(function() {
+            
+            $('#letterDate').datepicker({
+                format: 'dd-mm-yyyy'
+            });
+            
+            $('#eventStartDate').datepicker({
+                format: 'dd-mm-yyyy'
+            });
+            
+            $('#eventEndDate').datepicker({
+                format: 'dd-mm-yyyy'
             });
 
-            return false;
-        }
-
-        $(document).ready(function() {
-            $('#datatable').dataTable({                
-                //"order": [[ 3, "desc" ]]
-            });
         });
 
-        //get and show modal data tobe edited
-        $(document).on("click", ".show_modal", function () {
-            var kode_show = $(this).data('id');
-            //var rb_active = document.getElementsByName('rb_active_show');
-
-            $.ajax({
-                type    : "POST",
-                url     : "<?php echo base_url(); ?>brand/show_modal/",
-                data    : "p_kode="+kode_show,
-                cache   : false,
-                success : function(msg){
-                    data = msg;
-                    content = data.split("|");
-                    $(".modal-body #txt_kode_show").val(content[0]);
-                    $(".modal-body #txt_nama_show").val(content[1]);
-                
-                    if ($(".modal-body #rb_active_show_yes").val()==content[2]) {
-                        $(".modal-body #rb_active_show_yes").prop("checked", true);
-                        $(".modal-body #rb_active_show_no").prop("checked", false);
-                        
-                    } else {
-                        $(".modal-body #rb_active_show_yes").prop("checked", false);
-                        $(".modal-body #rb_active_show_no").prop("checked", true);
-                    }
-
-
-                }
-
-            });//end ajax
-
-        });
     </script>
-    
-    
-    
-    
 
   </head>
