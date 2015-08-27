@@ -5,7 +5,7 @@
 		function __construct(){
 			parent::__construct();
 			$this->is_logged_in();
-			$this->load->model("Template_Model");
+			$this->load->model("Template_model");
 		}
 		
 		function add() {
@@ -27,7 +27,7 @@
 		}
 		
 		function do_add_new(){
-			$this->Template_Model->do_add_new($this->session->userdata['event_logged_in']['username']);
+			$this->Template_model->do_add_new($this->session->userdata['event_logged_in']['username']);
 			
 			$this->session->set_flashdata('msg', ' Data berhasil di simpan.');
 			

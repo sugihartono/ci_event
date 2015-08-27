@@ -5,7 +5,7 @@
 		function __construct(){
 			parent::__construct();
 			$this->is_logged_in();
-			$this->load->model("Tillcode_Model");
+			$this->load->model("Tillcode_model");
 		}
 		
 		
@@ -32,7 +32,7 @@
 			$data['right_menu'] = 'tillcode/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			$data['list'] = $this->Tillcode_Model->all_list();
+			$data['list'] = $this->Tillcode_model->all_list();
 			$this->load->view('tillcode/v_tillcode', $data);
 		}
 		

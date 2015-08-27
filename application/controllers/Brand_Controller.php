@@ -5,7 +5,7 @@
 		function __construct(){
 			parent::__construct();
 			$this->is_logged_in();
-			$this->load->model("Brand_Model");
+			$this->load->model("Brand_model");
 		}
 		
 		
@@ -32,7 +32,7 @@
 			$data['right_menu'] = 'brand/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			$data['list'] = $this->Brand_Model->all_list();
+			$data['list'] = $this->Brand_model->all_list();
 			$this->load->view('brand/v_brand', $data);
 		}
 		

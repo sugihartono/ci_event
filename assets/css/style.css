@@ -2262,3 +2262,17 @@ label {
 label.error {
     color: red;
 }
+
+/* css utk view surat acara */
+table.view_acara{
+	margin-left:55px;
+	
+	
+}
+
+table.view_acara td{
+	
+	padding-left: 5px;
+	padding-right: 5px;
+	
+}

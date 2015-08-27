@@ -5,7 +5,7 @@
 		function __construct(){
 			parent::__construct();
 			$this->is_logged_in();
-			$this->load->model("Store_Model");
+			$this->load->model("Store_model");
 		}
 		
 		
@@ -32,7 +32,7 @@
 			$data['right_menu'] = 'store/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			$data['list'] = $this->Store_Model->all_list();
+			$data['list'] = $this->Store_model->all_list();
 			$this->load->view('store/v_store', $data);
 		}
 		

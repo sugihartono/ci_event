@@ -5,7 +5,7 @@
 		function __construct(){
 			parent::__construct();
 			$this->is_logged_in();
-			$this->load->model("Supplier_Model");
+			$this->load->model("Supplier_model");
 		}
 		
 		
@@ -32,7 +32,7 @@
 			$data['right_menu'] = 'supplier/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
-			$data['list'] = $this->Supplier_Model->all_list();
+			$data['list'] = $this->Supplier_model->all_list();
 			$this->load->view('supplier/v_supplier', $data);
 		}
 		

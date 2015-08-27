@@ -13,10 +13,10 @@
 		}
 		
 		function do_login(){
-			$this->load->model('User_Model');
+			$this->load->model('User_model');
 			$username = $this->input->post('txt_username');
 			$pass = $this->input->post('txt_pass');
-			$res = $this->User_Model->login($username, $pass);
+			$res = $this->User_model->login($username, $pass);
 			
 			if ($res){
 				$sess_array = array();

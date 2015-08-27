@@ -84,6 +84,7 @@ $route['tillcode/(:any)'] = 'Tillcode_Controller/$1';
 $route['acara'] = 'Acara_Controller';
 $route['acara/list'] = 'Acara_Controller/all_list';
 $route['acara/(:any)'] = 'Acara_Controller/$1';
+$route['acara/(:any)/(:any)'] = 'Acara_Controller/$1/$2';
 
 
 

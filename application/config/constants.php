@@ -92,6 +92,8 @@ define('UPDATE_CAPTION', 'Update');
 define('DELETE_CAPTION', 'Delete');
 define('BACK_CAPTION', 'Back');
 define('CANCEL_CAPTION', 'Cancel');
+define('PRINT_CAPTION', 'Print');
+define('PREVIEW_CAPTION', 'Print');
 // ---------------- end 
 
 
