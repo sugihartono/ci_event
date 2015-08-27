@@ -78,7 +78,7 @@
 			
 		}
 		
-<<<<<<< HEAD
+
 		function preview($id) {
 			$data['trans_active'] = 'dcjq-parent active';
 			$data['menu_daftar_active'] = 'color:#FFF';
@@ -329,7 +329,9 @@
 			
 			$this->load->view('acara/v_acara', $data);
 			
-=======
+		}
+		
+		
 		public function save() {
 			# fix this later
 			$usr = "admin";
@@ -409,10 +411,10 @@
 				$inputs["templateCode"], $inputs["firstSignature"], $inputs["secondSignature"], $inputs["notes"], $inputs["cc"], $isManualSetting,
 				$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 			);
->>>>>>> origin/master
+
 		}
 		
-		
-	}
+	}	
+	
 
 ?>
