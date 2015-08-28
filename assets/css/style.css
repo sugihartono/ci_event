@@ -2264,6 +2264,12 @@ label.error {
 }
 
 /* css utk view surat acara */
+
+table.head_acara td{
+	min-width:10px;
+	vertical-align:top;
+}
+
 table.view_acara{
 	margin-left:55px;
 	

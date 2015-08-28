@@ -44,7 +44,7 @@
 									<img src="<?php echo base_url(); ?>assets/img/yg_red.png" /><br>
 									<p align='left'>Bandung, #TGL_SURAT</p>
 									<p align='left'>
-										<table border='0' style="font-size:13px;">
+										<table border='0' style="font-size:13px;" class='view_acara'>
 											<tr>
 												<td>Nomor</td>
 												<td>:</td>

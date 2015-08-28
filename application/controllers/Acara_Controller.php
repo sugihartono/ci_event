@@ -336,12 +336,21 @@
 			
 			//tempat acara
 			$rlocation = $this->Event_model->get_event_same_location($id);
-			$vlocation .= "<tr><td colspan='2'>Tempat Acara :</td></tr>";	
+			$vlocation .= "<tr>
+								<td>Tempat Acara</td>
+								<td>:</td>
+								<td>";
 			
-			
+			$i=0;
 			foreach ($rlocation->result() as $res) :
-				$vlocation .= "<tr><td colspan='2'></td><td>".$res->loc_desc." ".$res->store_desc."</td></tr>";	
+				$vlocation .= $res->loc_desc." ".$res->store_desc.", ";	
 			endforeach;
+			
+			$vlocation .=		"</td>
+							</tr>";	
+			
+			
+			
 			
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 			
