@@ -293,8 +293,8 @@ class Acara extends CI_Model {
                                         (is_numeric($detailEvent[$i]["margin"]) ? $detailEvent[$i]["margin"] : 0),
                                         #$detailEvent[$i]["bruttoMargin"],
                                         #$detailEvent[$i]["netMargin"],
-                                        $isSameDate,
-                                        $isSameLocation 
+                                        $isSameLocation,
+                                        $isSameDate
                                 );
                         $sql = "insert into event_item (event_id, tillcode, notes, supp_code, yds_responsibility, supp_responsibility, is_pkp, tax, " .
                                                         "same_location, same_date) ". 
