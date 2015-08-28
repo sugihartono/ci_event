@@ -7,7 +7,7 @@
 		}
 		
 		function all_list(){	
-			$sql = "SELECT a.id, a.event_no, a.about, a.toward FROM event a";
+			$sql = "SELECT a.id, a.event_no, a.about, a.toward FROM event a LEFT JOIN event_item b ON(a.id=b.event_id) WHERE b.same_location='1' AND b.same_date='0' GROUP BY a.id, a.event_no, a.about, a.toward ";
 			
 			$ambil = $this->db->query($sql);
 			if ($ambil->num_rows() > 0){

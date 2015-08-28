@@ -8,7 +8,7 @@
 		<a href="<?php echo base_url(); ?>acara/list" class="btn_add btn btn-default btn-sm">
 		<i class="fa fa-backward "></i> <?php echo BACK_CAPTION; ?></a>
 		
-		<a href="<?php echo base_url(); ?>acara/do_print" class="btn_add btn btn-default btn-sm">
+		<a href="#" class="btn_add btn btn-default btn-sm">
 		<i class="fa fa-print "></i> <?php echo PRINT_CAPTION; ?></a>
 		
 		<div class="row mt">
