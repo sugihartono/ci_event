@@ -33,8 +33,14 @@
 											<td><?php echo $r->toward; ?></td>
 											<td><?php echo $r->about; ?></td>
 											<td>
-												<a href="<?php echo base_url(); ?>acara/preview/<?php echo $r->id; ?>" class='btn_update btn btn-xs'>
-													<i class='fa fa-search'></i> <?php echo PREVIEW_CAPTION; ?>
+												<a href="#" class='btn_update btn btn-xs' title="update">
+													<i class='fa fa-pencil'></i> <?php //echo UPDATE_CAPTION; ?>
+												</a>&nbsp;
+												<a href="#" class='btn_update btn btn-xs' title="delete">
+													<i class='fa fa-trash-o'></i> <?php //echo DELETE_CAPTION; ?>
+												</a>&nbsp;
+												<a href="<?php echo base_url(); ?>acara/preview/<?php echo $r->id; ?>" class='btn_update btn btn-xs' title="preview">
+													<i class='fa fa-search'></i> <?php //echo PREVIEW_CAPTION; ?>
 												</a>
 											</td>
 										</tr>

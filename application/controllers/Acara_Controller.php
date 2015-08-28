@@ -134,11 +134,33 @@
 					$yds_res = $r->yds_responsibility.'%';
 					$supplier_res = $r->supp_responsibility.'%';
 					
-					if($r->is_pkp=='1'){
-						$margin = $r->brutto_margin.' PKP (bruto) -> Nett margin = '.$r->net_margin.'%';
-					} else {
-						$margin = $r->brutto_margin.' NPKP (bruto) -> Nett margin = '.$r->net_margin.'%';
+					//hitung net margin
+					
+					$yds_price = $r->yds_responsibility/100*$r->price;
+					
+					$bruto_price = $r->tax/100 * $r->price;
+					
+					$after_disc1 = $r->price-($r->price*$r->disc1/100);
+					$after_disc2 = $after_disc1-($r->price*$r->disc2/100);
+					
+					$net_margin = round(($bruto_price - $yds_price) / $after_disc2*100, 2, PHP_ROUND_HALF_UP);
+					
+					if ($r->is_sp=='1'){
+						if($r->is_pkp=='1'){
+							$margin = $r->tax.'% PKP (netto)';
+						} else {
+							$margin = $r->tax.'% NPKP (netto)';
+						}
+					} 
+					else{
+						if($r->is_pkp=='1'){
+							$margin = $r->tax.'% PKP (bruto) -> Nett margin = '.$net_margin.'%';
+						} else {
+							$margin = $r->tax.'% NPKP (bruto) -> Nett margin = '.$net_margin.'%';
+						}	
 					}
+					
+					
 					
 					$vlocation .= "<tr><td>Acara</td>
 										<td>:</td>

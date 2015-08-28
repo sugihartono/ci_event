@@ -90,7 +90,7 @@
 										kami ucapkan terima kasih.
 									</p>
 									<br>
-									<table border='0' style="font-size:13px;">
+									<table border='0' style="font-size:13px;width:500px">
 										<tr>
 											<td width="30%">Hormat kami</td>
 											<td width="30%">Mengetahui,</td>
