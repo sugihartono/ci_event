@@ -1,7 +1,7 @@
       <!--footer start-->
       <footer class="site-footer">
           <div class="text-center">
-              2015 - YOGYA IT&amp;S Team
+              YOGYA IT&amp;S Team
               <a href="#" class="go-top">
                   <i class="fa fa-angle-up"></i>
               </a>
