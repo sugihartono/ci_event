@@ -26,7 +26,7 @@
 					<li><a  href="<?php echo base_url(); ?>brand/list" style="<?php if (isset($menu_brand_active)){echo $menu_brand_active;}else echo ""; ?>">Brand</a></li>
 					<li><a  href="<?php echo base_url(); ?>store/list" style="<?php if (isset($menu_store_active)){echo $menu_store_active;}else echo ""; ?>">Store</a></li>
 					<li><a  href="<?php echo base_url(); ?>supplier/list" style="<?php if (isset($menu_supplier_active)){echo $menu_supplier_active;}else echo ""; ?>">Supplier</a></li>
-					<li><a  href="<?php echo base_url(); ?>template/add" style="<?php if (isset($menu_template_active)){echo $menu_template_active;}else echo ""; ?>">Template</a></li>
+					<li><a  href="<?php echo base_url(); ?>template/list" style="<?php if (isset($menu_template_active)){echo $menu_template_active;}else echo ""; ?>">Template</a></li>
 					<li><a  href="<?php echo base_url(); ?>tillcode/list" style="<?php if (isset($menu_tillcode_active)){echo $menu_tillcode_active;}else echo ""; ?>">Tillcode</a></li>
 				</ul>
 			</li>

@@ -8,7 +8,8 @@
 		
 		function all_list(){	
 			$this->db->select('*'); 
-			$this->db->from('mst_supplier'); 
+			$this->db->from('mst_template'); 
+			$this->db->where('is_active', '1'); 
 			
 			$ambil = $this->db->get();
 			if ($ambil->num_rows() > 0){
@@ -31,10 +32,10 @@
 		}
 		
 		function do_add_new($username){
-            $rb_source = $this->input->post('rb_source');
+            $cb_source = $this->input->post('cb_source');
 			
 			//generate new code
-			$tmpl_code = $this->new_code($rb_source, '1', '2', '2', '0');
+			$tmpl_code = $this->new_code($cb_source, '1', '2', '2', '0');
 			
             $txt_name = $this->input->post('txt_name');
 			$txt_header = $this->input->post('txt_header');

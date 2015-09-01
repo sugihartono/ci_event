@@ -34,6 +34,20 @@
 			redirect('template/add');
 		}
 		
+		function all_list() {
+			$data['menu_active'] = 'dcjq-parent active';
+			$data['menu_template_active'] = 'color:#FFF';
+			
+			$data['head'] = 'template_master/v_head';
+			$data['top_menu'] = 'template/v_top_menu';
+			$data['left_menu'] = 'template/v_left_menu';
+			$data['content'] = 'template_master/v_all_list';
+			$data['right_menu'] = 'template_master/v_right_menu';
+			$data['footer'] = 'template/v_footer';
+			
+			$data['list'] = $this->Template_model->all_list();
+			$this->load->view('template_master/v_template', $data);
+		}
 		
 		
 	}

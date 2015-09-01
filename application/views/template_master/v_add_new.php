@@ -11,7 +11,8 @@
 	<section class="wrapper">
 		
 		<h3><i class="fa fa-angle-right"></i> Data Template</h3>
-		
+		<a href="<?php echo base_url(); ?>template/list" class="btn_add btn btn-default btn-sm">
+		<i class="fa fa-backward "></i> <?php echo BACK_CAPTION; ?></a>
 		
 		<div class="row mt">
 			<div class="col-lg-12" style="padding-left:5px;padding-left:5px">
@@ -24,9 +25,11 @@
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Event Source</label>
 							<div class="col-sm-2">
-								
-								<label><input type="radio" name="rb_source" checked value="Y">YOGYA</input></label>&nbsp;&nbsp;&nbsp;
-								<label><input type="radio" name="rb_source" value="S">Supplier</input></label>
+								<select id="cb_source" class="form-control" name="cb_source">
+									<option value="C">Cabang</option>
+									<option value="S">Supplier</option>
+									<option value="Y">YOGYA</option>
+								</select>
 							</div>
 							
 							<label class="col-sm-1 col-sm-1 control-label-right">Name</label>
@@ -105,7 +108,8 @@
 									</table>
 									<br>
 									<p align='left'>
-										cc. #CC
+										cc. Bapak Untara Hartono Somali, Fashion Director
+											Ibu Lucia Lisdawaty, Senior Merchandising Manager
 									</p>
 									
 								</textarea>

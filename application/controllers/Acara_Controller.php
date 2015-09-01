@@ -107,6 +107,7 @@
 				);
 				
 				//cek footer
+				//blm fix
 				$rfooter =  str_replace(
 					array("#NOTES", "#FIRST_SIGNATURE", "#SECOND_SIGNATURE", "#APPROVED_BY", "#CC"),
 					array($r->notes, $r->first_signature,$r->second_signature,$r->approved_by, $r->cc),

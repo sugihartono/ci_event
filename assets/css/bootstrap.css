@@ -1425,7 +1425,7 @@ pre code {
   position: relative;
   min-height: 1px;
   padding-right: 5px;
-  padding-left: 15px;
+  padding-left: 0px;
 }
 .col-xs-1, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9, .col-xs-10, .col-xs-11, .col-xs-12 {
   float: left;
@@ -1594,7 +1594,7 @@ pre code {
     width: 91.66666667%;
   }
   .col-sm-10 {
-    width: 82%;
+    width: 83%;
   }
   .col-sm-9 {
     width: 75%;
@@ -2353,9 +2353,9 @@ output {
 .form-control {
   display: block;
   width: 100%;
-  height: 34px;
-  padding: 6px 12px;
-  font-size: 14px;
+  height: 28px;
+  padding: 6px 8px;
+  font-size: 12px;
   line-height: 1.42857143;
   color: #555;
   background-color: #fff;
@@ -2696,8 +2696,8 @@ select[multiple].input-lg {
   min-height: 27px;
 }
 .form-horizontal .form-group {
-  margin-right: -15px;
-  margin-left: -15px;
+  margin-right: -10px;
+  margin-left: 0px;
 }
 @media (min-width: 768px) {
   .form-horizontal .control-label {
