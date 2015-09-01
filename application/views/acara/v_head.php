@@ -68,6 +68,10 @@
             $('#eventEndDate').datepicker({
                 format: 'dd-mm-yyyy'
             });
+			
+			$('#datatable').dataTable({                
+                "order": [[ 0, "desc" ]]
+            });	
 
         });
 
