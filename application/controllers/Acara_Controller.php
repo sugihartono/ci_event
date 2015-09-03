@@ -107,7 +107,6 @@
 				);
 				
 				//cek footer
-				//blm fix
 				$rfooter =  str_replace(
 					array("#NOTES", "#FIRST_SIGNATURE", "#SECOND_SIGNATURE", "#APPROVED_BY", "#CC"),
 					array($r->notes, $r->first_signature,$r->second_signature,$r->approved_by, $r->cc),
@@ -125,14 +124,10 @@
 			// cek location
 			$same_location = $this->Event_model->is_same_location($id);
 			
+			if ($same_location=='1'){
 				$vlocation = "";
 				
-				if ($same_location=='1'){
-					$list = $this->Event_model->get_same_location_content($id);	
-				} else {
-					$list = $this->Event_model->get_diff_location_content($id);
-				}
-				
+				$list = $this->Event_model->get_same_location_content($id);
 				
 				foreach ($list->result() as $r) :
 				
@@ -167,7 +162,6 @@
 					
 					
 					
-					
 					$vlocation .= "<tr><td>Acara</td>
 										<td>:</td>
 										<td>".$r->disc_label."</td>
@@ -181,27 +175,9 @@
 										<td>$margin</td>
 									<tr>
 									";		
-					
-					if ($same_location=='0'){
-						$rlocation = $this->Event_model->get_event_location($id, $r->tillcode);
-						$vlocation .= "<tr>
-											<td>Tempat Acara</td>
-											<td>:</td>
-											<td>";
-						
-						foreach ($rlocation->result() as $res) :
-							$vlocation .= $res->loc_desc." ".$res->store_desc.", ";	
-						endforeach;
-						
-						$vlocation .=		"</td>
-										</tr>";	
-						//echo $vlocation;				
-					} else  $vlocation .="else-";
-					
+									
 					//cek same date
 					$same_date = $this->Event_model->is_same_date($id);
-					$date_tmp = "";
-					
 					if ($same_date!='1'){
 						
 						//get tanggal by event id n tillcode
@@ -227,10 +203,9 @@
 						//get tanggal by event id
 						$date = $this->Event_model->get_event_same_date($id);
 						
-						$rdate = "";	
-						
+						$rdate = "";				
 						foreach ($date->result() as $res) :
-							$rdate .= $res->date_start.' - '.$res->date_end.', '; 	
+							$rdate .= $this->to_dMY($res->date_start).' - '.to_dMY($res->date_end).', '; 	
 						endforeach;
 						
 						$date_tmp .= "<tr><td>Tanggal</td>
@@ -247,8 +222,82 @@
 				
 				
 				
+				
+			} 
 			
-			
+			//same location = 0 //////////////////////////////////////////////////////////////////////////////////////////
+			else {
+				/* $vlocation = "";
+				
+				$list = $this->Event_model->get_diff_location_content($id);
+				
+				foreach ($list->result() as $r) :
+				
+					$yds_res = $r->yds_responsibility.'%';
+					$supplier_res = $r->supp_responsibility.'%';
+					
+					if($r->is_pkp=='1'){
+						$margin = $r->brutto_margin.' PKP (bruto) -> Nett margin = '.$r->net_margin.'%';
+					} else {
+						$margin = $r->brutto_margin.' NPKP (bruto) -> Nett margin = '.$r->net_margin.'%';
+					}
+					
+					$vlocation .= "<tr><td>Acara</td>
+										<td>:</td>
+										<td>".$r->disc_label."</td>
+									<tr>
+									<tr><td>Pertanggungan</td>
+										<td>:</td>
+										<td>YDS $yds_res SUPPLIER $supplier_res</td>
+									<tr>
+									<tr><td>Margin Yogya</td>
+										<td>:</td>
+										<td>$margin</td>
+									<tr>
+									";		
+									
+					//cek same date
+					$same_date = $this->Event_model->is_same_date($id);
+					if ($same_date!='1'){
+						
+						//get tanggal by event id n tillcode
+						$date = $this->Event_model->get_event_date($id, $r->tillcode);
+						
+						$rdate = "";				
+						foreach ($date->result() as $res) :
+							if (($res->date_end==null) || ($res->date_end=="")){
+								$rdate .= $this->to_dMY($res->date_start).', '; 
+							} else {
+								$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
+							}
+						endforeach;
+						
+						$vlocation .= "<tr><td>Tanggal</td>
+											<td>:</td>
+											<td>$rdate</td>
+										<tr>";
+						$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+						
+					} else {
+						
+						//get tanggal by event id
+						$date = $this->Event_model->get_event_same_date($id);
+						
+						$rdate = "";				
+						foreach ($date->result() as $res) :
+							$rdate .= $this->to_dMY($res->date_start).' - '.to_dMY($res->date_end).', '; 	
+						endforeach;
+						
+						$date_tmp .= "<tr><td>Tanggal</td>
+										<td>:</td>
+										<td>$rdate</td>
+									<tr>";
+							
+						
+					}
+					
+				endforeach; */
+			}
 			
 			
 			
@@ -282,30 +331,23 @@
 			
 			
 			
-					
 			//cek date tmp 
 			(isset($date_tmp)? $vlocation .= $date_tmp : "");
 			
 			//tempat acara
+			$rlocation = $this->Event_model->get_event_same_location($id);
+			$vlocation .= "<tr>
+								<td>Tempat Acara</td>
+								<td>:</td>
+								<td>";
 			
+			$i=0;
+			foreach ($rlocation->result() as $res) :
+				$vlocation .= $res->loc_desc." ".$res->store_desc.", ";	
+			endforeach;
 			
-			if ($same_location=='1'){
-				$rlocation = $this->Event_model->get_event_same_location($id);
-				$vlocation .= "<tr>
-									<td>Tempat Acara same</td>
-									<td>:</td>
-									<td>";
-				
-				$i=0;
-				foreach ($rlocation->result() as $res) :
-					$vlocation .= $res->loc_desc." ".$res->store_desc.", ";	
-				endforeach;
-				
-				$vlocation .=		"</td>
-								</tr>";		
-			} 
-			
-			
+			$vlocation .=		"</td>
+							</tr>";	
 			
 			
 			
@@ -325,7 +367,7 @@
 		
 		public function save() {
 			# fix this later
-			$usr = "admin";
+			$usr = $this->session->userdata['event_logged_in']['username'];
 			$upd = date("Y-m-d H:i:s");
 			
 			$inputs = $this->session->userdata("acaraHolder");
@@ -397,9 +439,14 @@
 				$detailEvent[$i]["notes"] = $eventNotesArr[$i];
 			}
 			
+			# remove these variables from inuput
+			#$inputs["firstSignature"]
+			#$inputs["secondSignature"]
+			#$inputs["cc"]
+			
 			$this->Acara->addNew(
 				$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
-				$inputs["templateCode"], $inputs["firstSignature"], $inputs["secondSignature"], $inputs["notes"], $inputs["cc"], $isManualSetting,
+				$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
 				$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 			);
 

@@ -5,16 +5,30 @@
 		
 		<h3><i class="fa fa-angle-right"></i> Data Acara</h3>
 		
-		<!--
-		<a class="btn_add btn btn-default btn-sm" href="<?php echo base_url(); ?>acara/all_list">
+		<a class="btn_add btn btn-default btn-sm" href="<?php echo base_url(); ?>acara/add">
 		<i class="fa fa-backward "></i> <?php echo BACK_CAPTION; ?></a>
-		-->
 		
 		<div class="row mt">
 			<div style="padding-left:5px;padding-left:5px" class="col-lg-12">
 				<form method="post" class="form-horizontal style-form" name="frmAcaraNext" id="frmAcaraNext" action="<?php echo base_url(); ?>acara/save"  novalidate="novalidate">
 					
 					<div style="padding:30px 10px 10px 10px;" class="form-panel">
+						
+						<div class="form-group">
+							<label class="col-sm-2 col-sm-2 control-label">Supplier</label>
+							<div class="col-sm-10">
+								<select id="supplierCode" class="form-control" name="supplierCode">
+									<option value="">Pilih supplier..</option>
+									<?php
+										foreach($suppliers as $supplier) {
+									?>
+										<option value="<?php echo $supplier->supp_code; ?>"><?php echo $supplier->supp_desc . " (" . $supplier->supp_code . ")"; ?></option>
+									<?php
+										}
+									?>
+								</select>
+							</div>	
+						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Kategori</label>
@@ -52,22 +66,6 @@
 							<label class="col-sm-2 col-sm-2 control-label">Note</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="notes" name="notes">
-							</div>	
-						</div>
-						
-						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Supplier</label>
-							<div class="col-sm-10">
-								<select id="supplierCode" class="form-control" name="supplierCode">
-									<option value="">Pilih supplier..</option>
-									<?php
-										foreach($suppliers as $supplier) {
-									?>
-										<option value="<?php echo $supplier->supp_code; ?>"><?php echo $supplier->supp_desc . " (" . $supplier->supp_code . ")"; ?></option>
-									<?php
-										}
-									?>
-								</select>
 							</div>	
 						</div>
 						

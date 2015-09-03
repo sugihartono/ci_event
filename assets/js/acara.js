@@ -106,7 +106,7 @@ $(function() {
                 alert("Input berhasil");
             },
             error: function(xhr, textStatus, errorThrown) {
-                alert("Error: " + errorThrown);
+                //alert("Error: " + errorThrown);
             },
             complete: function(xhr, textStatus) {
                 //$("#imgLoading").addClass("hide");
