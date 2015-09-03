@@ -316,6 +316,8 @@
 			
 			$data['vlocation'] = $vlocation;
 			
+			//calculate disc
+			
 			$this->load->view('acara/v_acara', $data);
 			
 		}

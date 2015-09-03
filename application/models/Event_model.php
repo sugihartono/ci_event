@@ -201,7 +201,7 @@
 		}
 		
 		//calculate contoh perhitungan
-		function get_event_location($id){	
+		function get_calculate($id){	
 			$sql = "SELECT b.*
 					FROM event_item a JOIN mst_tillcode b ON(a.tillcode=b.tillcode)
 					WHERE a.event_id='$id'
