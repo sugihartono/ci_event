@@ -15,7 +15,7 @@
 			<div class="col-lg-12" style="padding-left:5px;padding-left:5px">
 				<div class="form-panel" style="padding:10px;">
 					<?php
-							
+						
 						echo $rheader;
 						echo "<table class='view_acara'>";
 							echo $vlocation;

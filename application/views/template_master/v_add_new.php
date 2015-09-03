@@ -47,7 +47,7 @@
 									<img src="<?php echo base_url(); ?>assets/img/yg_red.png" /><br>
 									<p align='left'>Bandung, #TGL_SURAT</p>
 									<p align='left'>
-										<table border='0' style="font-size:13px;" class='view_acara'>
+										<table border='0' style="font-size:13px;" class='head_acara'>
 											<tr>
 												<td>Nomor</td>
 												<td>:</td>
@@ -99,20 +99,21 @@
 											<td width="30%">Mengetahui,</td>
 											<td width="30%">Menyetujui</td>
 										</tr>
-										<tr><td colspan="3"><br><br><br></td></tr>
+										<tr><td colspan="3"><br><br></td></tr>
 										<tr>
-											<td>#FIRST_SIGNATURE</td>
-											<td>#SECOND_SIGNATURE</td>
-											<td>#APPROVED_BY</td>
+											<td>Silvia Wening<br>MD. Shoes &amp; Bags Cons.</td>
+											<td>Susan<br>DMM. Shoes &amp; Bags</td>
+											<td valign="top"><br>Mitra Usaha</td>
 										</tr>
 									</table>
 									<br>
 									<p align='left'>
 										cc. Bapak Untara Hartono Somali, Fashion Director
-											Ibu Lucia Lisdawaty, Senior Merchandising Manager
+										<br>
+										Ibu Lucia Lisdawaty, Senior Merchandising Manager
 									</p>
-									
 								</textarea>
+								
 								<label id="txt_footer-error" for="txt_footer" style="color:red"></label>
 							</div>
 						</div>

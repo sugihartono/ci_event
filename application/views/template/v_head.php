@@ -35,10 +35,10 @@
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/gritter/js/jquery.gritter.js"></script>
     <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/gritter-conf.js"></script>
 
-    <!--datatables-->
-    <link href="<?php echo base_url(); ?>assets/datatables/jquery.dataTables.css" rel="stylesheet">
-    <script src="<?php echo base_url(); ?>assets/datatables/jquery.dataTables.js"></script>
-
+    <!--datatables
+    <link href="<?php //echo base_url(); ?>assets/datatables/jquery.dataTables.css" rel="stylesheet">
+    <script src="<?php //echo base_url(); ?>assets/datatables/jquery.dataTables.js"></script>
+-->
     <!--script for this page-->
     <script src="<?php echo base_url(); ?>assets/js/sparkline-chart.js"></script>    
     <script src="<?php echo base_url(); ?>assets/js/zabuto_calendar.js"></script>   
