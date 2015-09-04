@@ -7,7 +7,7 @@
 		}
 		
 		function all_list(){	
-			$sql = "SELECT a.id, a.event_no, a.about, a.toward , a.created_date
+			$sql = "SELECT a.id, a.event_no, a.about, a.toward , TO_CHAR(a.created_date, 'dd Mon yyyy') as created_date
 					FROM event a 
 					LEFT JOIN event_item b ON(a.id=b.event_id) 
 					
