@@ -70,7 +70,14 @@
             });
 			
 			$('#datatable').dataTable({                
-                "order": [[ 0, "desc" ]]
+                "order": [[ 0, "desc" ]],
+				"columnDefs": [
+					{
+						"targets": [0],
+						"visible": false,
+						"searchable": false
+					}
+				]
             });	
 
         });

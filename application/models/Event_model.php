@@ -7,7 +7,7 @@
 		}
 		
 		function all_list(){	
-			$sql = "SELECT a.id, a.event_no, a.about, a.toward 
+			$sql = "SELECT a.id, a.event_no, a.about, a.toward , a.created_date
 					FROM event a 
 					LEFT JOIN event_item b ON(a.id=b.event_id) 
 					

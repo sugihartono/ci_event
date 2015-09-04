@@ -111,6 +111,8 @@
 										cc. Bapak Untara Hartono Somali, Fashion Director
 										<br>
 										Ibu Lucia Lisdawaty, Senior Merchandising Manager
+										<br>
+										Bapak Dede Martono, Manager Audit
 									</p>
 								</textarea>
 								
