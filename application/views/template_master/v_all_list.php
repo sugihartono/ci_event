@@ -27,7 +27,7 @@
 										foreach ($list as $r) :
 									?>
 								    <tr>
-										<td><?php echo $r->tmpl_name; ?></td>
+										<td><a href="<?php echo base_url()."template/preview/".$r->tmpl_code; ?>"><?php echo $r->tmpl_name; ?></a></td>
 										<td><?php echo $r->created_date; ?></td>
 	                                </tr>
 									<?php

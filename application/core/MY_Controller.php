@@ -20,7 +20,7 @@
 			}
 		}
 		
-		function to_dMY($date){
+		public function to_dMY($date){
 			$fmt = date('d M Y', strtotime($date));
 			return $fmt;
 		}

@@ -39,7 +39,7 @@
 							</div>
 						</div>
 						
-						<!--------------------------------------------- header surat ----------------------------------------------->
+						<!--------------------------------------------- header surat --------------------------------------------- -->
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Header</label>
 							<div class="col-sm-10">
@@ -61,13 +61,13 @@
 											<tr>
 												<td>Hal</td>
 												<td>:</td>
-												<td>#ACARA_DISKON produk #NAMA_BRAND #ABOUT</td>
+												<td><b>#ACARA_DISKON #NAMA_BRAND #ABOUT</b></td>
 											</tr>
 										</table>
 									</p>
 									<p align='left'>
 										Kepada Yth,</br>
-										Bapak / Ibu #TOWARD</br>
+										<b>Bapak / Ibu #TOWARD </b></br>
 										#NAMA_SUPPLIER</br>
 										#KOTA - #FAX
 									</p>
@@ -75,7 +75,7 @@
 									
 									<p align='left'>
 										Dengan hormat,<br>
-										Sehubungan dengan diadakannya acara discount #JML_DISKON untuk produk #NAMA_BRAND
+										Sehubungan dengan diadakannya acara discount #JML_DISKON #NAMA_BRAND
 										dalam rangka #ABOUT, berikut kami informasikan ketentuan acara tersebut :
 									</p>
 								</textarea>
@@ -83,7 +83,7 @@
 							</div>
 						</div>
 						
-						<!--------------------------------------------- footer surat ----------------------------------------------->
+						<!--------------------------------------------- footer surat --------------------------------------------- -->
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Footer</label>
 							<div class="col-sm-10">
@@ -101,18 +101,18 @@
 										</tr>
 										<tr><td colspan="3"><br><br></td></tr>
 										<tr>
-											<td>Silvia Wening<br>MD. Shoes &amp; Bags Cons.</td>
-											<td>Susan<br>DMM. Shoes &amp; Bags</td>
-											<td valign="top"><br>Mitra Usaha</td>
+											<td><b><u>Silvia Wening</u></b><br>MD. Shoes &amp; Bags Cons.</td>
+											<td><b><u>Susan</u></b><br>DMM. Shoes &amp; Bags</td>
+											<td valign="top">_____________<br>Mitra Usaha</td>
 										</tr>
 									</table>
 									<br>
 									<p align='left'>
 										cc. Bapak Untara Hartono Somali, Fashion Director
-										<br>
+										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 										Ibu Lucia Lisdawaty, Senior Merchandising Manager
-										<br>
-										Bapak Dede Martono, Manager Audit
+										<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										Bapak Dede Martono, Internal Audit Manager
 									</p>
 								</textarea>
 								
@@ -120,16 +120,17 @@
 							</div>
 						</div>
 						
-						<!--------------------------------------------- notes surat ----------------------------------------------->
+						<!--------------------------------------------- notes surat --------------------------------------------- -->
 						<div class="form-group">
 							<label class="col-sm-2 col-sm-2 control-label">Notes</label>
 							<div class="col-sm-10">
 								<textarea class="form-control" name="txt_notes" id="txt_notes">
-									<p align='left'>
+									<p align='left'><b><i>
 										NB: <br>
 										* Acara dapat dihentikan sewaktu waktu jika evaluasi sales tidak menunjukkan hasil yang memuaskan.<br>
 										* Surat perpanjangan acara harus kami terima paling lambat H-7 sebelum acara berakhir<br>
 										* Apabila surat ini telah diterima dan ditandatangani harap difax kembali ke no. fax. 022-88884422.
+										</i></b>
 									</p>
 								</textarea>
 								<label id="txt_notes-error" for="txt_notes" style="color:red"></label>

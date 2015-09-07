@@ -7,7 +7,7 @@
 		}
 		
 		function all_list(){	
-			$this->db->select('*'); 
+			$this->db->select("tmpl_code, tmpl_name, TO_CHAR(created_date, 'dd Mon yyyy') as created_date"); 
 			$this->db->from('mst_template'); 
 			$this->db->where('is_active', '1'); 
 			
@@ -72,34 +72,22 @@
 		}
 
 
-		function show_modal($kode){
-			$sql = "SELECT kode, init, nama, alamat, kontak, active from mst_supplier WHERE kode='$kode' ";
-			$query = $this->db->query($sql);
-			if ($query->num_rows() > 0){
-				return $query;
+		function preview($id){
+			
+			$this->db->select("*"); 
+			$this->db->from('mst_template'); 
+			$this->db->where('tmpl_code', $id); 
+			
+			$ambil = $this->db->get();
+			if ($ambil->num_rows() > 0){
+				foreach ($ambil->result() as $data){
+					$hasil[] = $data;
+				}
+				return $hasil;
 			}
+
 		}
 
-		function edit($username){
-			$kode = $this->input->post('txt_kode_show');
-			$nama = $this->input->post('txt_nama_show');
-			$alamat = $this->input->post('txt_alamat_show');
-			$kontak = $this->input->post('txt_kontak_show');
-			$active = $this->input->post('rb_active_show');
-
-			$update_at = date("Y-m-d H:i:s");
-
-			$data = array(
-						'nama' => $nama,
-						'alamat' => $alamat,
-						'kontak' => $kontak,
-						'active' => $active,
-						'update_by' => $username,
-						'update_at' => $update_at
-					);
-			$this->db->where('kode', $kode);
-			$this->db->update('mst_supplier',$data);
-		}
 
 		function get_max_code($prefix){
 			$sql = "SELECT MAX(tmpl_code) AS max_code FROM mst_template WHERE tmpl_code ILIKE '$prefix%' ";

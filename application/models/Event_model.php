@@ -7,11 +7,14 @@
 		}
 		
 		function all_list(){	
-			$sql = "SELECT a.id, a.event_no, a.about, a.toward , TO_CHAR(a.created_date, 'dd Mon yyyy') as created_date
+			$sql = "SELECT a.id, a.event_no, a.about, a.toward , 
+					TO_CHAR(a.created_date, 'dd Mon yyyy') as created_date
 					FROM event a 
 					LEFT JOIN event_item b ON(a.id=b.event_id) 
-					
+					JOIN mst_template c ON(a.template_code=c.tmpl_code)
+					WHERE c.is_active='1'
 					GROUP BY a.id, a.event_no, a.about, a.toward 
+
 				";//WHERE b.same_location='1' AND b.same_date='0' 
 			
 			$ambil = $this->db->query($sql);

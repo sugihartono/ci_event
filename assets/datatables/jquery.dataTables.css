@@ -1,6 +1,11 @@
 /*
  * Table styles
  */
+
+ .table-responsive{
+  min-height: 374px;
+ }
+
 table.dataTable {
   width: 100%;
   margin: 0 auto;
