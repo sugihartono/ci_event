@@ -20,6 +20,7 @@
 						echo "<table class='view_acara'>";
 							echo $vlocation;
 						echo "</table>";
+						echo $vcalculate;
 						echo $rfooter;
 						echo $rnotes;
 					?>

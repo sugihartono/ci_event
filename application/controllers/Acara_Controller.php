@@ -133,7 +133,7 @@
 					$list = $this->Event_model->get_diff_location_content($id);
 				}
 
-				foreach ($list->result() as $r) :
+				foreach ($list->result() as $r) {
 				
 					$yds_res = $r->yds_responsibility.'%';
 					$supplier_res = $r->supp_responsibility.'%';
@@ -163,7 +163,6 @@
 							$margin = $r->tax.'% NPKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
 						}	
 					}
-					
 					
 					
 					$vlocation .= "<tr><td>Acara</td>
@@ -198,7 +197,7 @@
 						
 						$vlocation .= "<tr><td>Tanggal</td>
 											<td>:</td>
-											<td><b>$rdate</b></td>
+											<td><b>".rtrim($rdate, ", ")."</b></td>
 										<tr>";
 						$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 						
@@ -215,7 +214,7 @@
 						
 						$date_tmp .= "<tr><td>Tanggal</td>
 										<td>:</td>
-										<td><b>$rdate</b></td>
+										<td><b>".rtrim($rdate, ", ")."</b></td>
 									<tr>";
 							
 						
@@ -225,27 +224,28 @@
 					if ($same_location=='0'){
 						$rlocation = $this->Event_model->get_event_location($id, $r->tillcode);
 
-						$vlocation .= "<tr>
-											<td>Tempat Acara</td>
-											<td>:</td>
-											<td>";
+						
 						
 						$i=0;
+						$tmp_loc = "";
 						foreach ($rlocation->result() as $res) :
 							$i++;
 							if ($i%3==0){
-								$vlocation .= "<br>";
+								$tmp_loc .= "<br>";
 							}
-							$vlocation .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
+							$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
 						endforeach;
-						
-						$vlocation .=		"</td>
-										</tr>";	
-						$vlocation .=  "<tr><td colspan='3'><br></td></tr>";				
+
+						$vlocation .= "<tr>
+											<td>Tempat Acara</td>
+											<td>:</td>
+											<td>".rtrim($tmp_loc, ", ")."</td>
+										</tr>
+										<tr><td colspan='3'><br></td></tr>";				
 							
 					}
 
-				endforeach;
+				} //end foreach
 				
 			
 			
@@ -281,7 +281,7 @@
 			
 			$vlocation .= "<tr><td>Tillcode</td>
 								<td>:</td>
-								<td>".$rtillcode."</td>
+								<td>".rtrim($rtillcode, ", ")."</td>
 							</tr>";	
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 			
@@ -294,22 +294,22 @@
 			if ($same_location=='1'){
 				$rlocation = $this->Event_model->get_event_same_location($id);
 
-				$vlocation .= "<tr>
-									<td>Tempat Acara</td>
-									<td>:</td>
-									<td>";
-				
 				$i=0;
+				$tmp_loc = "";
 				foreach ($rlocation->result() as $res) :
 					$i++;
 					if ($i%3==0){
-						$vlocation .= "<br>";
+						$tmp_loc .= "<br>";
 					}
-					$vlocation .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
+					$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
 				endforeach;
 				
-				$vlocation .=		"</td>
-								</tr>";	
+				$vlocation .= "<tr>
+											<td>Tempat Acara</td>
+											<td>:</td>
+											<td>".rtrim($tmp_loc, ", ")."</td>
+										</tr>
+										<tr><td colspan='3'><br></td></tr>";
 					
 			}
 			
@@ -318,12 +318,112 @@
 			
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 			
-			
-			
 			$data['vlocation'] = $vlocation;
-			
+
+
+			$vcalculate = "<table>
+							<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
+								<td>:</td>
+							</tr>";	
 			//calculate disc
+			$list = $this->Event_model->get_calculate($id);
+
+			foreach ($list->result() as $r) {
+
+				$hrg = 100000;
+				$tmp = $hrg*$r->disc1/100;
+				$tmp2 = $tmp-($tmp*$r->disc2/100);
+
+				$sel = $hrg - $tmp2;
+
+				if($r->is_pkp=='1'){
+					$pmargin = $r->tax.'% PKP';
+				} else {
+					$pmargin = $r->tax.'% NPKP';
+				}
+
+				$margin = $hrg*$r->tax/100;
+
+				$sel_margin = $sel - $margin;
+
+				$yds_res = $r->yds_responsibility/100*$hrg;
+
+				$bayar = $sel_margin + $yds_res;
+
+				$nett_magin = round((($margin-$yds_res) / $sel)*100, 2, PHP_ROUND_HALF_UP);
+				
+
+				if ($r->is_sp=='0'){
+					$label1 = $r->disc1;
+					($r->disc2=="0" ? $label2="":$label2="+ ".$r->disc2."%");
+
+					$label = "Disc. ".$label1."% ".$label2;
+
+					$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Harga Jual</td>
+										<td>Rp. </td>
+										<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+									</tr>";	
+					$vcalculate .= "<tr><td>".$label."</td>
+										<td>Rp. </td>
+										<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
+										<td><u> - </u></td>
+									</tr>";	
+					$vcalculate .= "<tr><td>&nbsp;</td>
+										<td>Rp. </td>
+										<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
+										<td>Rp. </td>
+										<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
+										<td><u> - </u></td>
+									</tr>";									
+					$vcalculate .= "<tr><td></td>
+										<td>Rp. </td>
+										<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."</td>
+										<td>Rp. </td>
+										<td align='right'><u>".number_format($yds_res, 0, ",", ".")."</u></td>
+										<td><u> + </u></td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
+										<td>Rp. </td>
+										<td align='right'>".number_format($bayar, 0, ",", ".")."</td>
+									</tr>";		
+					$vcalculate .= "<tr><td><b>Nett margin = $nett_magin %</b></td>
+									</tr>";			
+					$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";
+				} else {
+					$label = "SPECIAL PRICE";
+
+					$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Harga special</td>
+										<td>Rp. </td>
+										<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
+										<td>Rp. </td>
+										<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
+										<td><u> - </u></td>
+									</tr>";	
+					$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
+										<td>Rp. </td>
+										<td align='right'>".number_format($hrg-$margin, 0, ",", ".")."</td>
+									</tr>";									
+
+				}
+				
+
+																
+			}
 			
+			$vcalculate .=  "<tr><td colspan='3'><br><br></td></tr>";
+			$vcalculate .= "</table>";
+			
+			$data['vcalculate'] = $vcalculate;
 			$this->load->view('acara/v_acara', $data);
 			
 		}
