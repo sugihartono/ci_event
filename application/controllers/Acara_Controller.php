@@ -130,7 +130,7 @@
 			$vlocation .= "<tr><td>Tanggal</td>
 								<td>:</td>
 								<td><b>".rtrim($rdate, ", ")."</b></td>
-							<tr>";
+							</tr>";
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 
 			return $vlocation;
@@ -149,7 +149,7 @@
 			$date_tmp .= "<tr><td>Tanggal</td>
 							<td>:</td>
 							<td><b>".rtrim($rdate, ", ")."</b></td>
-						<tr>";
+						</tr>";
 
 			return $date_tmp;
 		}
@@ -368,18 +368,19 @@
 			
 			$vlocation = "";
 
-			// cek location
+			//cek location
 			$same_location = $this->Event_model->is_same_location($id);
 			if ($same_location=='1'){
-				$list = $this->Event_model->get_same_location_content($id);	
+				$list = $this->Event_model->get_same_location_content($id);
 			} else {
 				$list = $this->Event_model->get_diff_location_content($id);
+
 			}
 
 			foreach ($list->result() as $r) {
 				$yds_res = $r->yds_responsibility.'%';
 				$supplier_res = $r->supp_responsibility.'%';
-				
+
 				//hitung net margin
 				$yds_price = $r->yds_responsibility/100*$r->price;
 				
@@ -445,7 +446,7 @@
 			
 			//tempat acara
 			if ($same_location=='1'){
-				$vlocation = $this->get_event_same_location($id);
+				$vlocation .= $this->get_event_same_location($id);
 			}
 			
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";

@@ -79,27 +79,6 @@
 			} */
 		}
 		
-		function get_same_location_content($id){	
-			$sql = "SELECT c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
-					c.event_id, c.tillcode, c.notes, c.tax, c.brutto_margin, c.net_margin,
-					e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp
-					
-					FROM event_item c JOIN event_same_location d ON(d.event_id=c.event_id)
-					JOIN mst_tillcode e ON(c.tillcode=e.tillcode)
-					WHERE c.event_id='$id' 
-					
-					GROUP BY c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
-					c.event_id, c.tillcode, c.notes, c.tax, c.brutto_margin, c.net_margin,
-					e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp";
-					
-			//FROM event b JOIN event_item c ON(b.id=c.event_id)
-			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
-			
-		}
-		
 		function get_event_same_location($id){	
 			$sql = "SELECT loc_desc, b.store_desc 
 					FROM event_same_location a JOIN mst_store b ON(a.store_code=b.store_code) 
@@ -175,6 +154,27 @@
 					ORDER BY a.disc_label ASC
 					";
 					
+			$ambil = $this->db->query($sql);
+			if ($ambil->num_rows() > 0){
+				return $ambil;
+			}
+			
+		}
+		
+		function get_same_location_content($id){	
+			$sql = "SELECT c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
+					c.event_id, c.tillcode, c.notes, c.tax, c.brutto_margin, c.net_margin,
+					e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp
+					
+					FROM event_item c JOIN event_same_location d ON(d.event_id=c.event_id)
+					JOIN mst_tillcode e ON(c.tillcode=e.tillcode)
+					WHERE c.event_id='$id' 
+					
+					GROUP BY c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
+					c.event_id, c.tillcode, c.notes, c.tax, c.brutto_margin, c.net_margin,
+					e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp";
+					
+			//FROM event b JOIN event_item c ON(b.id=c.event_id)
 			$ambil = $this->db->query($sql);
 			if ($ambil->num_rows() > 0){
 				return $ambil;
