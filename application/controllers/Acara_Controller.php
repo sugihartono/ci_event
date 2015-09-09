@@ -78,18 +78,7 @@
 			
 		}
 		
-
-		function preview($id) {
-			$data['trans_active'] = 'dcjq-parent active';
-			$data['menu_daftar_active'] = 'color:#FFF';
-			
-			$data['head'] = 'acara/v_head';
-			$data['top_menu'] = 'template/v_top_menu';
-			$data['left_menu'] = 'template/v_left_menu';
-			$data['content'] = 'acara/v_preview';
-			$data['right_menu'] = 'acara/v_right_menu';
-			$data['footer'] = 'template/v_footer';
-			
+		function get_template($id){
 			$list = $this->Event_model->get_template($id);
 			
 			foreach($list->result() as $r){
@@ -115,143 +104,81 @@
 				
 				$rnotes =  $r->template_notes;
 				
-			} //endforeach
-			
-			$data['rheader'] = $rheader;
-			$data['rfooter'] = $rfooter;
-			$data['rnotes'] = $rnotes;
-			
-			// cek location
-			$same_location = $this->Event_model->is_same_location($id);
-			
+			} 
 
-				$vlocation = "";
+			return array(
+					    'rheader' => $rheader,
+					    'rfooter' => $rfooter,
+					    'rnotes' => $rnotes
+					);
+		}
 
-				if ($same_location=='1'){
-					$list = $this->Event_model->get_same_location_content($id);	
+		function get_event_date($id, $tillcode){
+			//get tanggal by event id n tillcode
+			$date = $this->Event_model->get_event_date($id, $tillcode);
+			
+			$rdate = "";				
+			$vlocation = "";				
+			foreach ($date->result() as $res) :
+				if (($res->date_end==null) || ($res->date_end=="")){
+					$rdate .= $this->to_dMY($res->date_start).', '; 
 				} else {
-					$list = $this->Event_model->get_diff_location_content($id);
+					$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
 				}
-
-				foreach ($list->result() as $r) {
-				
-					$yds_res = $r->yds_responsibility.'%';
-					$supplier_res = $r->supp_responsibility.'%';
-					
-					//hitung net margin
-					
-					$yds_price = $r->yds_responsibility/100*$r->price;
-					
-					$bruto_price = $r->tax/100 * $r->price;
-					
-					$after_disc1 = $r->price-($r->price*$r->disc1/100);
-					$after_disc2 = $after_disc1-($r->price*$r->disc2/100);
-					
-					$net_margin = round(($bruto_price - $yds_price) / $after_disc2*100, 2, PHP_ROUND_HALF_UP);
-					
-					if ($r->is_sp=='1'){
-						if($r->is_pkp=='1'){
-							$margin = $r->tax.'% PKP (netto)';
-						} else {
-							$margin = $r->tax.'% NPKP (netto)';
-						}
-					} 
-					else{
-						if($r->is_pkp=='1'){
-							$margin = $r->tax.'% PKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
-						} else {
-							$margin = $r->tax.'% NPKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
-						}	
-					}
-					
-					
-					$vlocation .= "<tr><td>Acara</td>
-										<td>:</td>
-										<td>".$r->disc_label."</td>
-									<tr>
-									<tr><td>Pertanggungan</td>
-										<td>:</td>
-										<td>YDS $yds_res SUPPLIER $supplier_res</td>
-									<tr>
-									<tr><td>Margin Yogya</td>
-										<td>:</td>
-										<td>$margin</td>
-									<tr>
-									";		
-									
-					//cek same date
-					$same_date = $this->Event_model->is_same_date($id);
-					if ($same_date!='1'){
-						
-						//get tanggal by event id n tillcode
-						$date = $this->Event_model->get_event_date($id, $r->tillcode);
-						
-						$rdate = "";				
-						foreach ($date->result() as $res) :
-							if (($res->date_end==null) || ($res->date_end=="")){
-								$rdate .= $this->to_dMY($res->date_start).', '; 
-							} else {
-								$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
-							}
-						endforeach;
-						
-						$vlocation .= "<tr><td>Tanggal</td>
-											<td>:</td>
-											<td><b>".rtrim($rdate, ", ")."</b></td>
-										<tr>";
-						$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
-						
-					} else {
-
-						//get tanggal by event id
-						$date = $this->Event_model->get_event_same_date($id);
-						
-						$rdate = "";				
-						$date_tmp = "";				
-						foreach ($date->result() as $res) :
-							$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
-						endforeach;
-						
-						$date_tmp .= "<tr><td>Tanggal</td>
-										<td>:</td>
-										<td><b>".rtrim($rdate, ", ")."</b></td>
-									<tr>";
-							
-						
-					}
-					
-					//tempat acara
-					if ($same_location=='0'){
-						$rlocation = $this->Event_model->get_event_location($id, $r->tillcode);
-
-						
-						
-						$i=0;
-						$tmp_loc = "";
-						foreach ($rlocation->result() as $res) :
-							$i++;
-							if ($i%3==0){
-								$tmp_loc .= "<br>";
-							}
-							$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
-						endforeach;
-
-						$vlocation .= "<tr>
-											<td>Tempat Acara</td>
-											<td>:</td>
-											<td>".rtrim($tmp_loc, ", ")."</td>
-										</tr>
-										<tr><td colspan='3'><br></td></tr>";				
-							
-					}
-
-				} //end foreach
-				
+			endforeach;
 			
+			$vlocation .= "<tr><td>Tanggal</td>
+								<td>:</td>
+								<td><b>".rtrim($rdate, ", ")."</b></td>
+							<tr>";
+			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+
+			return $vlocation;
+		}
+
+		function get_event_same_date($id){
+			//get tanggal by event id
+			$date = $this->Event_model->get_event_same_date($id);
 			
+			$rdate = "";				
+			$date_tmp = "";				
+			foreach ($date->result() as $res) :
+				$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
+			endforeach;
 			
-			
-			
+			$date_tmp .= "<tr><td>Tanggal</td>
+							<td>:</td>
+							<td><b>".rtrim($rdate, ", ")."</b></td>
+						<tr>";
+
+			return $date_tmp;
+		}
+
+		function get_event_location($id, $tillcode){
+			$rlocation = $this->Event_model->get_event_location($id, $tillcode);
+
+			$i=0;
+			$tmp_loc = "";
+			$vlocation = "";
+			foreach ($rlocation->result() as $res) :
+				$i++;
+				if ($i%3==0){
+					$tmp_loc .= "<br>";
+				}
+				$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
+			endforeach;
+
+			$vlocation .= "<tr>
+								<td>Tempat Acara</td>
+								<td>:</td>
+								<td>".rtrim($tmp_loc, ", ")."</td>
+							</tr>
+							<tr><td colspan='3'><br></td></tr>";
+			return $vlocation;				
+		}
+
+		function get_supplier($id){
+			$vlocation ="";
 			$supp = $this->Event_model->get_supplier($id);
 			
 			foreach ($supp->result() as $res) :
@@ -263,12 +190,15 @@
 								<td>".$supp_code."</td>
 							</tr>";	
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
-			
-			
-			//get tillcode
+			return $vlocation;
+
+		}
+
+		function get_tillcode($id){
 			$tillcode = $this->Event_model->get_tillcode($id);
 			
 			$rtillcode = "";
+			$vlocation = "";
 			$x = 0;
 			foreach ($tillcode->result() as $res) :
 				$x++;
@@ -284,43 +214,36 @@
 								<td>".rtrim($rtillcode, ", ")."</td>
 							</tr>";	
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
-			
-			
-			
-			//cek date tmp 
-			(isset($date_tmp)? $vlocation .= $date_tmp : "");
-			
-			//tempat acara
-			if ($same_location=='1'){
-				$rlocation = $this->Event_model->get_event_same_location($id);
 
-				$i=0;
-				$tmp_loc = "";
-				foreach ($rlocation->result() as $res) :
-					$i++;
-					if ($i%3==0){
-						$tmp_loc .= "<br>";
-					}
-					$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
-				endforeach;
-				
-				$vlocation .= "<tr>
-											<td>Tempat Acara</td>
-											<td>:</td>
-											<td>".rtrim($tmp_loc, ", ")."</td>
-										</tr>
-										<tr><td colspan='3'><br></td></tr>";
-					
-			}
-			
-			
-			
-			
-			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
-			
-			$data['vlocation'] = $vlocation;
+			return $vlocation;
 
+		}
 
+		function get_event_same_location($id){
+			$rlocation = $this->Event_model->get_event_same_location($id);
+
+			$i=0;
+			$tmp_loc = "";
+			$vlocation = ""; 
+			foreach ($rlocation->result() as $res) :
+				$i++;
+				if ($i%3==0){
+					$tmp_loc .= "<br>";
+				}
+				$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
+			endforeach;
+			
+			$vlocation .= "<tr>
+								<td>Tempat Acara</td>
+								<td>:</td>
+								<td>".rtrim($tmp_loc, ", ")."</td>
+							</tr>
+							<tr><td colspan='3'><br></td></tr>";
+			return $vlocation;
+
+		}
+
+		function get_perhitungan($id){
 			$vcalculate = "<table>
 							<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
 								<td>:</td>
@@ -329,7 +252,6 @@
 			$list = $this->Event_model->get_calculate($id);
 
 			foreach ($list->result() as $r) {
-
 				$hrg = 100000;
 				$tmp = $hrg*$r->disc1/100;
 				$tmp2 = $tmp-($tmp*$r->disc2/100);
@@ -383,7 +305,7 @@
 										<td>Rp. </td>
 										<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
 									</tr>";	
-					$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."</td>
+					$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
 										<td>Rp. </td>
 										<td align='right'><u>".number_format($yds_res, 0, ",", ".")."</u></td>
 										<td><u> + </u></td>
@@ -395,7 +317,8 @@
 					$vcalculate .= "<tr><td><b>Nett margin = $nett_magin %</b></td>
 									</tr>";			
 					$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";
-				} else {
+				} 
+				else {
 					$label = "SPECIAL PRICE";
 
 					$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td>
@@ -422,6 +345,114 @@
 			
 			$vcalculate .=  "<tr><td colspan='3'><br><br></td></tr>";
 			$vcalculate .= "</table>";
+
+			return $vcalculate;
+
+		}
+
+		function preview($id) {
+			$data['trans_active'] = 'dcjq-parent active';
+			$data['menu_daftar_active'] = 'color:#FFF';
+			$data['head'] = 'acara/v_head';
+			$data['top_menu'] = 'template/v_top_menu';
+			$data['left_menu'] = 'template/v_left_menu';
+			$data['content'] = 'acara/v_preview';
+			$data['right_menu'] = 'acara/v_right_menu';
+			$data['footer'] = 'template/v_footer';
+			
+			//get template
+			$template = $this->get_template($id);
+			$data['rheader'] = $template['rheader'];
+			$data['rfooter'] = $template['rfooter'];
+			$data['rnotes'] = $template['rnotes'];
+			
+			$vlocation = "";
+
+			// cek location
+			$same_location = $this->Event_model->is_same_location($id);
+			if ($same_location=='1'){
+				$list = $this->Event_model->get_same_location_content($id);	
+			} else {
+				$list = $this->Event_model->get_diff_location_content($id);
+			}
+
+			foreach ($list->result() as $r) {
+				$yds_res = $r->yds_responsibility.'%';
+				$supplier_res = $r->supp_responsibility.'%';
+				
+				//hitung net margin
+				$yds_price = $r->yds_responsibility/100*$r->price;
+				
+				$bruto_price = $r->tax/100 * $r->price;
+				
+				$after_disc1 = $r->price-($r->price*$r->disc1/100);
+				$after_disc2 = $after_disc1-($r->price*$r->disc2/100);
+				
+				$net_margin = round(($bruto_price - $yds_price) / $after_disc2*100, 2, PHP_ROUND_HALF_UP);
+				
+				if ($r->is_sp=='1'){
+					if($r->is_pkp=='1'){
+						$margin = $r->tax.'% PKP (netto)';
+					} else {
+						$margin = $r->tax.'% NPKP (netto)';
+					}
+				} 
+				else {
+					if($r->is_pkp=='1'){
+						$margin = $r->tax.'% PKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
+					} else {
+						$margin = $r->tax.'% NPKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
+					}	
+				}
+
+				$vlocation .= "<tr><td>Acara</td>
+									<td>:</td>
+									<td>".$r->disc_label."</td>
+								</tr>
+								<tr><td>Pertanggungan</td>
+									<td>:</td>
+									<td>YDS $yds_res SUPPLIER $supplier_res</td>
+								</tr>
+								<tr><td>Margin Yogya</td>
+									<td>:</td>
+									<td>$margin</td>
+								</tr>
+								";		
+								
+				// cek date
+				$same_date = $this->Event_model->is_same_date($id);
+				if ($same_date!='1'){
+					$vlocation .= $this->get_event_date($id, $r->tillcode);					
+				} else {
+					$date_tmp = $this->get_event_same_date($id);
+				}
+
+				//tempat acara
+				if ($same_location=='0'){
+					$vlocation .= $this->get_event_location($id, $r->tillcode);
+				}
+
+			} //end foreach
+				
+			//get supplier
+			$vlocation .= $this->get_supplier($id);
+			
+			//get tillcode
+			$vlocation .= $this->get_tillcode($id);
+			
+			//cek date tmp 
+			(isset($date_tmp)? $vlocation .= $date_tmp : "");
+			
+			//tempat acara
+			if ($same_location=='1'){
+				$vlocation = $this->get_event_same_location($id);
+			}
+			
+			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+			$data['vlocation'] = $vlocation;
+
+			// tampilkan contoh perhitungan 
+			$vcalculate = $this->get_perhitungan($id);
 			
 			$data['vcalculate'] = $vcalculate;
 			$this->load->view('acara/v_acara', $data);
