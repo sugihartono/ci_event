@@ -1,4 +1,22 @@
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/acara.js"></script>
+<style>
+	/* overwrite */
+	.alert {
+	  padding: 10px;
+	}
+	/* end overwrite */
+	.red-star {
+		color: #FF0000;
+	}
+	.help-inline {
+		color: #a94442;
+	}
+</style>
+
+<script type="text/javascript">
+	var arrSupplier = [];
+	var arrStore = [];
+	var arrLocation = [];
+</script>
 
 <section id="main-content">
 	<section class="wrapper"> 
@@ -12,11 +30,16 @@
 			<div style="padding-left:5px;padding-left:5px" class="col-lg-12">
 				<form method="post" class="form-horizontal style-form" name="frmAcaraNext" id="frmAcaraNext" action="<?php echo base_url(); ?>acara/save"  novalidate="novalidate">
 					
+					<div class="alert alert-danger hide">
+						<a class="close" data-dismiss="alert" href="#">&times;</a>
+						<span id="alertMessage">&nbsp;</span>
+					</div>
+					
 					<div style="padding:30px 10px 10px 10px;" class="form-panel">
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Supplier</label>
-							<div class="col-sm-10">
+							<label class="col-sm-2 col-sm-2 control-label">Supplier<span class="red-star"> *</span></label>
+							<div class="col-sm-10 required">
 								<select id="supplierCode" class="form-control" name="supplierCode">
 									<option value="">Pilih supplier..</option>
 									<?php
@@ -24,6 +47,9 @@
 									?>
 										<option value="<?php echo $supplier->supp_code; ?>"><?php echo $supplier->supp_desc . " (" . $supplier->supp_code . ")"; ?></option>
 									<?php
+											echo "<script type='text/javascript'>";
+											echo "arrSupplier['" . $supplier->supp_desc . "'] = '" . $supplier->supp_code . "'";
+											echo "</script>";
 										}
 									?>
 								</select>
@@ -31,8 +57,8 @@
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Kategori</label>
-							<div class="col-sm-10">
+							<label class="col-sm-2 col-sm-2 control-label">Kategori<span class="red-star"> *</span></label>
+							<div class="col-sm-10 required">
 								<select id="categoryCode" class="form-control" name="categoryCode">
 									<option value="">Pilih kategori..</option>
 									<?php
@@ -47,8 +73,8 @@
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Tillcode</label>
-							<div class="col-sm-10">
+							<label class="col-sm-2 col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
+							<div class="col-sm-10 required">
 								<select id="tillcode" class="form-control" name="tillcode">
 									<option value="">Pilih tillcode..</option>
 									<?php
@@ -70,27 +96,27 @@
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Pert. Supplier</label>
-							<div class="col-sm-3">
+							<label class="col-sm-2 col-sm-2 control-label">Pert. Supplier<span class="red-star"> *</span></label>
+							<div class="col-sm-3 required">
 								<input type="text" class="form-control" id="supplierResponsibility" name="supplierResponsibility">
 							</div>
 							
-							<label class="col-sm-1 col-sm-1 control-label-right">Pert. Yogya</label>
-							<div class="col-sm-6 pad-right">
+							<label class="col-sm-1 col-sm-1 control-label-right">Pert. Yogya<span class="red-star"> *</span></label>
+							<div class="col-sm-6 pad-right required">
 								<input type="text" class="form-control" id="ydsResponsibility" name="ydsResponsibility">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Tipe Margin</label>
-							<div class="col-sm-3">
+							<label class="col-sm-2 col-sm-2 control-label">Tipe Margin<span class="red-star"> *</span></label>
+							<div class="col-sm-3 required">
 								<select id="isPkp"  class="form-control">
-									<option value="1">1 (PKP)</option>
-									<option value="0">0 (NPKP)</option>
+									<option value="1">PKP</option>
+									<option value="0">NPKP</option>
 								</select>
 							</div>
-							<label class="col-sm-1 col-sm-1 control-label-right">Margin</label>
-							<div class="col-sm-6 pad-right">
+							<label class="col-sm-1 col-sm-1 control-label-right">Margin<span class="red-star"> *</span></label>
+							<div class="col-sm-6 pad-right required">
 								<input type="text" class="form-control" id="margin" name="margin">
 							</div>
 						</div>
@@ -167,8 +193,11 @@
 									<?php
 										foreach($locations as $location) {
 									?>
-									<option value="<?php echo $location->loc_code; ?>"><?php echo $location->loc_code . " (" . $location->loc_desc . ")"; ?></option>
+									<option value="<?php echo $location->loc_desc; ?>"><?php echo $location->loc_desc; ?></option>
 									<?php
+											echo "<script type='text/javascript'>";
+											echo "arrLocation['" . $location->loc_desc . "'] = '" . $location->loc_code . "'";
+											echo "</script>";
 										}
 									?>
 								</select>
@@ -180,8 +209,11 @@
 									<?php
 										foreach($stores as $store) {
 									?>
-										<option value="<?php echo $store->store_code; ?>"><?php echo $store->store_init . " (" .  $store->store_code . ", " . $store->store_desc . ")"; ?></option>
+										<option value="<?php echo $store->store_desc; ?>"><?php echo $store->store_desc . " (" . $store->store_init . ")"; ?></option>
 									<?php
+											echo "<script type='text/javascript'>";
+											echo "arrStore['" . $store->store_desc . "'] = '" . $store->store_code . "'";
+											echo "</script>";
 										}
 									?>
 								</select>
@@ -277,7 +309,7 @@
 									<i class="fa fa-rotate-left"></i>
 								<?php echo CANCEL_CAPTION; ?></button>
 								
-								<button id="btnSubmit" type="button" class="btn btn-theme02">
+								<button id="btnSubmit" type="submit" class="btn btn-theme02">
 								<i class="fa fa-save"></i> <?php echo SAVE_CAPTION; ?></button> 
 							</div>
 						</div>
@@ -292,7 +324,8 @@
 			
 		</form>   
 		
-		
-		
-		
-	</div></section>	
+	</div></section>
+
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/autoNumeric.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/acara.js"></script>

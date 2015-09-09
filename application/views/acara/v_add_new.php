@@ -1,4 +1,16 @@
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/acara.js"></script>
+<style>
+	/* overwrite */
+	.alert {
+	  padding: 10px;
+	}
+	/* end overwrite */
+	.red-star {
+		color: #FF0000;
+	}
+	.help-inline {
+		color: #a94442;
+	}
+</style>
 
 <section id="main-content">
 	<section class="wrapper"> 
@@ -13,18 +25,24 @@
 		<div class="row mt">
 			<div style="padding-left:5px;padding-left:5px" class="col-lg-12">
 				<form method="post" class="form-horizontal style-form" name="frmAcara" id="frmAcara" action="<?php echo base_url(); ?>acara/add/next" novalidate="novalidate">
+					
+					<div class="alert alert-danger hide">
+						<a class="close" data-dismiss="alert" href="#">&times;</a>
+						<span id="alertMessage">&nbsp;</span>
+					</div>
+					
 					<div style="padding:30px 10px 10px 10px;" class="form-panel">
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Business Unit</label>
-							<div class="col-sm-3">
+							<label class="col-sm-2 col-sm-2 control-label">Unit Bisnis<span class="red-star"> *</span></label>
+							<div class="col-sm-3 required">
 								<select id="department" class="form-control" name="department">
 									<option value="Fashion">Fashion</option>
 									<!--<option value="Supermarket">Supermarket</option>-->
 								</select>
 							</div>
-							<label class="col-sm-1 col-sm-1 control-label">Divisi</label>
-							<div class="col-sm-6 pad-right">
+							<label class="col-sm-1 col-sm-1 control-label-right">Divisi<span class="red-star"> *</span></label>
+							<div class="col-sm-6 pad-right required">
 								<select id="divisionCode" class="form-control" name="divisionCode">
 									<option value="">Pilih divisi..</option>
 									<?php
@@ -44,8 +62,8 @@
 								<input type="text" class="form-control" readonly="" value=" -- auto -- " id="eventNo" name="eventNo" maxlength="26">
 							</div>
 							
-							<label class="col-sm-1 col-sm-1 control-label-right">Tgl. Surat</label>
-							<div class="col-sm-6 pad-right">
+							<label class="col-sm-1 col-sm-1 control-label-right">Tgl. Surat<span class="red-star"> *</span></label>
+							<div class="col-sm-6 pad-right required">
 								<input type="text" class="form-control" id="letterDate" name="letterDate" value="<?php echo $today; ?>"  maxlength="10">
 							</div>
 						</div>
@@ -58,8 +76,8 @@
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Hal.</label>
-							<div class="col-sm-10">
+							<label class="col-sm-2 col-sm-2 control-label">Hal.<span class="red-star"> *</span></label>
+							<div class="col-sm-10 required">
 								<input type="text" class="form-control" id="about" name="about" maxlength="200">
 							</div>
 						</div>
@@ -72,15 +90,15 @@
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Kepada</label>
-							<div class="col-sm-10">
+							<label class="col-sm-2 col-sm-2 control-label">Kepada<span class="red-star"> *</span></label>
+							<div class="col-sm-10 required">
 								<input type="text" class="form-control" id="toward" name="toward" maxlength="60">
 							</div>
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Template</label>
-							<div class="col-sm-3">
+							<label class="col-sm-2 col-sm-2 control-label">Template<span class="red-star"> *</span></label>
+							<div class="col-sm-3 required">
 								<select id="templateCode" class="form-control" name="templateCode">
 									<option value="">Pilih template..</option>
 									<?php
@@ -146,4 +164,7 @@
 			
 		</form>   
 		
-	</div></section>	
+	</div></section>
+	
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/acara.val.js"></script>
