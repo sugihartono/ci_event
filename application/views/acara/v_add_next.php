@@ -135,7 +135,7 @@
 						</div>
 						
 						<section id="unseen">
-							<div class="table-responsive">
+							<div class="add_detail table-responsive">
 								<table class="table table-bordered table-striped table-condensed" id="datatableY">
 									<thead>
 										<tr>
@@ -202,7 +202,7 @@
 						</div>
 						
 						<section id="unseen">
-							<div class="table-responsive">
+							<div class="add_detail table-responsive">
 								<table class="table table-bordered table-striped table-condensed" id="datatableZ">
 									<thead>
 										<tr>
@@ -235,7 +235,7 @@
 						</div>
 						
 						<section id="unseen">
-							<div class="table-responsive">
+							<div class="add_detail table-responsive">
 								<table class="table table-bordered table-striped table-condensed" id="datatableX">
 									<thead>
 										<tr>

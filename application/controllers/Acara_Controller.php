@@ -253,10 +253,7 @@
 
 			foreach ($list->result() as $r) {
 				$hrg = 100000;
-				$tmp = $hrg*$r->disc1/100;
-				$tmp2 = $tmp-($tmp*$r->disc2/100);
-
-				$sel = $hrg - $tmp2;
+				
 
 				if($r->is_pkp=='1'){
 					$pmargin = $r->tax.'% PKP';
@@ -266,15 +263,27 @@
 
 				$margin = $hrg*$r->tax/100;
 
+				//$tmp = $hrg*$r->disc1/100;//100.000*0.2
+				
+
+				$after_disc1 = $hrg-($hrg*$r->disc1/100);
+				$after_disc2 = $after_disc1-($after_disc1*$r->disc2/100);
+
+				$jml_diskon = (1-($after_disc2/$hrg));
+				$yds = $r->yds_responsibility/100*$jml_diskon;
+
+				$tmp2 = $hrg*$jml_diskon;20.000-
+
+				$sel = $hrg - $tmp2;
+
 				$sel_margin = $sel - $margin;
 
-				$yds_res = $r->yds_responsibility/100*$hrg;
+				$yds_res = $yds*$hrg;
 
 				$bayar = $sel_margin + $yds_res;
 
 				$nett_magin = round((($margin-$yds_res) / $sel)*100, 2, PHP_ROUND_HALF_UP);
 				
-
 				if ($r->is_sp=='0'){
 					$label1 = $r->disc1;
 					($r->disc2=="0" ? $label2="":$label2="+ ".$r->disc2."%");
@@ -350,6 +359,8 @@
 
 		}
 
+		
+
 		function preview($id) {
 			$data['trans_active'] = 'dcjq-parent active';
 			$data['menu_daftar_active'] = 'color:#FFF';
@@ -374,21 +385,26 @@
 				$list = $this->Event_model->get_same_location_content($id);
 			} else {
 				$list = $this->Event_model->get_diff_location_content($id);
-
 			}
 
 			foreach ($list->result() as $r) {
-				$yds_res = $r->yds_responsibility.'%';
-				$supplier_res = $r->supp_responsibility.'%';
-
 				//hitung net margin
-				$yds_price = $r->yds_responsibility/100*$r->price;
+				$hrg = 100000;
+
+				$bruto_price = $r->tax/100 * $hrg;
 				
-				$bruto_price = $r->tax/100 * $r->price;
-				
-				$after_disc1 = $r->price-($r->price*$r->disc1/100);
-				$after_disc2 = $after_disc1-($r->price*$r->disc2/100);
-				
+				$after_disc1 = $hrg-($hrg*$r->disc1/100);//100.000-20.000 = 80.000
+				$after_disc2 = $after_disc1-($after_disc1*$r->disc2/100);//80.000-10.000
+
+				$jml_diskon = (1-($after_disc2/$hrg));
+				$yds = $r->yds_responsibility/100*$jml_diskon;
+				$sup = $r->supp_responsibility/100*$jml_diskon;
+
+				$yds_price = $yds*$hrg;//0.08*100.000
+
+				$yds_res = $yds*100;
+				$supplier_res = $sup*100;
+
 				$net_margin = round(($bruto_price - $yds_price) / $after_disc2*100, 2, PHP_ROUND_HALF_UP);
 				
 				if ($r->is_sp=='1'){
@@ -397,28 +413,41 @@
 					} else {
 						$margin = $r->tax.'% NPKP (netto)';
 					}
-				} 
-				else {
-					if($r->is_pkp=='1'){
-						$margin = $r->tax.'% PKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
-					} else {
-						$margin = $r->tax.'% NPKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
-					}	
-				}
 
-				$vlocation .= "<tr><td>Acara</td>
+					$vlocation .= "<tr><td>Acara</td>
 									<td>:</td>
 									<td>".$r->disc_label."</td>
-								</tr>
-								<tr><td>Pertanggungan</td>
-									<td>:</td>
-									<td>YDS $yds_res SUPPLIER $supplier_res</td>
 								</tr>
 								<tr><td>Margin Yogya</td>
 									<td>:</td>
 									<td>$margin</td>
 								</tr>
-								";		
+								";	
+				} 
+				else {
+
+					if($r->is_pkp=='1'){
+						$margin = $r->tax.'% PKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
+					} else {
+						$margin = $r->tax.'% NPKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
+					}	
+
+					$vlocation .= "<tr><td>Acara</td>
+										<td>:</td>
+										<td>".$r->disc_label."</td>
+									</tr>
+									<tr><td>Pertanggungan</td>
+										<td>:</td>
+										<td>YDS $yds_res% SUPPLIER $supplier_res%</td>
+									</tr>
+									<tr><td>Margin Yogya</td>
+										<td>:</td>
+										<td>$margin</td>
+									</tr>
+									";		
+				}
+
+					
 								
 				// cek date
 				$same_date = $this->Event_model->is_same_date($id);

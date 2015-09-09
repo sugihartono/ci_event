@@ -6,6 +6,10 @@
   min-height: 374px;
  }
 
+ .add_detail{
+  min-height: 0px;
+ }
+
 table.dataTable {
   width: 100%;
   margin: 0 auto;
