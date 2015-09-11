@@ -189,7 +189,8 @@ function submitEvent() {
             //$("#imgLoading").removeClass("hide");
         },
         success: function(data) {
-            alert("Input berhasil");
+            //alert("Input berhasil: " + data);
+            location.href=baseUrl+"acara/preview/"+data;
         },
         error: function(xhr, textStatus, errorThrown) {
             //alert("Error: " + errorThrown);

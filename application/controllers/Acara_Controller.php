@@ -564,12 +564,13 @@
 			#$inputs["secondSignature"]
 			#$inputs["cc"]
 			
-			$this->Acara->addNew(
-				$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
-				$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
-				$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
+			$seq = $this->Acara->addNew(
+					$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
+					$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
+					$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 			);
-
+			
+			echo $seq;
 		}
 		
 		public function loadSuppliers() {

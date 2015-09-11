@@ -349,7 +349,8 @@ class Acara extends CI_Model {
                 # end transaction
                 $this->db->trans_complete();
                 
-                return $this->db->trans_status();
+                #return $this->db->trans_status();
+                return $seq;
         }
         
         private function makeDate($v) {
