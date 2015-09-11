@@ -14,13 +14,74 @@ $(function() {
         }
     });
     
+    $('#eventStartDate').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        dateFormat: "dd-mm-yy"
+    });
+    
+    $('#eventEndDate').datepicker({
+        changeMonth: true,
+        changeYear: true,
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        dateFormat: "dd-mm-yy"
+    });
+    
+    autocompleteSuppliers();
+    autocompleteTillcodes(); 
     FormValidation.init();
-    
-    //$("#btnSubmit").click(function() {
-       //submitEvent();
-    //});
-    
+
 });
+
+function autocompleteSuppliers() {
+    var suppliers = loadSuppliers();
+    $("#supplierCode").autocomplete({
+         source: suppliers,
+         minLength: 2
+    });
+}
+
+function loadSuppliers() {
+    var supplierList = "";
+    
+    $.ajax({
+        url: baseUrl+'acara/loadSuppliers',
+        type: "POST",
+        async: false,
+        data: { supp: null}
+    }).done(function(supplier) {
+        supplierList = supplier.split('|');
+    });
+    
+    return supplierList;
+}
+
+function autocompleteTillcodes() {
+    var tillcodes = loadTillcodes();
+    $("#tillcode").autocomplete({
+         source: tillcodes,
+         minLength: 2
+    });
+}
+
+function loadTillcodes() {
+    var division = $("#division").val();
+    var tillcodeList = "";
+    
+    $.ajax({
+        url: baseUrl+'acara/loadTillcodes/'+division,
+        type: "POST",
+        async: false,
+        data: { supp: null}
+    }).done(function(tillcode) {
+        tillcodeList = tillcode.split('|');
+    });
+    
+    return tillcodeList;
+}
 
 function submitEvent() {
     var dateTillcode = "";
@@ -457,7 +518,8 @@ function tillcodeExist(tillcode, supplierCode, supplierResponsibility, ydsRespon
 }
 
 $("#btnAddDate").click(function() {
-    var tillcode = $("#tillcode option:selected").val(); 
+    var tillcode = $("#tillcode").val(); 
+    tillcode = tillcode.substr(0, 8);
     var sameDate = $("#sameDate").prop("checked");
     var eventStartDate = $("#eventStartDate").val();
     var eventEndDate = $("#eventEndDate").val();
@@ -507,7 +569,8 @@ $("#btnAddDate").click(function() {
 });
 
 $("#btnAddLocation").click(function() {
-    var tillcode = $("#tillcode option:selected").val(); 
+    var tillcode = $("#tillcode").val(); 
+    tillcode = tillcode.substr(0, 8);
     var sameLocation = $("#sameLocation").prop("checked");
     var locationCode = $("#locationCode").val();
     var storeCode = $("#storeCode").val();
@@ -547,9 +610,12 @@ $("#btnAddLocation").click(function() {
 });
 
 $("#btnPoolTillcode").click(function() {
-    var tillcode = $("#tillcode option:selected").val(); 
+    var tillcode = $("#tillcode").val(); 
+    tillcode = tillcode.substr(0, 8);
     var notes = $("#notes").val();
-    var supplierCode = $("#supplierCode option:selected").val();
+    var supplierCode = $("#supplierCode").val();
+    supplierCode = supplierCode.slice(-5).substr(0, 4);
+    
     var kindOfResponsibility = $("#kindOfResponsibility option:selected").val();
     if (kindOfResponsibility == "0") {
         var ydsResponsibility = $("#ydsResponsibility").autoNumeric("get");

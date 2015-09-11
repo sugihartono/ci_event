@@ -57,14 +57,10 @@
 				
 				$this->session->set_userdata("acaraHolder", $inputs);
 				
-				#$acaraHolder = $this->session->userdata("acaraHolder");
-				#print_r($acaraHolder);
-				
 				$data['categories'] = $this->Acara->loadCategoryByDivision($inputs["divisionCode"]);
-				$data['tillcodes'] = $this->Acara->loadTillcodeByDivision($inputs["divisionCode"]);
-				$data['suppliers'] = $this->Acara->loadAllSupplier();
 				$data['stores'] = $this->Acara->loadAllStore();
 				$data['locations'] = $this->Acara->loadAllLocation();
+				$data['division'] = $inputs["divisionCode"];
 				$data['today'] = date('d-m-Y');
 				$data['head'] = 'acara/v_head';
 				$data['top_menu'] = 'template/v_top_menu';
@@ -491,7 +487,6 @@
 		
 		
 		public function save() {
-			# fix this later
 			$usr = $this->session->userdata['event_logged_in']['username'];
 			$upd = date("Y-m-d H:i:s");
 			
@@ -575,6 +570,26 @@
 				$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 			);
 
+		}
+		
+		public function loadSuppliers() {
+			$suppliers = $this->Acara->loadAllSupplier();
+			$supp = "";
+			foreach($suppliers as $supplier) {
+				$supp .= $supplier->supp_desc . " (" . $supplier->supp_code . ")|";
+			}
+			$supp = substr($supp, 0, strlen($supp)-1);
+			echo $supp;
+		}
+		
+		public function loadTillcodes($division) {
+			$tillcodes = $this->Acara->loadTillcodeByDivision($division);
+			$till = "";
+			foreach($tillcodes as $tillcode) {
+				$till .= $tillcode->tillcode . " (" . $tillcode->disc_label . ")|";
+			}
+			$till = substr($till, 0, strlen($till)-1);
+			echo $till;
 		}
 		
 	}	

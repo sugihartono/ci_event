@@ -1,4 +1,12 @@
 $(function() {
+        $('#letterDate').datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                dateFormat: "dd-mm-yy"
+        });
+                
         FormValidation.init();
 });
 

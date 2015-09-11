@@ -16,10 +16,6 @@
     <link href="<?php echo base_url(); ?>assets/css/style.css" rel="stylesheet">
     <link href="<?php echo base_url(); ?>assets/css/style-responsive.css" rel="stylesheet">
 
-    <!-- bootstrap datepicker style -->
-    <link rel="stylesheet" media="screen" href="<?php echo base_url(); ?>assets/js/bootstrap-datepicker/css/datepicker.css">
-    <link rel="stylesheet" media="screen" href="<?php echo base_url(); ?>assets/js/bootstrap-datepicker/css/datepicker.fixes.css">
-    
     <script src="<?php echo base_url(); ?>assets/js/chart-master/Chart.js"></script>
     
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -46,28 +42,10 @@
     <script src="<?php echo base_url(); ?>assets/js/sparkline-chart.js"></script>    
     <script src="<?php echo base_url(); ?>assets/js/zabuto_calendar.js"></script>   
     
-    <!-- jquery validate -->
-    <script src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
-    
-    <!-- bootstrap datepicker -->
-    <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    
     <script type="text/javascript">
         var baseUrl = "<?php echo base_url(); ?>"; 
 
         $(function() {
-            
-            $('#letterDate').datepicker({
-                format: 'dd-mm-yyyy'
-            });
-            
-            $('#eventStartDate').datepicker({
-                format: 'dd-mm-yyyy'
-            });
-            
-            $('#eventEndDate').datepicker({
-                format: 'dd-mm-yyyy'
-            });
 			
 			$('#datatable').dataTable({                
                 "order": [[ 0, "desc" ]],

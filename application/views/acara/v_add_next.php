@@ -10,10 +10,14 @@
 	.help-inline {
 		color: #a94442;
 	}
+	.ui-autocomplete-loading {
+		background: white url('<?php echo base_url(); ?>assets/images/ui-anim_basic_16x16.gif') right center no-repeat;
+	}
 </style>
 
+<link href="<?php echo base_url(); ?>assets/css/themes/cupertino/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
+
 <script type="text/javascript">
-	var arrSupplier = [];
 	var arrStore = [];
 	var arrLocation = [];
 </script>
@@ -38,27 +42,16 @@
 					<div style="padding:30px 10px 10px 10px;" class="form-panel">
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Supplier<span class="red-star"> *</span></label>
+							<label class="col-sm-2 control-label">Supplier</label>
 							<div class="col-sm-10 required">
-								<select id="supplierCode" class="form-control" name="supplierCode">
-									<option value="">Pilih supplier..</option>
-									<?php
-										foreach($suppliers as $supplier) {
-									?>
-										<option value="<?php echo $supplier->supp_code; ?>"><?php echo $supplier->supp_desc . " (" . $supplier->supp_code . ")"; ?></option>
-									<?php
-											echo "<script type='text/javascript'>";
-											echo "arrSupplier['" . $supplier->supp_desc . "'] = '" . $supplier->supp_code . "'";
-											echo "</script>";
-										}
-									?>
-								</select>
+								<input type="text" class="form-control" id="supplierCode" name="supplierCode">
 							</div>	
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Kategori<span class="red-star"> *</span></label>
-							<div class="col-sm-10 required">
+							
+							<label class="col-sm-2 control-label">Kategori<span class="red-star"> *</span></label>
+							<div class="col-sm-3 required">
 								<select id="categoryCode" class="form-control" name="categoryCode">
 									<option value="">Pilih kategori..</option>
 									<?php
@@ -69,27 +62,17 @@
 										}
 									?>
 								</select>
-							</div>	
+							</div>
+							
+							<label class="col-sm-1 control-label-right">Tillcode<span class="red-star"> *</span></label>
+							<div class="col-sm-6 pad-right required">
+								<input type="text" class="form-control" id="tillcode" name="tillcode">
+							</div>
+							
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
-							<div class="col-sm-10 required">
-								<select id="tillcode" class="form-control" name="tillcode">
-									<option value="">Pilih tillcode..</option>
-									<?php
-										foreach($tillcodes as $tillcode) {
-									?>
-										<option value="<?php echo $tillcode->tillcode; ?>"><?php echo $tillcode->tillcode . " (" . $tillcode->disc_label . ")"; ?></option>
-									<?php
-										}
-									?>
-								</select>
-							</div>	
-						</div>
-						
-						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Note</label>
+							<label class="col-sm-2 control-label">Note</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" id="notes" name="notes">
 							</div>	
@@ -338,6 +321,8 @@
 		
 	</div></section>
 
+<input type="hidden" id="division" value="<?php echo $division; ?>">
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/autoNumeric.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/acara.js"></script>
