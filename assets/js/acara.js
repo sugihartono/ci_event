@@ -5,6 +5,15 @@ $(function() {
     $("#ydsResponsibility").autoNumeric('init', opts);
     $("#margin").autoNumeric('init', opts);
     
+    $("#kindOfResponsibility").change(function() {
+        if ($(this).val() == "0") {
+            $("#responsibilityHolder").show("slow");
+        }
+        else {
+            $("#responsibilityHolder").hide("slow");
+        }
+    });
+    
     FormValidation.init();
     
     //$("#btnSubmit").click(function() {
@@ -542,15 +551,27 @@ $("#btnPoolTillcode").click(function() {
     var notes = $("#notes").val();
     var supplierCode = $("#supplierCode option:selected").val();
     var kindOfResponsibility = $("#kindOfResponsibility option:selected").val();
-    var ydsResponsibility = kindOfResponsibility.substr(0, 2);
-    var supplierResponsibility = kindOfResponsibility.substr(2, 2);
+    if (kindOfResponsibility == "0") {
+        var ydsResponsibility = $("#ydsResponsibility").autoNumeric("get");
+        var supplierResponsibility = $("#supplierResponsibility").autoNumeric("get");
+    }
+    else {
+        var ydsResponsibility = kindOfResponsibility.substr(0, 2);
+        var supplierResponsibility = kindOfResponsibility.substr(2, 2);    
+    }
     var isPkp = $("#isPkp option:selected").val();
-    var margin = $("#margin").val();
+    var margin = $("#margin").autoNumeric("get");
     
     isPkp = isPkp == "1" ? "PKP" : "NPKP";
     
-    if (tillcode == "" || supplierCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp =="" || margin == "") {
+    if (tillcode == "" || supplierCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
         alert("Silahkan lengkapi isian terlebih dahulu.");
+        return;
+    }
+    
+    var check = new Number(ydsResponsibility) + new Number(supplierResponsibility);
+    if (check != 100) {
+        alert("Jumlah pertanggungan tidak sama dengan 100.");
         return;
     }
     
@@ -609,14 +630,28 @@ var FormValidation = function () {
                                 tillcode: {
                                     required: true
                                 },
-                                /*
                                 supplierResponsibility: {
-                                    required: true
+                                    required: {
+                                        depends: function(element) {
+                                            // Do what you want to test
+                                            if ($("#kindOfResponsibility option:selected").val() == "0")
+                                                return true;
+                                            else
+                                                return false;
+                                        }
+                                    }
                                 },
                                 ydsResponsibility: {
-                                    required: true
+                                    required: {
+                                        depends: function(element) {
+                                            // Do what you want to test
+                                            if ($("#kindOfResponsibility option:selected").val() == "0")
+                                                return true;
+                                            else
+                                                return false;
+                                        }
+                                    }
                                 },
-                                */
                                 kindOfResponsibility: {
                                     required: true
                                 },
@@ -637,14 +672,12 @@ var FormValidation = function () {
                                 tillcode: {
                                     required: "Tillcode harus diisi."
                                 },
-                                /*
                                 supplierResponsibility: {
                                     required: "Pert. supplier harus diisi."
                                 },
                                 ydsResponsibility: {
                                     required: "Pert. yogya harus diisi."
                                 },
-                                */
                                 kindOfResponsibility: {
                                     required: "Jenis pertanggungan harus diisi."
                                 },

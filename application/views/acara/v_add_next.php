@@ -101,6 +101,7 @@
 								<select id="kindOfResponsibility" name="kindOfResponsibility"  class="form-control">
 									<option value="5050">YDS 50% : Supplier 50%</option>
 									<option value="4060">YDS 40% : Supplier 60%</option>
+									<option value="0">Custom</option>
 								</select>
 							</div>
 							
@@ -118,20 +119,19 @@
 							</div>
 							
 						</div>
-						
-						<!--
-						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Pert. Supplier<span class="red-star"> *</span></label>
-							<div class="col-sm-3 required">
-								<input type="text" class="form-control" id="supplierResponsibility" name="supplierResponsibility">
-							</div>
-							
-							<label class="col-sm-1 col-sm-1 control-label-right">Pert. Yogya<span class="red-star"> *</span></label>
-							<div class="col-sm-6 pad-right required">
-								<input type="text" class="form-control" id="ydsResponsibility" name="ydsResponsibility">
+						<div id="responsibilityHolder" style="display: none;">
+							<div class="form-group">
+								<label class="col-sm-2 control-label">Pert. Supplier<span class="red-star"> *</span></label>
+								<div class="col-sm-1 required">
+									<input type="text" class="form-control" id="supplierResponsibility" name="supplierResponsibility">
+								</div>
+								
+								<label class="col-sm-1 control-label-right">Pert. Yogya<span class="red-star"> *</span></label>
+								<div class="col-sm-1 pad-right required">
+									<input type="text" class="form-control" id="ydsResponsibility" name="ydsResponsibility">
+								</div>
 							</div>
 						</div>
-						-->
 						
 						<!--
 						<div class="form-group">
