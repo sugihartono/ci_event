@@ -14,7 +14,7 @@
 	echo "start job at ", date("Y-m-d H:i:s"), EOL;
 	
 	echo "set web service.. ", EOL;
-	$url = $webService . "/ws_load_stores.php?hash=vendit0re";
+	$url = $webService . "/ws_load_categories.php?hash=vendit0re";
 	
 	echo "read content from web service.. ";
 	$json = @file_get_contents($url);
@@ -40,7 +40,7 @@
 			/*
 			echo "emptying table.. ";
 			# -- empty first
-			$sql = "truncate table mst_store";
+			$sql = "truncate table mst_category";
 			$res = pg_query($conn, $sql);
 			echo "ok.", EOL;
 			*/
@@ -53,8 +53,8 @@
 				$lineNumber++;
 				
 				# check exist
-				$aParams = array($row->store_code);
-				$sql = "select count(store_code) cnt from mst_store where store_code = $1";
+				$aParams = array($row->cat_code);
+				$sql = "select count(category_code) cnt from mst_category where category_code = $1";
 				$res2 = pg_query_params($conn, $sql, $aParams);
 				$cnt = 0;
 				if ($row2 = pg_fetch_array($res2)) {
@@ -63,14 +63,14 @@
 				
 				# exist, update
 				if ($cnt) {
-					$aParams = array($row->store_code, $row->store_init, $row->store_desc, $row->address, $row->city, $row->regional_code, 1);
+					$aParams = array($row->cat_code, $row->cat_desc, $row->div_code, 1);
 				
-					# -- UPDATE STORE --
-					$sql = "update mst_store set store_init = $2, store_desc = $3, address = $4, city = $5, regional_code = $6, is_active = $7, created_date = current_timestamp where store_code = $1";
+					# -- UPDATE CATEGORY --
+					$sql = "update mst_category set category_desc = $2, division_code = $3, is_active = $4, created_date = current_timestamp where category_code = $1";
 					$res = pg_query_params($conn, $sql, $aParams);
 					if (!$res) {
-						echo "failed at row ", $lineNumber, ", data: store_code, store_init, store_desc, address, city, regional_code => ";
-						echo $row->store_code, ", ", $row->store_init, ", ", $row->store_desc, ", ", $row->address, ", ", $row->city, ", ", $row->regional_code, EOL;
+						echo "failed at row ", $lineNumber, ", data: category_code, category_desc, division_code => ";
+						echo $row->cat_code, ", ", $row->cat_desc, ", ", $row->div_code, EOL;
 						continue;
 					}
 					else {
@@ -79,14 +79,14 @@
 				}
 				# insert
 				else {
-					$aParams = array($row->store_code, $row->store_init, $row->store_desc, $row->address, $row->city, $row->regional_code, 1);
+					$aParams = array($row->cat_code, $row->cat_desc, $row->div_code, 1);
 				
-					# -- INSERT STORE --
-					$sql = "insert into mst_store (store_code, store_init, store_desc, address, city, regional_code, is_active, created_date) values ($1, $2, $3, $4, $5, $6, $7, current_timestamp)";
+					# -- INSERT CATEGORY --
+					$sql = "insert into mst_category (category_code, category_desc, division_code, is_active, created_date) values ($1, $2, $3, $4, current_timestamp)";
 					$res = pg_query_params($conn, $sql, $aParams);
 					if (!$res) {
-						echo "failed at row ", $lineNumber, ", data: store_code, store_init, store_desc, address, city, regional_code => ";
-						echo $row->store_code, ", ", $row->store_init, ", ", $row->store_desc, ", ", $row->address, ", ", $row->city, ", ", $row->regional_code, EOL;
+						echo "failed at row ", $lineNumber, ", data: category_code, category_desc, division_code => ";
+						echo $row->cat_code, ", ", $row->cat_desc, ", ", $row->div_code, EOL;
 						continue;
 					}
 					else {

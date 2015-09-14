@@ -57,7 +57,7 @@
 									<?php
 										foreach($categories as $category) {
 									?>
-										<option value="<?php echo $category->category_code; ?>"><?php echo $category->category_desc; ?></option>
+										<option value="<?php echo $category->category_code; ?>"><?php echo $category->category_code . " (" . $category->category_desc . ")"; ?></option>
 									<?php
 										}
 									?>

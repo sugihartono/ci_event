@@ -160,6 +160,10 @@ create table mst_division (
 
 alter table mst_division add primary key (division_code);
 
+insert into mst_division (division_code, division_desc, is_active, created_date) values
+('A', 'LADIES', 1, current_timestamp), ('B', 'MENS', 1, current_timestamp), ('C', 'BABY AND KIDS', 1, current_timestamp),
+('D', 'SHOES AND BAGS', 1, current_timestamp), ('E', 'BEAUTY AND ACCESSORIES', 1, current_timestamp);
+
 create table mst_category (
     category_code varchar(6),
     category_desc varchar(60),
@@ -201,6 +205,9 @@ create table mst_location (
 );
 
 alter table mst_location add primary key (loc_code);
+
+insert into mst_location (loc_code, loc_desc, is_active, created_by, created_date) values
+('ATR', 'Atrium', 1, 'system', current_timestamp), ('CTR', 'Counter', 1, 'system', current_timestamp), ('PRM', 'Area Promosi', 1, 'system', current_timestamp);
 
 --alter sequence event_seq owned by event.id;
 alter table event add foreign key(division_code) references mst_division(division_code);
