@@ -39,8 +39,8 @@
 							<label class="col-sm-2 control-label">Unit Bisnis<span class="red-star"> *</span></label>
 							<div class="col-sm-3 required">
 								<select id="department" class="form-control" name="department">
-									<option value="Fashion">Fashion</option>
-									<!--<option value="Supermarket">Supermarket</option>-->
+									<option <?php if (isset($acaraHolder["department"]) && $acaraHolder["department"] == "Fashion") echo "selected='selected'"; ?> value="Fashion">Fashion</option>
+									<!--<option <?php //if (isset($acaraHolder["department"]) && $acaraHolder["department"] == "Supermarket") echo "selected='selected'"; ?> value="Supermarket">Supermarket</option>-->
 								</select>
 							</div>
 							<label class="col-sm-1 control-label-right">Divisi<span class="red-star"> *</span></label>
@@ -49,8 +49,9 @@
 									<option value="">Pilih divisi..</option>
 									<?php
 										foreach($divisions as $division) {
+										  if (isset($acaraHolder["divisionCode"]) && $acaraHolder["divisionCode"] == $division->division_code) $sel = "selected='selected'"; else $sel = "";
 									?>
-										<option value="<?php echo $division->division_code; ?>"><?php echo $division->division_desc; ?></option>
+										<option <?php echo $sel; ?> value="<?php echo $division->division_code; ?>"><?php echo $division->division_desc; ?></option>
 									<?php
 										}
 									?>
@@ -66,35 +67,35 @@
 							
 							<label class="col-sm-1 control-label-right">Tgl. Surat<span class="red-star"> *</span></label>
 							<div class="col-sm-6 pad-right required">
-								<input type="text" class="form-control" id="letterDate" name="letterDate" value="<?php echo $today; ?>"  maxlength="10">
+								<input type="text" class="form-control" id="letterDate" name="letterDate" value="<?php echo (isset($acaraHolder["letterDate"]) ? $acaraHolder["letterDate"] : $today); ?>"  maxlength="10">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Lampiran</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" id="attach" name="attach" maxlength="50">
+								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["attach"]) ? $acaraHolder["attach"] : ""); ?>" id="attach" name="attach" maxlength="50">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Hal.<span class="red-star"> *</span></label>
 							<div class="col-sm-10 required">
-								<input type="text" class="form-control" id="about" name="about" maxlength="200">
+								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["about"]) ? $acaraHolder["about"] : ""); ?>" id="about" name="about" maxlength="200">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Keperluan</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" id="purpose" name="purpose" maxlength="50">
+								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["purpose"]) ? $acaraHolder["purpose"] : ""); ?>" id="purpose" name="purpose" maxlength="50">
 							</div>
 						</div>
 						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Kepada<span class="red-star"> *</span></label>
 							<div class="col-sm-10 required">
-								<input type="text" class="form-control" id="toward" name="toward" maxlength="60">
+								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["toward"]) ? $acaraHolder["toward"] : ""); ?>" id="toward" name="toward" maxlength="60">
 							</div>
 						</div>
 						
@@ -105,8 +106,9 @@
 									<option value="">Pilih template..</option>
 									<?php
 										foreach($templates as $template) {
+										  if (isset($acaraHolder["templateCode"]) && $acaraHolder["templateCode"] == $template->tmpl_code) $sel = "selected='selected'"; else $sel = "";
 									?>
-										<option value="<?php echo $template->tmpl_code; ?>"><?php echo $template->tmpl_name; ?></option>
+										<option <?php echo $sel; ?> value="<?php echo $template->tmpl_code; ?>"><?php echo $template->tmpl_name; ?></option>
 									<?php
 										}
 									?>
@@ -115,7 +117,7 @@
 							
 							<div class="col-sm-6 pad-right">
 								<label class="control-label">
-									<input type="checkbox" id="manualSetting" name="manualSetting"> Setting promo diskon dilakukan oleh cabang
+									<input type="checkbox" id="manualSetting" name="manualSetting" <?php if (isset($acaraHolder["manualSetting"])) echo "checked='checked'"; ?>> Setting promo diskon dilakukan oleh cabang
 								</label>
 							</div>
 						</div>	
@@ -123,7 +125,7 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Notes</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" id="notes" name="notes" maxlength="255">
+								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["notes"]) ? $acaraHolder["notes"] : ""); ?>" id="notes" name="notes" maxlength="255">
 							</div>
 						</div>
 						

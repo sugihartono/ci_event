@@ -23,7 +23,7 @@ class Acara extends CI_Model {
         }
         
         public function loadAllStore($arrayMode = false) {	
-                $sql = "select store_code, store_init, store_desc from mst_store where is_active = 1 order by store_init";
+                $sql = "select store_code, store_init, store_desc from mst_store where is_active = 1 order by store_desc";
                 $query = $this->db->query($sql);
                 
                 if ($arrayMode) 

@@ -36,6 +36,8 @@
 			$data['menu_input_active'] = 'color:#FFF';
 			
 			if ($step == null) {
+			
+				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
 				$data['divisions'] = $this->Division->loadAll();
 				$data['templates'] = $this->Acara->loadAllTemplate();
 				$data['today'] = date('d-m-Y');
