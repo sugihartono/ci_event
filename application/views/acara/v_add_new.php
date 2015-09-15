@@ -115,11 +115,13 @@
 								</select>
 							</div>
 							
+							<!--
 							<div class="col-sm-6 pad-right">
 								<label class="control-label">
-									<input type="checkbox" id="manualSetting" name="manualSetting" <?php if (isset($acaraHolder["manualSetting"])) echo "checked='checked'"; ?>> Setting promo diskon dilakukan oleh cabang
+									<input type="checkbox" id="manualSetting" name="manualSetting" <?php #if (isset($acaraHolder["manualSetting"])) echo "checked='checked'"; ?>> Setting promo diskon dilakukan oleh cabang
 								</label>
 							</div>
+							-->
 						</div>	
 						
 						<div class="form-group">

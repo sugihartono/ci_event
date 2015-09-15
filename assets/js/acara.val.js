@@ -53,16 +53,16 @@ var FormValidation = function () {
                                     required: "Divisi harus diisi."
                                 },
                                 letterDate: {
-                                    required: "Tgl. surat harus diisi"
+                                    required: "Tgl. surat harus diisi."
                                 },
                                 about: {
-                                    required: "Hal harus diisi"
+                                    required: "Hal harus diisi."
                                 },
                                 toward: {
-                                    required: "Kepada harus diisi"
+                                    required: "Kepada harus diisi."
                                 },
                                 templateCode: {
-                                    required: "Template harus diisi"
+                                    required: "Template harus diisi."
                                 }
                         },
     

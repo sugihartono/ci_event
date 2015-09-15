@@ -572,6 +572,9 @@
 					$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 			);
 			
+			# remove acaraHolder from session
+			if ($seq) $this->session->unset_userdata("acaraHolder");
+			
 			echo $seq;
 		}
 		
