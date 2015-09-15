@@ -353,8 +353,28 @@ class Acara extends CI_Model {
                 return $seq;
         }
         
-        private function makeDate($v) {
+        private function makeLetterNumber($div) {
+                #SA.YDS/YG.SB/07/2015
                 
+                switch($div) {
+                        case "A":
+                                $code = "A";
+                                break;
+                        case "B":
+                                $code = "B";
+                                break;
+                        case "C":
+                                $code = "C";
+                                break;
+                        case "D":
+                                $code = "SB";
+                                break;
+                        case "E":
+                                $code = "E";
+                                break;
+                }
+                
+                return "SA.YDS/YG." . $code . "/" . date("m") . "/" . date("Y");
         }
         
 }
