@@ -11,6 +11,7 @@
 				<div class="form-panel" style="padding:30px 10px 10px 10px;">
 					<?php
 						
+						echo "<img src='".base_url()."assets/img/yg_red.png' /><br />";
 						foreach ($list as $r) {
 							echo $r->header;
 							echo $r->footer;

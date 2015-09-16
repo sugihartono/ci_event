@@ -82,13 +82,13 @@
 			foreach($list->result() as $r){
 				//cek header
 				$rheader =  str_replace(
-					array("#TGL_SURAT","#NOMOR_SURAT_ACARA","#LAMPIRAN","#ACARA_DISKON",
-						  "#NAMA_BRAND", "#ABOUT", "#TOWARD", "#NAMA_SUPPLIER",
-						  "#KOTA", "#FAX", "#JML_DISKON", "#NAMA_BRAND"
+					array("#TGL_SURAT","#NOMOR_SURAT_ACARA","#LAMPIRAN",
+						  "#ABOUT", "#TOWARD", "#NAMA_SUPPLIER", "#PURPOSE",
+						  "#KOTA", "#FAX"
 					),
-					array($this->to_dMY($r->letter_date), $r->event_no,$r->attach,$r->about,
-						  $r->brand_desc, $r->purpose, $r->toward, $r->supp_desc,
-						  $r->city, $r->fax, $r->about, $r->brand_desc
+					array($this->to_dMY($r->letter_date), $r->event_no, $r->attach,
+						  $r->about, $r->toward, $r->supp_desc, " &rarr; ".$r->purpose,
+						  $r->city, $r->fax
 					),
 					$r->header
 				);
@@ -242,17 +242,18 @@
 		}
 
 		function get_perhitungan($id){
-			$vcalculate = "<table>
-							<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
-								<td>:</td>
-							</tr>";	
+			$vcalculate = "";
+			$vcalculate_gold = "";
+
 			//calculate disc
 			$list = $this->Event_model->get_calculate($id);
 
+			$x = 0;
+			$y = 0;
 			foreach ($list->result() as $r) {
+				//default sbg contoh harga
 				$hrg = 100000;
 				
-
 				if($r->is_pkp=='1'){
 					$pmargin = $r->tax.'% PKP';
 				} else {
@@ -261,89 +262,211 @@
 
 				$margin = $hrg*$r->tax/100;
 
-				//$tmp = $hrg*$r->disc1/100;//100.000*0.2
-				
+				$after_disc1 = $hrg-($hrg*$r->disc1/100);//harga setelah disc1
+				$after_disc2 = $after_disc1-($after_disc1*$r->disc2/100);//harga setelah disc2 // 72000
+				$cek = 100-($after_disc2/$hrg*100);
 
-				$after_disc1 = $hrg-($hrg*$r->disc1/100);
-				$after_disc2 = $after_disc1-($after_disc1*$r->disc2/100);
+				//cek hanya yg kurang dr 30%
+				if ($cek<=30){
+					if ($y==0){
+						$vcalculate = "<table>
+								<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
+									<td>:</td>
+								</tr>";	
 
-				$jml_diskon = (1-($after_disc2/$hrg));
-				$yds = $r->yds_responsibility/100*$jml_diskon;
+						$vcalculate_gold = "<table><tr><td colspan='3'>&nbsp;</td></tr>";	
+					}
+					
+					$y++;
 
-				$tmp2 = $hrg*$jml_diskon;20.000-
+					$jml_diskon = (1-($after_disc1/$hrg));//1-0.8=0.2
+					$yds = $r->yds_responsibility/100*$jml_diskon;
 
-				$sel = $hrg - $tmp2;
+					$tmp2 = $hrg*$jml_diskon;20.000-
 
-				$sel_margin = $sel - $margin;
+					$sel = $hrg - $tmp2;
 
-				$yds_res = $yds*$hrg;
+					// cek disc 2
+					if ($r->disc2=="0"){
+						$sel_margin = $sel - $margin;
+						$yds2 = 0;
+						$sel2=0;
+					} else {
+						$tambahan = $r->disc2/100*$sel;
+						$sel2 = $sel-$tambahan;
+						$sel_margin = $sel2 - $margin;//jika ada disc +an di kurangin dulu
 
-				$bayar = $sel_margin + $yds_res;
+						$yds2 = $r->yds_responsibility/100*$tambahan;
 
-				$nett_magin = round((($margin-$yds_res) / $sel)*100, 2, PHP_ROUND_HALF_UP);
-				
-				if ($r->is_sp=='0'){
-					$label1 = $r->disc1;
-					($r->disc2=="0" ? $label2="":$label2="+ ".$r->disc2."%");
 
-					$label = "Disc. ".$label1."% ".$label2;
+					}
 
-					$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Harga Jual</td>
-										<td>Rp. </td>
-										<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
-									</tr>";	
-					$vcalculate .= "<tr><td>".$label."</td>
-										<td>Rp. </td>
-										<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
-										<td><u> - </u></td>
-									</tr>";	
-					$vcalculate .= "<tr><td>&nbsp;</td>
-										<td>Rp. </td>
-										<td align='right'>".number_format($sel, 0, ",", ".")."</td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
-										<td>Rp. </td>
-										<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
-										<td><u> - </u></td>
-									</tr>";									
-					$vcalculate .= "<tr><td></td>
-										<td>Rp. </td>
-										<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
-										<td>Rp. </td>
-										<td align='right'><u>".number_format($yds_res, 0, ",", ".")."</u></td>
-										<td><u> + </u></td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
-										<td>Rp. </td>
-										<td align='right'>".number_format($bayar, 0, ",", ".")."</td>
-									</tr>";		
-					$vcalculate .= "<tr><td><b>Nett margin = $nett_magin %</b></td>
-									</tr>";			
-					$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";
-				} 
-				else {
-					$label = "SPECIAL PRICE";
+						
 
-					$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Harga special</td>
-										<td>Rp. </td>
-										<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
-										<td>Rp. </td>
-										<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
-										<td><u> - </u></td>
-									</tr>";	
-					$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
-										<td>Rp. </td>
-										<td align='right'>".number_format($hrg-$margin, 0, ",", ".")."</td>
-									</tr>";									
+					$yds_res = $yds*$hrg;
 
+					$bayar = $sel_margin + $yds_res + $yds2;
+
+					if ($r->disc2=="0"){
+						$nett_margin = round((($margin-($yds_res+$yds2)) / ($sel))*100, 2, PHP_ROUND_HALF_UP);
+					} else {
+						$nett_margin = round((($margin-($yds_res+$yds2)) / ($sel2))*100, 2, PHP_ROUND_HALF_UP);
+					}
+					
+							
+					//echo $sel_margin;	
+					
+					if ($r->is_sp=='0'){
+						$label1 = $r->disc1;
+						($r->disc2=="0" ? $label2="":$label2="+ ".$r->disc2."%");
+
+						$label = "Disc. ".$label1."% ".$label2;
+
+						$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td></tr>";	
+						$vcalculate .= "<tr><td>Harga Jual</td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+										</tr>";	
+						$vcalculate .= "<tr><td>Disc. ".$r->disc1."%</td>
+											<td>Rp. </td>
+											<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
+											<td><u> - </u></td>
+										</tr>";	
+						$vcalculate .= "<tr><td>&nbsp;</td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+										</tr>";	
+
+						////////////////// gold //////////////////////////
+						$vcalculate_gold .= "<tr><td colspan='3'><b><u>".$label." (GOLD)</u></b></td></tr>";	
+						$vcalculate_gold .= "<tr><td>Harga Jual</td>
+												<td>Rp. </td>
+												<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+											</tr>";	
+						$vcalculate_gold .= "<tr><td>Disc. ".$r->disc1."%</td>
+												<td>Rp. </td>
+												<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
+												<td><u> - </u></td>
+											</tr>";	
+						$vcalculate_gold .= "<tr><td>&nbsp;</td>
+												<td>Rp. </td>
+												<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+											</tr>";					
+						
+						if ($r->disc2!="0"){
+							$vcalculate .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
+											<td>Rp. </td>
+											<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
+											<td><u> - </u></td>
+										</tr>";	
+							$vcalculate .= "<tr><td>&nbsp;</td>
+												<td>Rp. </td>
+												<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
+											</tr>";
+
+							$vcalculate_gold .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
+													<td>Rp. </td>
+													<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
+													<td><u> - </u></td>
+												</tr>";	
+							$vcalculate_gold .= "<tr><td>&nbsp;</td>
+													<td>Rp. </td>
+													<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
+												</tr>";
+
+							////////////////////// gold //////////////////
+							$margin_gold = $nett_margin/100*$sel2;	
+							$bayar_gold = $sel2 - $margin_gold;
+
+							$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+													<td>Rp. </td>
+													<td align='right'><u>".number_format($margin_gold, 0, ",", ".")."</u></td>
+													<td><u> - </u></td>
+												</tr>";		
+
+							$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
+													<td>Rp. </td>
+													<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
+												</tr>";		
+
+							for ($i=1;$i<=4;$i++){
+								$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+							}					
+																				
+
+						}	else {
+
+							//gold
+							$margin_gold = $nett_margin/100*$sel;	
+							$bayar_gold = $sel - $margin_gold;
+							
+							$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+														<td>Rp. </td>
+														<td align='right'><u>".number_format($margin_gold, 0, ",", ".")."</u></td>
+														<td><u> - </u></td>
+													</tr>";		
+
+							$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
+													<td>Rp. </td>
+													<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
+												</tr>";	
+							for ($i=1;$i<=4;$i++){
+								$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+							}						
+
+						}
+
+						$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
+											<td>Rp. </td>
+											<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
+											<td><u> - </u></td>
+										</tr>";									
+						$vcalculate .= "<tr><td></td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
+										</tr>";	
+						$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($yds_res, 0, ",", ".")."</td>
+										</tr>";	
+						
+						if ($r->disc2!="0"){
+							$vcalculate .= "<tr><td>Partisipasi Yogya Disc Tamb.</td>
+												<td>Rp. </td>
+												<td align='right'><u>".number_format($yds2, 0, ",", ".")."</u></td>
+												<td><u> + </u></td>
+											</tr>";			
+						}
+
+						$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($bayar, 0, ",", ".")."</td>
+										</tr>";		
+						$vcalculate .= "<tr><td><b>Nett margin = $nett_margin %</b></td></tr>";			
+						$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";
+
+						
+					} 
+					else {
+						$label = "SPECIAL PRICE";
+
+						$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td></tr>";	
+						$vcalculate .= "<tr><td>Harga special</td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+										</tr>";	
+						$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
+											<td>Rp. </td>
+											<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
+											<td><u> - </u></td>
+										</tr>";	
+						$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
+											<td>Rp. </td>
+											<td align='right'>".number_format($hrg-$margin, 0, ",", ".")."</td>
+										</tr>";									
+
+					}
+						
 				}
 				
 
@@ -353,7 +476,14 @@
 			$vcalculate .=  "<tr><td colspan='3'><br><br></td></tr>";
 			$vcalculate .= "</table>";
 
-			return $vcalculate;
+			$vcalculate_gold .=  "<tr><td colspan='3'><br><br></td></tr>";
+			$vcalculate_gold .= "</table>";
+
+			return array(
+					    'vcalculate' => $vcalculate,
+					    'vcalculate_gold' => $vcalculate_gold
+					);
+
 
 		}
 
@@ -405,6 +535,12 @@
 
 				$net_margin = round(($bruto_price - $yds_price) / $after_disc2*100, 2, PHP_ROUND_HALF_UP);
 				
+				if ($r->notes==""){
+					$acara = $r->disc_label;
+				} else {
+					$acara = $r->disc_label." &rarr; ".$r->notes;
+				}
+
 				if ($r->is_sp=='1'){
 					if($r->is_pkp=='1'){
 						$margin = $r->tax.'% PKP (netto)';
@@ -413,14 +549,14 @@
 					}
 
 					$vlocation .= "<tr><td>Acara</td>
-									<td>:</td>
-									<td>".$r->disc_label."</td>
-								</tr>
-								<tr><td>Margin Yogya</td>
-									<td>:</td>
-									<td>$margin</td>
-								</tr>
-								";	
+										<td>:</td>
+										<td>".$acara."</td>
+									</tr>
+									<tr><td>Margin Yogya</td>
+										<td>:</td>
+										<td>$margin</td>
+									</tr>
+									";	
 				} 
 				else {
 
@@ -432,7 +568,7 @@
 
 					$vlocation .= "<tr><td>Acara</td>
 										<td>:</td>
-										<td>".$r->disc_label."</td>
+										<td>".$acara."</td>
 									</tr>
 									<tr><td>Pertanggungan</td>
 										<td>:</td>
@@ -445,7 +581,8 @@
 									";		
 				}
 
-					
+				//get supplier
+				$vlocation .= $this->get_supplier($id);	
 								
 				// cek date
 				$same_date = $this->Event_model->is_same_date($id);
@@ -462,8 +599,7 @@
 
 			} //end foreach
 				
-			//get supplier
-			$vlocation .= $this->get_supplier($id);
+			
 			
 			//get tillcode
 			$vlocation .= $this->get_tillcode($id);
@@ -481,8 +617,9 @@
 
 			// tampilkan contoh perhitungan 
 			$vcalculate = $this->get_perhitungan($id);
-			
-			$data['vcalculate'] = $vcalculate;
+
+			$data['vcalculate'] = $vcalculate['vcalculate'];
+			$data['vcalculate_gold'] = $vcalculate['vcalculate_gold'];
 			$this->load->view('acara/v_acara', $data);
 			
 		}

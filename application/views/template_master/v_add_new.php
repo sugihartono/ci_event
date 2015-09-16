@@ -44,7 +44,7 @@
 							<label class="col-sm-2 col-sm-2 control-label">Header</label>
 							<div class="col-sm-10">
 								<textarea class="form-control" name="txt_header" id="txt_header" rows="18">
-									<img src="<?php echo base_url(); ?>assets/img/yg_red.png" /><br>
+									
 									<p align='left'>Bandung, #TGL_SURAT</p>
 									<p align='left'>
 										<table border='0' style="font-size:13px;" class='head_acara'>
@@ -61,7 +61,7 @@
 											<tr>
 												<td>Hal</td>
 												<td>:</td>
-												<td><b>#ACARA_DISKON #NAMA_BRAND #ABOUT</b></td>
+												<td><b>#ABOUT #PURPOSE</b></td>
 											</tr>
 										</table>
 									</p>
@@ -75,8 +75,8 @@
 									
 									<p align='left'>
 										Dengan hormat,<br>
-										Sehubungan dengan diadakannya acara discount #JML_DISKON #NAMA_BRAND
-										dalam rangka #ABOUT, berikut kami informasikan ketentuan acara tersebut :
+										Sehubungan dengan diadakannya acara #ABOUT
+										dalam rangka #PURPOSE, berikut kami informasikan ketentuan acara tersebut :
 									</p>
 								</textarea>
 								<label id="txt_header-error" for="txt_header" style="color:red"></label>

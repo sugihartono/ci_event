@@ -61,5 +61,20 @@
         });
 
     </script>
-
+    <style type="text/css">
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #section-to-print, #section-to-print * {
+            visibility: visible;
+          }
+          #section-to-print {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+          }
+        }
+    </style>  
+      
   </head>
