@@ -68,7 +68,7 @@
 							
 							<label class="col-sm-1 control-label-right">Tgl. Surat<span class="red-star"> *</span></label>
 							<div class="col-sm-6 pad-right required">
-								<input type="text" class="form-control" id="letterDate" name="letterDate" value="<?php echo (isset($acaraHolder["letterDate"]) ? $acaraHolder["letterDate"] : $today); ?>"  maxlength="10">
+								<input type="text" class="form-control" readonly="" id="letterDate" name="letterDate" value="<?php echo (isset($acaraHolder["letterDate"]) ? $acaraHolder["letterDate"] : $today); ?>"  maxlength="10">
 							</div>
 						</div>
 						

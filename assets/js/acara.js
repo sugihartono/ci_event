@@ -19,7 +19,8 @@ $(function() {
         changeYear: true,
         showOtherMonths: true,
         selectOtherMonths: true,
-        dateFormat: "dd-mm-yy"
+        dateFormat: "dd-mm-yy",
+        minDate: new Date()
     });
     
     $('#eventEndDate').datepicker({
@@ -27,7 +28,8 @@ $(function() {
         changeYear: true,
         showOtherMonths: true,
         selectOtherMonths: true,
-        dateFormat: "dd-mm-yy"
+        dateFormat: "dd-mm-yy",
+        minDate: new Date()
     });
     
     autocompleteSuppliers();
