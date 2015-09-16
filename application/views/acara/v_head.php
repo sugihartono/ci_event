@@ -44,10 +44,11 @@
     
     <script type="text/javascript">
         var baseUrl = "<?php echo base_url(); ?>"; 
-
+		var oTable;
+		
         $(function() {
 			
-			$('#datatable').dataTable({                
+			oTable = $('#datatable').dataTable({                
                 "order": [[ 0, "desc" ]],
 				"columnDefs": [
 					{
@@ -59,7 +60,7 @@
             });	
 
         });
-
+		
     </script>
     <style type="text/css">
         @media print {

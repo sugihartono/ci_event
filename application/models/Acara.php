@@ -84,6 +84,60 @@ class Acara extends CI_Model {
                         return $query->result();
         }
         
+        public function load($id, $arrayMode = false) {
+                $aResult = array();
+                $params = array($id);
+                
+                $sql = "select tillcode, to_char(date_start, 'dd-mm-yyyy') date_start, to_char(date_end, 'dd-mm-yyyy') date_end from event_date where event_id = ? order by date_start";
+                $query = $this->db->query($sql, $params);
+                if ($arrayMode) 
+                        $aResult["event_date"] = $query->result_array();
+                else
+                        $aResult["event_date"] = $query->result();
+                
+                $sql = "select x.tillcode, x.store_code, y.store_desc, x.location_code, z.loc_desc from event_location x inner join mst_store y on y.store_code = x.store_code " .
+                        "inner join mst_location z on z.loc_code = x.location_code " .
+                        "where x.event_id = ? order by x.store_code";
+                $query = $this->db->query($sql, $params);
+                if ($arrayMode) 
+                        $aResult["event_location"] = $query->result_array();
+                else
+                        $aResult["event_location"] = $query->result();
+                
+                $sql = "select to_char(date_start, 'dd-mm-yyyy') date_start, to_char(date_end, 'dd-mm-yyyy') date_end from event_same_date where event_id = ? order by date_start";
+                $query = $this->db->query($sql, $params);
+                if ($arrayMode) 
+                        $aResult["event_same_date"] = $query->result_array();
+                else
+                        $aResult["event_same_date"] = $query->result();
+                
+                $sql = "select x.store_code, y.store_desc, x.location_code, z.loc_desc from event_same_location x inner join mst_store y on y.store_code = x.store_code " .
+                        "inner join mst_location z on z.loc_code = x.location_code " .
+                        "where x.event_id = ? order by x.store_code";
+                $query = $this->db->query($sql, $params);
+                if ($arrayMode) 
+                        $aResult["event_same_location"] = $query->result_array();
+                else
+                        $aResult["event_same_location"] = $query->result();
+                
+                $sql = "select tillcode, category_code, notes, supp_code, yds_responsibility, supp_responsibility, is_pkp, tax, same_location, same_date from event_item where event_id = ?";
+                $query = $this->db->query($sql, $params);
+                if ($arrayMode) 
+                        $aResult["event_item"] = $query->result_array();
+                else
+                        $aResult["event_item"] = $query->result();
+                
+                $sql = "select event_no, about, purpose, attach, toward, department, division_code, source, template_code, first_signature, second_signature, 
+                        approved_by, approved_date, notes, cc, is_manual_setting, to_char(letter_date, 'dd-mm-yyyy') letter_date from event where id = ?";
+                $query = $this->db->query($sql, $params);
+                if ($arrayMode) 
+                        $aResult["event"] = $query->result_array();
+                else
+                        $aResult["event"] = $query->result();
+                
+                return $aResult;
+        }
+        
         public function remove($id) {
                 # start transaction
                 $this->db->trans_start();
@@ -128,8 +182,8 @@ class Acara extends CI_Model {
                 $this->db->query($sql, $params); 
                 
                 # event
-                $params = array($id, $eventNo, $about, $purpose, $attach, $toward, $department, $divisionCode, $source, $templateCode, $firstSignature, $secondSignature,
-                                $notes, $cc, $isManualSetting, $letterDate, $usr, $upd);
+                $params = array($eventNo, $about, $purpose, $attach, $toward, $department, $divisionCode, $source, $templateCode, $firstSignature, $secondSignature,
+                                $notes, $cc, $isManualSetting, $letterDate, $usr, $upd, $id);
                 
                 $sql = "update event set event_no = ?, about = ?, purpose = ?, attach = ?, toward = ?, department = ?, division_code = ?, source = ?, template_code = ?, " .
                                 "first_signature = ?, second_signature = ?, notes = ?, cc = ?, is_manual_setting = ?, letter_date = to_date(?, 'dd-mm-yyyy'), updated_by = ?, updated_date = ? " .
@@ -226,44 +280,37 @@ class Acara extends CI_Model {
                                 $sql = "select nextval('letter_no_a_seq') seq";
                                 $query = $this->db->query($sql);
                                 if ($row = $query->row()) {
-                                        $seqLetterNumber = $row->seq;        
+                                        $seqLetterNumber = $this->makeLetterNumber($row->seq, $divisionCode); 
                                 }
                                 break;
                         case "B":
                                 $sql = "select nextval('letter_no_b_seq') seq";
                                 $query = $this->db->query($sql);
                                 if ($row = $query->row()) {
-                                        $seqLetterNumber = $row->seq;        
+                                        $seqLetterNumber = $this->makeLetterNumber($row->seq, $divisionCode);    
                                 }
                                 break;
                         case "C":
                                 $sql = "select nextval('letter_no_c_seq') seq";
                                 $query = $this->db->query($sql);
                                 if ($row = $query->row()) {
-                                        $seqLetterNumber = $row->seq;        
+                                        $seqLetterNumber = $this->makeLetterNumber($row->seq, $divisionCode);      
                                 }
                                 break;
                         case "D":
                                 $sql = "select nextval('letter_no_d_seq') seq";
                                 $query = $this->db->query($sql);
                                 if ($row = $query->row()) {
-                                        $seqLetterNumber = $row->seq;        
+                                        $seqLetterNumber = $this->makeLetterNumber($row->seq, $divisionCode);     
                                 }
                                 break;
                         case "E":
                                 $sql = "select nextval('letter_no_e_seq') seq";
                                 $query = $this->db->query($sql);
                                 if ($row = $query->row()) {
-                                        $seqLetterNumber = $row->seq;        
+                                        $seqLetterNumber = $this->makeLetterNumber($row->seq, $divisionCode);     
                                 }
-                                break;
-                        default: // shoes n bags
-                                $sql = "select nextval('letter_no_d_seq') seq";
-                                $query = $this->db->query($sql);
-                                if ($row = $query->row()) {
-                                        $seqLetterNumber = $row->seq;        
-                                }
-                                
+                                break;        
                 }
                 $eventNo = $seqLetterNumber; # fix this later
                 
@@ -353,10 +400,11 @@ class Acara extends CI_Model {
                 return $seq;
         }
         
-        private function makeLetterNumber($div) {
-                #SA.YDS/YG.SB/07/2015
+        private function makeLetterNumber($num, $div) {
+                #9999/SA.YDS/YG.SB/07/2015
                 
-                switch($div) {
+                $code = "";
+                switch(strtoupper($div)) {
                         case "A":
                                 $code = "A";
                                 break;
@@ -374,7 +422,7 @@ class Acara extends CI_Model {
                                 break;
                 }
                 
-                return "SA.YDS/YG." . $code . "/" . date("m") . "/" . date("Y");
+                return str_pad($num, 4, "0", STR_PAD_LEFT) . "/SA.YDS/YG." . $code . "/" . date("m") . "/" . date("Y");
         }
         
 }

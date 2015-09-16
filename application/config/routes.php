@@ -89,9 +89,10 @@ $route['acara/list'] = 'Acara_Controller/all_list';
 $route['acara/add'] = 'Acara_Controller/add';
 $route['acara/add/next'] = 'Acara_Controller/add/next';
 $route['acara/save'] = 'Acara_Controller/save';
+$route['acara/save/(:num)'] = 'Acara_Controller/save/$1';
 $route['acara/loadSuppliers'] = 'Acara_Controller/loadSuppliers';
 $route['acara/loadTillcodes/(:any)'] = 'Acara_Controller/loadTillcodes/$1';
 $route['acara/preview/(:any)'] = 'Acara_Controller/preview/$1';
-
-
-
+$route['acara/edit/(:num)'] = 'Acara_Controller/edit/$1';
+$route['acara/edit/(:num)/next'] = 'Acara_Controller/edit/$1/next';
+$route['acara/delete'] = 'Acara_Controller/delete';

@@ -27,7 +27,7 @@
 								<tbody>
 									<?php 
 										
-										foreach ($list as $r) :
+										foreach ((array)$list as $r) :	
 											
 									?>
 										<tr>
@@ -37,10 +37,10 @@
 											<td><?php echo $r->about; ?></td>
 											<td><?php echo $r->created_date; ?></td>
 											<td>
-												<a href="#" class='btn_update btn btn-xs' title="update">
+												<a href="<?php echo base_url(); ?>acara/edit/<?php echo $r->id; ?>" class='btn_update btn btn-xs' title="edit">
 													<i class='fa fa-pencil'></i> 
 												</a>&nbsp;
-												<a href="#" class='btn_update btn btn-xs' title="delete">
+												<a href='#deleteConfirm' data-id='<?php echo $r->id; ?>' data-letter_number='<?php echo $r->event_no; ?>' data-toggle='modal' class='btn_update btn btn-xs deleteTrigger' title="delete">
 													<i class='fa fa-trash-o'></i> 
 												</a>&nbsp;
 												<a href="<?php echo base_url(); ?>acara/preview/<?php echo $r->id; ?>" class='btn_update btn btn-xs' title="preview">
@@ -64,7 +64,28 @@
 		<!--	  	</div> /row -->
 										
 										
+<!-- delete confirmation -->
+<div id="deleteConfirm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlertLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="myModalDeleteConfirmLabel" class="modal-title">Konfirmasi Penghapusan</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    Surat dengan nomor <span id="letterNumber" style="font-weight: bold;"></span> akan dihapus.
+                    <br>Lanjutkan?
+                </p>
+                <p><input type="hidden" name="idToDelete" id="idToDelete" value="">&nbsp;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default confirmOk">&nbsp; Yes &nbsp;</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">&nbsp; No &nbsp;</button>
+            </div>
+        </div>
+    </div>
+</div>
 										
-										
-										
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/acara.list.js"></script>							
 																				

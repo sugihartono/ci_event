@@ -33,6 +33,10 @@ $(function() {
     autocompleteSuppliers();
     autocompleteTillcodes(); 
     FormValidation.init();
+    
+    addDeleteRowEvent("datatableY");
+    addDeleteRowEvent("datatableZ");
+    addDeleteRowEvent("datatableX");
 
 });
 
@@ -83,7 +87,7 @@ function loadTillcodes() {
     return tillcodeList;
 }
 
-function submitEvent() {
+function submitEvent(todo) {
     var dateTillcode = "";
     var dateEventStartDate = "";
     var dateEventEndDate = "";
@@ -100,6 +104,7 @@ function submitEvent() {
     var eventMargin = "";
     var eventNotes = "";
     
+    var id = $("#id").val(); // for edit
     var sameDate = $("#sameDate").prop("checked") ? 1 : 0;
     var sameLocation = $("#sameLocation").prop("checked") ? 1 : 0;
     
@@ -181,9 +186,14 @@ function submitEvent() {
                     "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp + "&eventMargin=" + eventMargin + "&eventNotes=" + eventNotes +
                     "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
     
+    var sUrl = baseUrl+"acara/save";
+    if (todo == "edit") {
+        sUrl = baseUrl+"acara/save/"+id;
+    }
+    
     $.ajax({
         type: "POST",
-        url: baseUrl+"acara/save",
+        url: sUrl,
         data: dataString,
         beforeSend: function() {
             //$("#imgLoading").removeClass("hide");
@@ -677,7 +687,8 @@ var FormValidation = function () {
         var handleValidation1 = function() {
                 // for more info visit the official plugin documentation: 
                 // http://docs.jquery.com/Plugins/Validation
-
+                
+                var todo = $("#todo").val();
                 var form1 = $('#frmAcaraNext');
                 var error1 = $('.alert-danger', form1);
                 var success1 = $('.alert-success', form1);
@@ -688,72 +699,10 @@ var FormValidation = function () {
                         focusInvalid: false, // do not focus the last invalid input
                         ignore: "",
                         rules: {
-                                supplierCode: {
-                                    required: true
-                                },
-                                categoryCode: {
-                                    required: true
-                                },
-                                tillcode: {
-                                    required: true
-                                },
-                                supplierResponsibility: {
-                                    required: {
-                                        depends: function(element) {
-                                            // Do what you want to test
-                                            if ($("#kindOfResponsibility option:selected").val() == "0")
-                                                return true;
-                                            else
-                                                return false;
-                                        }
-                                    }
-                                },
-                                ydsResponsibility: {
-                                    required: {
-                                        depends: function(element) {
-                                            // Do what you want to test
-                                            if ($("#kindOfResponsibility option:selected").val() == "0")
-                                                return true;
-                                            else
-                                                return false;
-                                        }
-                                    }
-                                },
-                                kindOfResponsibility: {
-                                    required: true
-                                },
-                                isPkp: {
-                                    required: true
-                                },
-                                margin: {
-                                    required: true
-                                }
+                                
                         },
                         messages: {
-                                supplierCode: {
-                                    required: "Supplier harus diisi."
-                                },
-                                categoryCode: {
-                                    required: "Kategori harus diisi."
-                                },
-                                tillcode: {
-                                    required: "Tillcode harus diisi."
-                                },
-                                supplierResponsibility: {
-                                    required: "Pert. supplier harus diisi."
-                                },
-                                ydsResponsibility: {
-                                    required: "Pert. yogya harus diisi."
-                                },
-                                kindOfResponsibility: {
-                                    required: "Jenis pertanggungan harus diisi."
-                                },
-                                isPkp: {
-                                    required: "Tipe margin harus diisi."
-                                },
-                                margin: {
-                                    required: "Margin harus diisi."
-                                }
+                            
                         },
     
                         invalidHandler: function (event, validator) { //display error alert on form submit              
@@ -788,7 +737,7 @@ var FormValidation = function () {
                                 }
                                 else {
                                     //alert("aye");
-                                    submitEvent();
+                                    submitEvent(todo);
                                 }
                         }
                     
