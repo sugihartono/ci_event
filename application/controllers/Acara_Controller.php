@@ -124,6 +124,7 @@
 					$tillcodeRows .= 	"<tr>" . 
 											"<td class='eventTillcode'>" . $eItem->tillcode . "</td>" .
 											"<td class='eventSupplierCode'>" . $eItem->supp_code . "</td>" .
+											"<td class='eventCategoryCode'>" . $eItem->category_desc . "</td>" .
 											"<td class='eventSupplierResponsibility'>" . $eItem->supp_responsibility . "</td>" .
 											"<td class='eventYdsResponsibility'>" . $eItem->yds_responsibility . "</td>" .
 											"<td class='eventIsPkp'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" . 
@@ -797,6 +798,7 @@
 			# event
 			$eventTillcode = $inputDetails["eventTillcode"];
 			$eventSupplierCode = $inputDetails["eventSupplierCode"];
+			$eventCategoryCode = $inputDetails["eventCategoryCode"];
 			$eventSupplierResponsibility = $inputDetails["eventSupplierResponsibility"];
 			$eventYdsResponsibility = $inputDetails["eventYdsResponsibility"];
 			$eventIsPkp = $inputDetails["eventIsPkp"];
@@ -805,6 +807,7 @@
 			
 			$eventTillcodeArr = explode("#", $eventTillcode);
 			$eventSupplierCodeArr = explode("#", $eventSupplierCode);
+			$eventCategoryCodeArr = explode("#", $eventCategoryCode);
 			$eventSupplierResponsibilityArr = explode("#", $eventSupplierResponsibility);
 			$eventYdsResponsibilityArr = explode("#", $eventYdsResponsibility);
 			$eventIsPkpArr = explode("#", $eventIsPkp);
@@ -815,6 +818,7 @@
 			for ($i = 0; $i < sizeof($eventTillcodeArr); $i++) {
 				$detailEvent[$i]["tillcode"] = $eventTillcodeArr[$i];
 				$detailEvent[$i]["suppCode"] = $eventSupplierCodeArr[$i];
+				$detailEvent[$i]["categoryCode"] = $eventCategoryCodeArr[$i];
 				$detailEvent[$i]["ydsResponsibility"] = $eventYdsResponsibilityArr[$i];
 				$detailEvent[$i]["suppResponsibility"] = $eventSupplierResponsibilityArr[$i];
 				$detailEvent[$i]["isPkp"] = $eventIsPkpArr[$i];

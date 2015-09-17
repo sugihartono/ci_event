@@ -20,6 +20,7 @@
 <script type="text/javascript">
 	var arrStore = [];
 	var arrLocation = [];
+	var arrCategory = [];
 </script>
 
 <section id="main-content">
@@ -59,6 +60,9 @@
 									?>
 										<option value="<?php echo $category->category_code; ?>"><?php echo $category->category_code . " (" . $category->category_desc . ")"; ?></option>
 									<?php
+										  echo "<script type='text/javascript'>";
+										  echo "arrCategory[\"" . $category->category_desc . "\"] = \"" . $category->category_code . "\"";
+										  echo "</script>";
 										}
 									?>
 								</select>

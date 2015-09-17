@@ -20,6 +20,7 @@
 <script type="text/javascript">
 	var arrStore = [];
 	var arrLocation = [];
+	var arrCategory = [];
 </script>
 
 <section id="main-content">
@@ -57,8 +58,11 @@
 									<?php
 										foreach($categories as $category) {
 									?>
-										<option value="<?php echo $category->category_code; ?>"><?php echo $category->category_code . " (" . $category->category_desc . ")"; ?></option>
+										<option value="<?php echo $category->category_desc; ?>"><?php echo $category->category_desc; ?></option>
 									<?php
+										  echo "<script type='text/javascript'>";
+										  echo "arrCategory[\"" . $category->category_desc . "\"] = \"" . $category->category_code . "\"";
+										  echo "</script>";
 										}
 									?>
 								</select>
@@ -84,6 +88,7 @@
 								<select id="kindOfResponsibility" name="kindOfResponsibility"  class="form-control">
 									<option value="5050">YDS 50% : Supplier 50%</option>
 									<option value="4060">YDS 40% : Supplier 60%</option>
+									<option value="-1">Tanpa Pertanggungan</option>
 									<option value="0">Custom</option>
 								</select>
 							</div>
@@ -191,7 +196,7 @@
 									<option value="<?php echo $location->loc_desc; ?>"><?php echo $location->loc_desc; ?></option>
 									<?php
 											echo "<script type='text/javascript'>";
-											echo "arrLocation['" . $location->loc_desc . "'] = '" . $location->loc_code . "'";
+											echo "arrLocation[\"" . $location->loc_desc . "\"] = \"" . $location->loc_code . "\"";
 											echo "</script>";
 										}
 									?>
@@ -207,7 +212,7 @@
 										<option value="<?php echo $store->store_desc; ?>"><?php echo $store->store_desc . " (" . $store->store_init . ")"; ?></option>
 									<?php
 											echo "<script type='text/javascript'>";
-											echo "arrStore['" . $store->store_desc . "'] = '" . $store->store_code . "'";
+											echo "arrStore[\"" . $store->store_desc . "\"] = \"" . $store->store_code . "\"";
 											echo "</script>";
 										}
 									?>
@@ -268,6 +273,7 @@
 										<tr>
 											<th>Tillcode</th>
 											<th>Supplier</th>
+											<th>Kategori</th>
 											<th>Pert. Supp</th>
 											<th>Pert. Yogya</th>
 											<th>Tipe Margin</th>
@@ -278,6 +284,7 @@
 									</thead>
 									<tbody>
 											<tr id="dummyRowX">
+												<td>&nbsp;</td>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>

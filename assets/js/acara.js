@@ -100,6 +100,7 @@ function submitEvent(todo) {
     
     var eventTillcode = "";
     var eventSupplierCode = "";
+    var eventCategoryCode = "";
     var eventSupplierResponsibility = "";
     var eventYdsResponsibility = "";
     var eventIsPkp = "";
@@ -156,6 +157,12 @@ function submitEvent(todo) {
     });
     eventSupplierCode = eventSupplierCode.substr(0, eventSupplierCode.length-1);
     
+    $("#datatableX .eventCategoryCode").each(function() {
+        cat = arrCategory[$(this).html()];
+        eventCategoryCode += cat + "#";
+    });
+    eventCategoryCode = eventCategoryCode.substr(0, eventCategoryCode.length-1);
+    
     $("#datatableX .eventSupplierResponsibility").each(function() {
         eventSupplierResponsibility += $(this).html() + "#";
     });
@@ -184,9 +191,9 @@ function submitEvent(todo) {
     
     var dataString = "dateTillcode=" + dateTillcode + "&dateEventStartDate=" + dateEventStartDate + "&dateEventEndDate=" + dateEventEndDate +
                     "&locationTillcode=" + locationTillcode + "&locationLocationCode=" + locationLocationCode + "&locationStoreCode=" + locationStoreCode +
-                    "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventSupplierResponsibility=" + eventSupplierResponsibility +
-                    "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp + "&eventMargin=" + eventMargin + "&eventNotes=" + eventNotes +
-                    "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
+                    "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventCategoryCode=" + eventCategoryCode +
+                    "&eventSupplierResponsibility=" + eventSupplierResponsibility + "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp +
+                    "&eventMargin=" + eventMargin + "&eventNotes=" + eventNotes + "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
     
     var sUrl = baseUrl+"acara/save";
     if (todo == "edit") {
@@ -239,7 +246,8 @@ function resetDetailTables() {
     $("#datatableZ tr:gt(0)").remove();
     $("#datatableZ > tbody:last").append(row);
     
-    var row =   "<tr id='dummyRowX'>" + 
+    var row =   "<tr id='dummyRowX'>" +
+                    "<td>&nbsp;</td>" +
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
@@ -283,6 +291,7 @@ function addDeleteRowEvent(id) {
             }
             else if (id == "datatableX") {
                 var row =   "<tr id='dummyRowX'>" + 
+                                "<td>&nbsp;</td>" +
                                 "<td>&nbsp;</td>" + 
                                 "<td>&nbsp;</td>" + 
                                 "<td>&nbsp;</td>" + 
@@ -338,7 +347,7 @@ function emptyTillcodes() {
     
     $("#datatableX > tbody  > tr").each(function() { 
         $("td", this).each(function (index) {
-            if (index < 7) {
+            if (index < 8) {
                 check += $(this).html().replace("&nbsp;", "");
             }
         });
@@ -516,16 +525,16 @@ function isValidDateRange(startDate, endDate) {
     return true;
 }
 
-function tillcodeExist(tillcode, supplierCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes) {
+function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes) {
     var check = "";
     var ret = false;
-    var row = tillcode + supplierCode + supplierResponsibility + ydsResponsibility + isPkp + margin + notes;
+    var row = tillcode + supplierCode + categoryCode + supplierResponsibility + ydsResponsibility + isPkp + margin + notes;
     
     $("#datatableX > tbody  > tr").each(function() {
     
         check = "";    
         $("td", this).each(function (index) {
-            if (index < 7) {
+            if (index < 8) {
                 check += $(this).html().trim();
             }
         });
@@ -644,11 +653,16 @@ $("#btnPoolTillcode").click(function() {
     var notes = $("#notes").val();
     var supplierCode = $("#supplierCode").val();
     supplierCode = supplierCode.slice(-5).substr(0, 4);
+    var categoryCode = $("#categoryCode option:selected").val();
     
     var kindOfResponsibility = $("#kindOfResponsibility option:selected").val();
     if (kindOfResponsibility == "0") {
         var ydsResponsibility = $("#ydsResponsibility").autoNumeric("get");
         var supplierResponsibility = $("#supplierResponsibility").autoNumeric("get");
+    }
+    else if (kindOfResponsibility == "-1") {
+        var ydsResponsibility = "0";
+        var supplierResponsibility = "0";
     }
     else {
         var ydsResponsibility = kindOfResponsibility.substr(0, 2);
@@ -659,21 +673,22 @@ $("#btnPoolTillcode").click(function() {
     
     isPkp = isPkp == "1" ? "PKP" : "NPKP";
     
-    if (tillcode == "" || supplierCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
+    if (tillcode == "" || supplierCode == "" || categoryCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
         alert("Silahkan lengkapi isian terlebih dahulu.");
         return;
     }
     
     var check = new Number(ydsResponsibility) + new Number(supplierResponsibility);
-    if (check != 100) {
+    if (kindOfResponsibility != "-1" && check != 100) {
         alert("Jumlah pertanggungan tidak sama dengan 100.");
         return;
     }
     
-    if (!tillcodeExist(tillcode, supplierCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes)) {
+    if (!tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes)) {
         var row =   "<tr>" + 
                         "<td class='eventTillcode'>" + tillcode + "</td>" +
                         "<td class='eventSupplierCode'>" + supplierCode + "</td>" +
+                        "<td class='eventCategoryCode'>" + categoryCode + "</td>" +
                         "<td class='eventSupplierResponsibility'>" + supplierResponsibility + "</td>" +
                         "<td class='eventYdsResponsibility'>" + ydsResponsibility + "</td>" +
                         "<td class='eventIsPkp'>" + isPkp + "</td>" + 
@@ -693,6 +708,7 @@ $("#btnPoolTillcode").click(function() {
         $("#datatableX > tbody:last").append(row);
         
         addDeleteRowEvent("datatableX");
+        $("#tillcode").val("");
         //$(this).closest("#frmAcaraNext").find("input[type=text], select").val("");
     }
     else {
