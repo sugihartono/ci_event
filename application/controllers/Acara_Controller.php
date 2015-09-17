@@ -127,8 +127,9 @@
 											"<td class='eventCategoryCode'>" . $eItem->category_desc . "</td>" .
 											"<td class='eventSupplierResponsibility'>" . $eItem->supp_responsibility . "</td>" .
 											"<td class='eventYdsResponsibility'>" . $eItem->yds_responsibility . "</td>" .
-											"<td class='eventIsPkp'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" . 
+											"<td class='eventIsPkp'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" .
 											"<td class='eventMargin'>" . $eItem->tax . "</td>" . 
+											"<td class='eventSp'>" . ($eItem->special_price == 0 ? "&nbsp;" : $eItem->special_price) . "</td>" . 
 											"<td class='eventNotes'>" . $eItem->notes . "</td>" . 
 											"<td>" . 
 												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
@@ -803,6 +804,7 @@
 			$eventYdsResponsibility = $inputDetails["eventYdsResponsibility"];
 			$eventIsPkp = $inputDetails["eventIsPkp"];
 			$eventMargin = $inputDetails["eventMargin"];
+			$eventSp = $inputDetails["eventSp"];
 			$eventNotes = $inputDetails["eventNotes"];
 			
 			$eventTillcodeArr = explode("#", $eventTillcode);
@@ -812,6 +814,7 @@
 			$eventYdsResponsibilityArr = explode("#", $eventYdsResponsibility);
 			$eventIsPkpArr = explode("#", $eventIsPkp);
 			$eventMarginArr = explode("#", $eventMargin);
+			$eventSpArr = explode("#", $eventSp);
 			$eventNotesArr = explode("#", $eventNotes);
 			
 			$detailEvent = array();
@@ -823,6 +826,7 @@
 				$detailEvent[$i]["suppResponsibility"] = $eventSupplierResponsibilityArr[$i];
 				$detailEvent[$i]["isPkp"] = $eventIsPkpArr[$i];
 				$detailEvent[$i]["margin"] = $eventMarginArr[$i];
+				$detailEvent[$i]["sp"] = $eventSpArr[$i];
 				$detailEvent[$i]["notes"] = $eventNotesArr[$i];
 			}
 			

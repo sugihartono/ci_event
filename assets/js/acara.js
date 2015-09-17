@@ -4,6 +4,7 @@ $(function() {
     $("#supplierResponsibility").autoNumeric('init', opts);
     $("#ydsResponsibility").autoNumeric('init', opts);
     $("#margin").autoNumeric('init', opts);
+    $("#sp").autoNumeric('init');
     
     $("#kindOfResponsibility").change(function() {
         if ($(this).val() == "0") {
@@ -30,6 +31,15 @@ $(function() {
         selectOtherMonths: true,
         dateFormat: "dd-mm-yy",
         minDate: new Date()
+    });
+    
+    $("#cbSp").click(function() {
+        if ($(this).prop("checked")) {
+            $("#sp").prop("disabled", false);
+        }
+        else {
+            $("#sp").prop("disabled", true);
+        }
     });
     
     autocompleteSuppliers();
@@ -105,6 +115,7 @@ function submitEvent(todo) {
     var eventYdsResponsibility = "";
     var eventIsPkp = "";
     var eventMargin = "";
+    var eventSp = "";
     var eventNotes = "";
     
     var id = $("#id").val(); // for edit
@@ -184,6 +195,11 @@ function submitEvent(todo) {
     });
     eventMargin = eventMargin.substr(0, eventMargin.length-1);
     
+    $("#datatableX .eventSp").each(function() {
+        eventSp += $(this).html().replace(/&nbsp;/gi, '').replace(/,/g, "" ) + "#";
+    });
+    eventSp = eventSp.substr(0, eventSp.length-1);
+    
     $("#datatableX .eventNotes").each(function() {
         eventNotes += $(this).html() + "#";
     });
@@ -193,7 +209,7 @@ function submitEvent(todo) {
                     "&locationTillcode=" + locationTillcode + "&locationLocationCode=" + locationLocationCode + "&locationStoreCode=" + locationStoreCode +
                     "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventCategoryCode=" + eventCategoryCode +
                     "&eventSupplierResponsibility=" + eventSupplierResponsibility + "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp +
-                    "&eventMargin=" + eventMargin + "&eventNotes=" + eventNotes + "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
+                    "&eventMargin=" + eventMargin + "&eventSp=" + eventSp + "&eventNotes=" + eventNotes + "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
     
     var sUrl = baseUrl+"acara/save";
     if (todo == "edit") {
@@ -250,6 +266,7 @@ function resetDetailTables() {
                     "<td>&nbsp;</td>" +
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
+                    "<td>&nbsp;</td>" +
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
@@ -293,6 +310,7 @@ function addDeleteRowEvent(id) {
                 var row =   "<tr id='dummyRowX'>" + 
                                 "<td>&nbsp;</td>" +
                                 "<td>&nbsp;</td>" + 
+                                "<td>&nbsp;</td>" +
                                 "<td>&nbsp;</td>" + 
                                 "<td>&nbsp;</td>" + 
                                 "<td>&nbsp;</td>" + 
@@ -347,7 +365,7 @@ function emptyTillcodes() {
     
     $("#datatableX > tbody  > tr").each(function() { 
         $("td", this).each(function (index) {
-            if (index < 8) {
+            if (index < 9) {
                 check += $(this).html().replace("&nbsp;", "");
             }
         });
@@ -534,7 +552,7 @@ function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibil
     
         check = "";    
         $("td", this).each(function (index) {
-            if (index < 8) {
+            if (index < 9) {
                 check += $(this).html().trim();
             }
         });
@@ -654,6 +672,8 @@ $("#btnPoolTillcode").click(function() {
     var supplierCode = $("#supplierCode").val();
     supplierCode = supplierCode.slice(-5).substr(0, 4);
     var categoryCode = $("#categoryCode option:selected").val();
+    var specialPrice = $("#sp").autoNumeric("get");
+    var specialPriceF = $("#sp").val();
     
     var kindOfResponsibility = $("#kindOfResponsibility option:selected").val();
     if (kindOfResponsibility == "0") {
@@ -672,9 +692,15 @@ $("#btnPoolTillcode").click(function() {
     var margin = $("#margin").autoNumeric("get");
     
     isPkp = isPkp == "1" ? "PKP" : "NPKP";
-    
+   
     if (tillcode == "" || supplierCode == "" || categoryCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
         alert("Silahkan lengkapi isian terlebih dahulu.");
+        return;
+    }
+    
+    if ($("#cbSp").prop("checked") && specialPrice == "") {
+        alert("Silahkan mengisi special price.");
+        $("#sp").focus();
         return;
     }
     
@@ -692,7 +718,8 @@ $("#btnPoolTillcode").click(function() {
                         "<td class='eventSupplierResponsibility'>" + supplierResponsibility + "</td>" +
                         "<td class='eventYdsResponsibility'>" + ydsResponsibility + "</td>" +
                         "<td class='eventIsPkp'>" + isPkp + "</td>" + 
-                        "<td class='eventMargin'>" + margin + "</td>" + 
+                        "<td class='eventMargin'>" + margin + "</td>" +
+                        "<td class='eventSp'>" + specialPriceF + "</td>" + 
                         "<td class='eventNotes'>" + notes + "</td>" + 
                         "<td>" + 
                             "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 

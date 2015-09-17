@@ -58,7 +58,7 @@
 									<?php
 										foreach($categories as $category) {
 									?>
-										<option value="<?php echo $category->category_code; ?>"><?php echo $category->category_code . " (" . $category->category_desc . ")"; ?></option>
+										<option value="<?php echo $category->category_desc; ?>"><?php echo $category->category_desc; ?></option>
 									<?php
 										  echo "<script type='text/javascript'>";
 										  echo "arrCategory[\"" . $category->category_desc . "\"] = \"" . $category->category_code . "\"";
@@ -77,9 +77,16 @@
 						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Note</label>
-							<div class="col-sm-10">
+							<div class="col-sm-3">
 								<input type="text" class="form-control" id="notes" name="notes" maxlength="50">
-							</div>	
+							</div>
+							
+							<label class="col-sm-1 control-label-right">
+							  SP <input type="checkbox" id="cbSp" name="cbSp">
+							</label>
+							<div class="col-sm-6 pad-right required">
+								<input type="text" class="form-control" id="sp" name="sp" disabled="disabled">
+							</div>
 						</div>
 						
 						<div class="form-group">
@@ -262,10 +269,12 @@
 										<tr>
 											<th>Tillcode</th>
 											<th>Supplier</th>
+											<th>Kategori</th>
 											<th>Pert. Supp</th>
 											<th>Pert. Yogya</th>
 											<th>Tipe Margin</th>
 											<th>Margin</th>
+											<th>SP</th>
 											<th>Notes</th>
 											<th class="action">Action</th>
 										</tr>

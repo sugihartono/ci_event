@@ -77,9 +77,16 @@
 						
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Note</label>
-							<div class="col-sm-10">
+							<div class="col-sm-3">
 								<input type="text" class="form-control" id="notes" name="notes" maxlength="50">
-							</div>	
+							</div>
+							
+							<label class="col-sm-1 control-label-right">
+							  SP <input type="checkbox" id="cbSp" name="cbSp">
+							</label>
+							<div class="col-sm-6 pad-right required">
+								<input type="text" class="form-control" id="sp" name="sp" disabled="disabled">
+							</div>
 						</div>
 						
 						<div class="form-group">
@@ -278,12 +285,14 @@
 											<th>Pert. Yogya</th>
 											<th>Tipe Margin</th>
 											<th>Margin</th>
+											<th>SP</th>
 											<th>Notes</th>
 											<th class="action">Action</th>
 										</tr>
 									</thead>
 									<tbody>
 											<tr id="dummyRowX">
+												<td>&nbsp;</td>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>

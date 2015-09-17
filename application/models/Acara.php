@@ -120,7 +120,8 @@ class Acara extends CI_Model {
                 else
                         $aResult["event_same_location"] = $query->result();
                 
-                $sql = "select x.tillcode, x.category_code, y.category_desc, x.notes, x.supp_code, x.yds_responsibility, x.supp_responsibility, x.is_pkp, x.tax, x.same_location, x.same_date " .
+                $sql = "select x.tillcode, x.category_code, y.category_desc, x.notes, x.supp_code, x.yds_responsibility, x.supp_responsibility, x.is_pkp, x.tax, " .
+                        "x.same_location, x.same_date, x.is_sp, x.special_price " .
                         "from event_item x inner join mst_category y on y.category_code = x.category_code where x.event_id = ?";
                 $query = $this->db->query($sql, $params);
                 if ($arrayMode) 
@@ -194,7 +195,8 @@ class Acara extends CI_Model {
                 # items
                 for ($i = 0; $i < sizeof($detailEvent); $i++) {
                         $withoutResponsibility = ($detailEvent[$i]["ydsResponsibility"] == 0 && $detailEvent[$i]["suppResponsibility"] == 0 ? 1 : 0);
-                        
+                        $isSp = ($detailEvent[$i]["sp"] == "" ? 0 : 1);
+                         
                         $params = array(
                                         $id,
                                         $detailEvent[$i]["tillcode"],
@@ -209,11 +211,13 @@ class Acara extends CI_Model {
                                         #$detailEvent[$i]["netMargin"],
                                         $isSameDate,
                                         $isSameLocation,
-                                        $withoutResponsibility
+                                        $withoutResponsibility,
+                                        $isSp,
+                                        (is_numeric($detailEvent[$i]["sp"]) ? $detailEvent[$i]["sp"] : 0),
                                 );
                         $sql = "insert into event_item (event_id, tillcode, notes, supp_code, category_code, yds_responsibility, supp_responsibility, is_pkp, tax, " .
-                                                        "same_location, same_date, without_responsibility) ". 
-                                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                        "same_location, same_date, without_responsibility, is_sp, special_price) ". 
+                                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $this->db->query($sql, $params);        
                 }
                 
@@ -336,6 +340,7 @@ class Acara extends CI_Model {
                         $ydsResponsibility = (is_numeric($detailEvent[$i]["ydsResponsibility"]) ? $detailEvent[$i]["ydsResponsibility"] : 0);
                         $suppResponsibility = (is_numeric($detailEvent[$i]["suppResponsibility"]) ? $detailEvent[$i]["suppResponsibility"] : 0);
                         $withoutResponsibility = ($ydsResponsibility == 0 && $suppResponsibility == 0 ? 1 : 0);
+                        $isSp = ($detailEvent[$i]["sp"] == "" ? 0 : 1);
                         
                         $params = array(
                                         $seq,
@@ -351,13 +356,15 @@ class Acara extends CI_Model {
                                         #$detailEvent[$i]["netMargin"],
                                         $isSameLocation,
                                         $isSameDate,
-                                        $withoutResponsibility
+                                        $withoutResponsibility,
+                                        $isSp,
+                                        (is_numeric($detailEvent[$i]["sp"]) ? $detailEvent[$i]["sp"] : 0),
                                 );
                         
                         
                         $sql = "insert into event_item (event_id, tillcode, notes, supp_code, category_code, yds_responsibility, supp_responsibility, is_pkp, tax, " .
-                                                        "same_location, same_date, without_responsibility) ". 
-                                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                                        "same_location, same_date, without_responsibility, is_sp, special_price) ". 
+                                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                         $this->db->query($sql, $params); 
                         
                 }
