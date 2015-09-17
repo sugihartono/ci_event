@@ -78,7 +78,7 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Note</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" id="notes" name="notes">
+								<input type="text" class="form-control" id="notes" name="notes" maxlength="50">
 							</div>	
 						</div>
 						
