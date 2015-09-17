@@ -505,6 +505,17 @@ function dateExist(tillcode, sameDate, eventStartDate, eventEndDate) {
     return ret;
 }
 
+function isValidDateRange(startDate, endDate) {
+    // format: dd-mm-yyyy -> yyyy-mm-dd
+    if (startDate != "" && endDate != "") {
+        startDateEn = startDate.substr(6, 4) + "-" + startDate.substr(3, 2) + "-" + startDate.substr(0, 2);
+        endDateEn = endDate.substr(6, 4) + "-" + endDate.substr(3, 2) + "-" + endDate.substr(0, 2);
+        
+        return Date.parse(startDateEn) <= Date.parse(endDateEn);
+    }
+    return true;
+}
+
 function tillcodeExist(tillcode, supplierCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes) {
     var check = "";
     var ret = false;
@@ -551,26 +562,31 @@ $("#btnAddDate").click(function() {
     
     if (!(dateExist(tillcode, sameDate, eventStartDate, eventEndDate))) {
         if (!dateInRange(tillcode, eventStartDate, eventEndDate)) {
-            var row =   "<tr>" + 
-                            "<td class='dateTillcode'>" + tillcode + "</td>" + 
-                            "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
-                            "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
-                            "<td>" + 
-                                "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
-                                    "<i class='fa fa-trash-o'></i> delete" + 
-                                "</a>" + 
-                            "</td>" + 
-                        "</tr>";
-            
-            if ($("#datatableY tr#dummyRowY").length) {
-                $("#datatableY tr#dummyRowY").remove();
+            if (isValidDateRange(eventStartDate, eventEndDate)) {
+                var row =   "<tr>" + 
+                                "<td class='dateTillcode'>" + tillcode + "</td>" + 
+                                "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
+                                "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
+                                "<td>" + 
+                                    "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                        "<i class='fa fa-trash-o'></i> delete" + 
+                                    "</a>" + 
+                                "</td>" + 
+                            "</tr>";
+                
+                if ($("#datatableY tr#dummyRowY").length) {
+                    $("#datatableY tr#dummyRowY").remove();
+                }
+                
+                $("#datatableY > tbody:last").append(row);
+                
+                addDeleteRowEvent("datatableY");
+                $("#eventStartDate").val("");
+                $("#eventEndDate").val("");            
             }
-            
-            $("#datatableY > tbody:last").append(row);
-            
-            addDeleteRowEvent("datatableY");
-            $("#eventStartDate").val("");
-            $("#eventEndDate").val("");        
+            else {
+                alert("Interval tanggal tidak valid.");
+            }
         }
         else {
             alert("Data tanggal sudah ada dalam interval.");
