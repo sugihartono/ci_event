@@ -24,7 +24,7 @@
 								<tbody>
 									<?php 
 										
-										foreach ($list as $r) :
+										foreach ((array)$list as $r) :
 									?>
 								    <tr>
 										<td><a href="<?php echo base_url()."template/preview/".$r->tmpl_code; ?>"><?php echo $r->tmpl_name; ?></a></td>

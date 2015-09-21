@@ -1,0 +1,38 @@
+/* css utk view surat acara */
+@page {
+            margin: 50px 50px 50px 80px;
+        }
+
+body *{
+	font-size:12px;
+	
+}
+
+table.head_acara td{
+	min-width:10px;
+	vertical-align:top;
+}
+
+table.view_acara{
+	margin-left:55px;
+}
+
+table.view_acara td{
+	vertical-align: top;
+	padding-left: 5px;
+	padding-right: 5px;
+	
+}
+
+#vcalculate{
+	float: left;
+}
+
+#vcalculate_gold{
+	margin-left: 300px;
+}
+
+#ttd{
+	/*page-break-before: always;*/
+}
+

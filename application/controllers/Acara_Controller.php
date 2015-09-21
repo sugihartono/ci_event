@@ -84,11 +84,11 @@
 				$rheader =  str_replace(
 					array("#TGL_SURAT","#NOMOR_SURAT_ACARA","#LAMPIRAN",
 						  "#ABOUT", "#TOWARD", "#NAMA_SUPPLIER", "#PURPOSE",
-						  "#KOTA", "#FAX"
+						  "#DPURPOSE", "#KOTA", "#FAX"
 					),
 					array($this->to_dMY($r->letter_date), $r->event_no, $r->attach,
 						  $r->about, $r->toward, $r->supp_desc, " &rarr; ".$r->purpose,
-						  $r->city, $r->fax
+						  $r->purpose, $r->city, $r->fax
 					),
 					$r->header
 				);
@@ -269,12 +269,12 @@
 				//cek hanya yg kurang dr 30%
 				if ($cek<=30){
 					if ($y==0){
-						$vcalculate = "<table>
+						$vcalculate = "<table id='vcalculate'>
 								<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
 									<td>:</td>
 								</tr>";	
 
-						$vcalculate_gold = "<table><tr><td colspan='3'>&nbsp;</td></tr>";	
+						$vcalculate_gold = "<table id='vcalculate_gold'><tr><td colspan='3'>&nbsp;</td></tr>";	
 					}
 					
 					$y++;
@@ -375,7 +375,7 @@
 												</tr>";
 
 							////////////////////// gold //////////////////
-							$margin_gold = $nett_margin/100*$sel2;	
+							$margin_gold = round($nett_margin/100*$sel2, -2);	
 							$bayar_gold = $sel2 - $margin_gold;
 
 							$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -397,7 +397,7 @@
 						}	else {
 
 							//gold
-							$margin_gold = $nett_margin/100*$sel;	
+							$margin_gold = round($nett_margin/100*$sel, -2);	
 							$bayar_gold = $sel - $margin_gold;
 							
 							$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -467,6 +467,9 @@
 
 					}
 						
+				} else {
+					$vcalculate .="<table id='vcalculate'><tr><td colspan='3'></td></tr>";
+					$vcalculate_gold .="<table id='vcalculate_gold'><tr><td colspan='3'></td></tr>";
 				}
 				
 
@@ -620,11 +623,44 @@
 
 			$data['vcalculate'] = $vcalculate['vcalculate'];
 			$data['vcalculate_gold'] = $vcalculate['vcalculate_gold'];
+
+			//set file
+			$event_no = $this->Event_model->get_event_no($id);
+		    $data['file'] = str_replace("/", "_", $event_no);
+
 			$this->load->view('acara/v_acara', $data);
 			
+			//////////////////////////////////////////////////// create pdf //////////////////////////////////////////
+			
+        	$this->load->helper('dompdf_helper');
+
+		    // page info here, db calls, etc.   
+		    $logo = "<img src='".base_url()."assets/img/yg_red.png' /><br />";
+		    $css = "<link type='text/css' href='".base_url()."assets/css/style-surat.css'"." />";
+
+		    $html = $logo. $css.
+		    		$data['rheader'] . 
+		    		"<table class='view_acara'>" .
+		    		$data['vlocation'] .
+		    		"</table>" .
+		    		"<div class='newspaper'>" .
+		    		$data['vcalculate'] .
+		    		$data['vcalculate_gold'] .
+		    		"</div>" .
+		    		$data['rfooter'] .
+		    		$data['rnotes']
+		    		;
+		    
+		   
+
+
+		    pdf_create($html, $event_no, false);
+		   
+		    
 		}
+
 		
-		
+
 		public function save() {
 			$usr = $this->session->userdata['event_logged_in']['username'];
 			$upd = date("Y-m-d H:i:s");

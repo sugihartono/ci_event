@@ -2264,23 +2264,22 @@ label.error {
 }
 
 /* css utk view surat acara */
-
 table.head_acara td{
-	min-width:10px;
-	vertical-align:top;
+    min-width:10px;
+    vertical-align:top;
 }
 
 table.view_acara{
-	margin-left:55px;
-	
-	
+    margin-left:55px;
+    
+    
 }
 
 table.view_acara td{
-	vertical-align: top;
-	padding-left: 5px;
-	padding-right: 5px;
-	
+    vertical-align: top;
+    padding-left: 5px;
+    padding-right: 5px;
+    
 }
 
 .newspaper {
@@ -2290,5 +2289,6 @@ table.view_acara td{
     -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
     -moz-column-gap: 40px; /* Firefox */
     column-gap: 40px;
+    
     
 }

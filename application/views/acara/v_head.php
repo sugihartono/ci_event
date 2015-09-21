@@ -42,6 +42,9 @@
     <script src="<?php echo base_url(); ?>assets/js/sparkline-chart.js"></script>    
     <script src="<?php echo base_url(); ?>assets/js/zabuto_calendar.js"></script>   
     
+    <!-- dom 
+    <link href="<?php echo base_url(); ?>assets/css/style-surat.css" rel="stylesheet">
+-->
     <script type="text/javascript">
         var baseUrl = "<?php echo base_url(); ?>"; 
 
@@ -58,23 +61,11 @@
 				]
             });	
 
+            
+
         });
 
     </script>
-    <style type="text/css">
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #section-to-print, #section-to-print * {
-            visibility: visible;
-          }
-          #section-to-print {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-          }
-        }
-    </style>  
-      
-  </head>
+    
+
+</head>

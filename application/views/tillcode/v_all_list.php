@@ -26,7 +26,7 @@
 								<tbody>
 									<?php 
 										
-										foreach ($list as $r):
+										foreach ((array)$list as $r) :
 									?>
 								    <tr>
 										<td><?php echo $r->tillcode; ?></td>

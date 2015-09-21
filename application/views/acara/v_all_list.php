@@ -27,7 +27,7 @@
 								<tbody>
 									<?php 
 										
-										foreach ($list as $r) :
+										foreach ((array)$list as $r) :
 											
 									?>
 										<tr>

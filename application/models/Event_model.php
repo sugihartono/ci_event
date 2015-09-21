@@ -217,5 +217,16 @@
 			
 		}
 		
+		function get_event_no($id){
+			$this->db->select('event_no');
+			$this->db->from('event');
+			$this->db->where('id', $id);
+			
+			$q = $this->db->get()->row();
+			$r = $q->event_no;
+			return $r;		
+		}
+
+
 	}
 ?>

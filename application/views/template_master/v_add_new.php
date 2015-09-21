@@ -65,6 +65,7 @@
 											</tr>
 										</table>
 									</p>
+									<br>
 									<p align='left'>
 										Kepada Yth,</br>
 										<b>Bapak / Ibu #TOWARD </b></br>
@@ -76,7 +77,7 @@
 									<p align='left'>
 										Dengan hormat,<br>
 										Sehubungan dengan diadakannya acara #ABOUT
-										dalam rangka #PURPOSE, berikut kami informasikan ketentuan acara tersebut :
+										dalam rangka #DPURPOSE, berikut kami informasikan ketentuan acara tersebut :
 									</p>
 								</textarea>
 								<label id="txt_header-error" for="txt_header" style="color:red"></label>
@@ -93,7 +94,7 @@
 										kami ucapkan terima kasih.
 									</p>
 									<br>
-									<table border='0' style="font-size:13px;width:500px">
+									<table border='0' style="font-size:13px;width:500px" id='ttd'>
 										<tr>
 											<td width="30%">Hormat kami</td>
 											<td width="30%">Mengetahui,</td>
