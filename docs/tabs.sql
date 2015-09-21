@@ -53,6 +53,9 @@ create index event_item_idx on event_item(event_id);
 create index event_item_idx2 on event_item(tillcode);
 create index event_item_idx3 on event_item(category_code);
 
+alter table event_item add is_sp integer default 0;
+alter table event_item add special_price numeric(18, 2) default 0;
+alter table event_item add without_responsibility integer default 0;
 
 create table event_location (
     event_id integer not null,

@@ -76,6 +76,132 @@
 			
 		}
 		
+		public function edit($id, $step = null) {
+			$data['trans_active'] = 'dcjq-parent active';
+			$data['menu_input_active'] = 'color:#FFF';
+			
+			if ($step == null) {
+				$aResult = $this->Acara->load($id);
+				
+				$data["id"] = $id;
+				$data["event"] = $aResult["event"];
+				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
+				$data['divisions'] = $this->Division->loadAll();
+				$data['templates'] = $this->Acara->loadAllTemplate();
+				$data['today'] = date('d-m-Y');
+				$data['head'] = 'acara/v_head';
+				$data['top_menu'] = 'template/v_top_menu';
+				$data['left_menu'] = 'template/v_left_menu';
+				$data['content'] = 'acara/v_edit';
+				$data['right_menu'] = 'acara/v_right_menu';
+				$data['footer'] = 'template/v_footer';
+				
+				$this->load->view('acara/v_acara', $data);	
+			}
+			else if ($step == 'next') {
+				$inputs = $this->input->post();
+				if (!isset($inputs["divisionCode"])) {
+					header("Location: " . base_url() . "acara/list");
+					exit;
+				}
+				
+				$this->session->set_userdata("acaraHolder", $inputs);
+				$aResult = $this->Acara->load($id);
+				
+				$eventItem = $aResult["event_item"];
+				
+				if (isset($eventItem[0]) && $eventItem[0]->same_date == "1")
+					$isSameDate = true;
+				else
+					$isSameDate = false;
+				if (isset($eventItem[0]) && $eventItem[0]->same_location == "1")
+					$isSameLocation = true;
+				else
+					$isSameLocation = false;
+				
+				$tillcodeRows = "";
+				foreach($eventItem as $eItem) {
+					$tillcodeRows .= 	"<tr>" . 
+											"<td class='eventTillcode'>" . $eItem->tillcode . "</td>" .
+											"<td class='eventSupplierCode'>" . $eItem->supp_code . "</td>" .
+											"<td class='eventCategoryCode'>" . $eItem->category_desc . "</td>" .
+											"<td class='eventSupplierResponsibility'>" . $eItem->supp_responsibility . "</td>" .
+											"<td class='eventYdsResponsibility'>" . $eItem->yds_responsibility . "</td>" .
+											"<td class='eventIsPkp'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" .
+											"<td class='eventMargin'>" . $eItem->tax . "</td>" . 
+											"<td class='eventSp'>" . ($eItem->special_price == 0 ? "&nbsp;" : $eItem->special_price) . "</td>" . 
+											"<td class='eventNotes'>" . $eItem->notes . "</td>" . 
+											"<td>" . 
+												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+													"<i class='fa fa-trash-o'></i> delete" . 
+												"</a>" . 
+											"</td>" . 
+										"</tr>";	
+				}
+				
+				if ($isSameDate)
+					$eventDate = $aResult["event_same_date"];
+				else
+					$eventDate = $aResult["event_date"];
+					
+				$dateRows = "";
+				foreach($eventDate as $eDate) {
+					$tillcode = ($isSameDate ? "&nbsp;" : $eDate->tillcode);
+					$dateRows .= 	"<tr>" . 
+										"<td class='dateTillcode'>" . $tillcode . "</td>" . 
+										"<td class='dateEventStartDate'>" . $eDate->date_start . "</td>" . 
+										"<td class='dateEventEndDate'>" . $eDate->date_end . "</td>" . 
+										"<td>" . 
+											"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+												"<i class='fa fa-trash-o'></i> delete" . 
+											"</a>" . 
+										"</td>" . 
+									"</tr>";	
+				}
+				
+				if ($isSameLocation)
+					$eventLocation = $aResult["event_same_location"];
+				else
+					$eventLocation = $aResult["event_location"];
+				
+				$locationRows = "";
+				foreach($eventLocation as $eLocation) {
+					$tillcode = ($isSameLocation ? "&nbsp;" : $eLocation->tillcode);
+					$locationRows .=   "<tr>" . 
+											"<td class='locationTillcode'>" . $tillcode . "</td>" . 
+											"<td class='locationLocationCode'>" . $eLocation->loc_desc . "</td>" . 
+											"<td class='locationStoreCode'>" . $eLocation->store_desc . "</td>" . 
+											"<td>" . 
+												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+													"<i class='fa fa-trash-o'></i> delete" . 
+												"</a>" . 
+											"</td>" . 
+										"</tr>";	
+				}
+				
+				$data["id"] = $id;
+				$data["isSameDate"] = $isSameDate;
+				$data["isSameLocation"] = $isSameLocation;
+				$data["dateRows"] = $dateRows;
+				$data["locationRows"] = $locationRows;
+				$data["tillcodeRows"] = $tillcodeRows;
+				$data['categories'] = $this->Acara->loadCategoryByDivision($inputs["divisionCode"]);
+				$data['stores'] = $this->Acara->loadAllStore();
+				$data['locations'] = $this->Acara->loadAllLocation();
+				$data['division'] = $inputs["divisionCode"];
+				$data['today'] = date('d-m-Y');
+				$data['head'] = 'acara/v_head';
+				$data['top_menu'] = 'template/v_top_menu';
+				$data['left_menu'] = 'template/v_left_menu';
+				$data['content'] = 'acara/v_edit_next';
+				$data['right_menu'] = 'acara/v_right_menu';
+				$data['footer'] = 'template/v_footer';
+				
+				$this->load->view('acara/v_acara', $data);	
+			}
+			
+		}
+		
 		function get_template($id){
 			$list = $this->Event_model->get_template($id);
 			
@@ -661,7 +787,9 @@
 
 		
 
-		public function save() {
+		
+		public function save($id = 0) {
+
 			$usr = $this->session->userdata['event_logged_in']['username'];
 			$upd = date("Y-m-d H:i:s");
 			
@@ -709,28 +837,34 @@
 			# event
 			$eventTillcode = $inputDetails["eventTillcode"];
 			$eventSupplierCode = $inputDetails["eventSupplierCode"];
+			$eventCategoryCode = $inputDetails["eventCategoryCode"];
 			$eventSupplierResponsibility = $inputDetails["eventSupplierResponsibility"];
 			$eventYdsResponsibility = $inputDetails["eventYdsResponsibility"];
 			$eventIsPkp = $inputDetails["eventIsPkp"];
 			$eventMargin = $inputDetails["eventMargin"];
+			$eventSp = $inputDetails["eventSp"];
 			$eventNotes = $inputDetails["eventNotes"];
 			
 			$eventTillcodeArr = explode("#", $eventTillcode);
 			$eventSupplierCodeArr = explode("#", $eventSupplierCode);
+			$eventCategoryCodeArr = explode("#", $eventCategoryCode);
 			$eventSupplierResponsibilityArr = explode("#", $eventSupplierResponsibility);
 			$eventYdsResponsibilityArr = explode("#", $eventYdsResponsibility);
 			$eventIsPkpArr = explode("#", $eventIsPkp);
 			$eventMarginArr = explode("#", $eventMargin);
+			$eventSpArr = explode("#", $eventSp);
 			$eventNotesArr = explode("#", $eventNotes);
 			
 			$detailEvent = array();
 			for ($i = 0; $i < sizeof($eventTillcodeArr); $i++) {
 				$detailEvent[$i]["tillcode"] = $eventTillcodeArr[$i];
 				$detailEvent[$i]["suppCode"] = $eventSupplierCodeArr[$i];
+				$detailEvent[$i]["categoryCode"] = $eventCategoryCodeArr[$i];
 				$detailEvent[$i]["ydsResponsibility"] = $eventYdsResponsibilityArr[$i];
 				$detailEvent[$i]["suppResponsibility"] = $eventSupplierResponsibilityArr[$i];
 				$detailEvent[$i]["isPkp"] = $eventIsPkpArr[$i];
 				$detailEvent[$i]["margin"] = $eventMarginArr[$i];
+				$detailEvent[$i]["sp"] = $eventSpArr[$i];
 				$detailEvent[$i]["notes"] = $eventNotesArr[$i];
 			}
 			
@@ -739,16 +873,32 @@
 			#$inputs["secondSignature"]
 			#$inputs["cc"]
 			
-			$seq = $this->Acara->addNew(
-					$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
-					$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
-					$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
-			);
+			if ($id) {
+				$seq = $this->Acara->update($id, $inputs["eventNo"],
+						$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
+						$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
+						$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
+				);
+				if ($seq) $seq = $id;
+			}
+			else {
+				$seq = $this->Acara->addNew(
+						$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
+						$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
+						$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
+				);	
+			}
 			
 			# remove acaraHolder from session
 			if ($seq) $this->session->unset_userdata("acaraHolder");
 			
 			echo $seq;
+		}
+		
+		public function delete() {
+			$input = $this->input->post();
+			$ret = $this->Acara->remove($input["id"]);
+			if ($ret) echo "success"; else echo "Gagal menghapus data.";
 		}
 		
 		public function loadSuppliers() {

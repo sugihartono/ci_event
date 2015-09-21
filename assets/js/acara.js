@@ -4,6 +4,7 @@ $(function() {
     $("#supplierResponsibility").autoNumeric('init', opts);
     $("#ydsResponsibility").autoNumeric('init', opts);
     $("#margin").autoNumeric('init', opts);
+    $("#sp").autoNumeric('init');
     
     $("#kindOfResponsibility").change(function() {
         if ($(this).val() == "0") {
@@ -19,7 +20,8 @@ $(function() {
         changeYear: true,
         showOtherMonths: true,
         selectOtherMonths: true,
-        dateFormat: "dd-mm-yy"
+        dateFormat: "dd-mm-yy",
+        minDate: new Date()
     });
     
     $('#eventEndDate').datepicker({
@@ -27,12 +29,26 @@ $(function() {
         changeYear: true,
         showOtherMonths: true,
         selectOtherMonths: true,
-        dateFormat: "dd-mm-yy"
+        dateFormat: "dd-mm-yy",
+        minDate: new Date()
+    });
+    
+    $("#cbSp").click(function() {
+        if ($(this).prop("checked")) {
+            $("#sp").prop("disabled", false);
+        }
+        else {
+            $("#sp").prop("disabled", true);
+        }
     });
     
     autocompleteSuppliers();
     autocompleteTillcodes(); 
     FormValidation.init();
+    
+    addDeleteRowEvent("datatableY");
+    addDeleteRowEvent("datatableZ");
+    addDeleteRowEvent("datatableX");
 
 });
 
@@ -83,7 +99,7 @@ function loadTillcodes() {
     return tillcodeList;
 }
 
-function submitEvent() {
+function submitEvent(todo) {
     var dateTillcode = "";
     var dateEventStartDate = "";
     var dateEventEndDate = "";
@@ -94,12 +110,15 @@ function submitEvent() {
     
     var eventTillcode = "";
     var eventSupplierCode = "";
+    var eventCategoryCode = "";
     var eventSupplierResponsibility = "";
     var eventYdsResponsibility = "";
     var eventIsPkp = "";
     var eventMargin = "";
+    var eventSp = "";
     var eventNotes = "";
     
+    var id = $("#id").val(); // for edit
     var sameDate = $("#sameDate").prop("checked") ? 1 : 0;
     var sameLocation = $("#sameLocation").prop("checked") ? 1 : 0;
     
@@ -149,6 +168,12 @@ function submitEvent() {
     });
     eventSupplierCode = eventSupplierCode.substr(0, eventSupplierCode.length-1);
     
+    $("#datatableX .eventCategoryCode").each(function() {
+        cat = arrCategory[$(this).html()];
+        eventCategoryCode += cat + "#";
+    });
+    eventCategoryCode = eventCategoryCode.substr(0, eventCategoryCode.length-1);
+    
     $("#datatableX .eventSupplierResponsibility").each(function() {
         eventSupplierResponsibility += $(this).html() + "#";
     });
@@ -170,6 +195,11 @@ function submitEvent() {
     });
     eventMargin = eventMargin.substr(0, eventMargin.length-1);
     
+    $("#datatableX .eventSp").each(function() {
+        eventSp += $(this).html().replace(/&nbsp;/gi, '').replace(/,/g, "" ) + "#";
+    });
+    eventSp = eventSp.substr(0, eventSp.length-1);
+    
     $("#datatableX .eventNotes").each(function() {
         eventNotes += $(this).html() + "#";
     });
@@ -177,13 +207,18 @@ function submitEvent() {
     
     var dataString = "dateTillcode=" + dateTillcode + "&dateEventStartDate=" + dateEventStartDate + "&dateEventEndDate=" + dateEventEndDate +
                     "&locationTillcode=" + locationTillcode + "&locationLocationCode=" + locationLocationCode + "&locationStoreCode=" + locationStoreCode +
-                    "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventSupplierResponsibility=" + eventSupplierResponsibility +
-                    "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp + "&eventMargin=" + eventMargin + "&eventNotes=" + eventNotes +
-                    "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
+                    "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventCategoryCode=" + eventCategoryCode +
+                    "&eventSupplierResponsibility=" + eventSupplierResponsibility + "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp +
+                    "&eventMargin=" + eventMargin + "&eventSp=" + eventSp + "&eventNotes=" + eventNotes + "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
+    
+    var sUrl = baseUrl+"acara/save";
+    if (todo == "edit") {
+        sUrl = baseUrl+"acara/save/"+id;
+    }
     
     $.ajax({
         type: "POST",
-        url: baseUrl+"acara/save",
+        url: sUrl,
         data: dataString,
         beforeSend: function() {
             //$("#imgLoading").removeClass("hide");
@@ -227,9 +262,11 @@ function resetDetailTables() {
     $("#datatableZ tr:gt(0)").remove();
     $("#datatableZ > tbody:last").append(row);
     
-    var row =   "<tr id='dummyRowX'>" + 
+    var row =   "<tr id='dummyRowX'>" +
+                    "<td>&nbsp;</td>" +
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
+                    "<td>&nbsp;</td>" +
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
@@ -271,7 +308,9 @@ function addDeleteRowEvent(id) {
             }
             else if (id == "datatableX") {
                 var row =   "<tr id='dummyRowX'>" + 
+                                "<td>&nbsp;</td>" +
                                 "<td>&nbsp;</td>" + 
+                                "<td>&nbsp;</td>" +
                                 "<td>&nbsp;</td>" + 
                                 "<td>&nbsp;</td>" + 
                                 "<td>&nbsp;</td>" + 
@@ -326,7 +365,7 @@ function emptyTillcodes() {
     
     $("#datatableX > tbody  > tr").each(function() { 
         $("td", this).each(function (index) {
-            if (index < 7) {
+            if (index < 9) {
                 check += $(this).html().replace("&nbsp;", "");
             }
         });
@@ -493,16 +532,27 @@ function dateExist(tillcode, sameDate, eventStartDate, eventEndDate) {
     return ret;
 }
 
-function tillcodeExist(tillcode, supplierCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes) {
+function isValidDateRange(startDate, endDate) {
+    // format: dd-mm-yyyy -> yyyy-mm-dd
+    if (startDate != "" && endDate != "") {
+        startDateEn = startDate.substr(6, 4) + "-" + startDate.substr(3, 2) + "-" + startDate.substr(0, 2);
+        endDateEn = endDate.substr(6, 4) + "-" + endDate.substr(3, 2) + "-" + endDate.substr(0, 2);
+        
+        return Date.parse(startDateEn) <= Date.parse(endDateEn);
+    }
+    return true;
+}
+
+function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes) {
     var check = "";
     var ret = false;
-    var row = tillcode + supplierCode + supplierResponsibility + ydsResponsibility + isPkp + margin + notes;
+    var row = tillcode + supplierCode + categoryCode + supplierResponsibility + ydsResponsibility + isPkp + margin + notes;
     
     $("#datatableX > tbody  > tr").each(function() {
     
         check = "";    
         $("td", this).each(function (index) {
-            if (index < 7) {
+            if (index < 9) {
                 check += $(this).html().trim();
             }
         });
@@ -539,26 +589,31 @@ $("#btnAddDate").click(function() {
     
     if (!(dateExist(tillcode, sameDate, eventStartDate, eventEndDate))) {
         if (!dateInRange(tillcode, eventStartDate, eventEndDate)) {
-            var row =   "<tr>" + 
-                            "<td class='dateTillcode'>" + tillcode + "</td>" + 
-                            "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
-                            "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
-                            "<td>" + 
-                                "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
-                                    "<i class='fa fa-trash-o'></i> delete" + 
-                                "</a>" + 
-                            "</td>" + 
-                        "</tr>";
-            
-            if ($("#datatableY tr#dummyRowY").length) {
-                $("#datatableY tr#dummyRowY").remove();
+            if (isValidDateRange(eventStartDate, eventEndDate)) {
+                var row =   "<tr>" + 
+                                "<td class='dateTillcode'>" + tillcode + "</td>" + 
+                                "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
+                                "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
+                                "<td>" + 
+                                    "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                        "<i class='fa fa-trash-o'></i> delete" + 
+                                    "</a>" + 
+                                "</td>" + 
+                            "</tr>";
+                
+                if ($("#datatableY tr#dummyRowY").length) {
+                    $("#datatableY tr#dummyRowY").remove();
+                }
+                
+                $("#datatableY > tbody:last").append(row);
+                
+                addDeleteRowEvent("datatableY");
+                $("#eventStartDate").val("");
+                $("#eventEndDate").val("");            
             }
-            
-            $("#datatableY > tbody:last").append(row);
-            
-            addDeleteRowEvent("datatableY");
-            $("#eventStartDate").val("");
-            $("#eventEndDate").val("");        
+            else {
+                alert("Interval tanggal tidak valid.");
+            }
         }
         else {
             alert("Data tanggal sudah ada dalam interval.");
@@ -616,11 +671,18 @@ $("#btnPoolTillcode").click(function() {
     var notes = $("#notes").val();
     var supplierCode = $("#supplierCode").val();
     supplierCode = supplierCode.slice(-5).substr(0, 4);
+    var categoryCode = $("#categoryCode option:selected").val();
+    var specialPrice = $("#sp").autoNumeric("get");
+    var specialPriceF = $("#sp").val();
     
     var kindOfResponsibility = $("#kindOfResponsibility option:selected").val();
     if (kindOfResponsibility == "0") {
         var ydsResponsibility = $("#ydsResponsibility").autoNumeric("get");
         var supplierResponsibility = $("#supplierResponsibility").autoNumeric("get");
+    }
+    else if (kindOfResponsibility == "-1") {
+        var ydsResponsibility = "0";
+        var supplierResponsibility = "0";
     }
     else {
         var ydsResponsibility = kindOfResponsibility.substr(0, 2);
@@ -630,26 +692,34 @@ $("#btnPoolTillcode").click(function() {
     var margin = $("#margin").autoNumeric("get");
     
     isPkp = isPkp == "1" ? "PKP" : "NPKP";
-    
-    if (tillcode == "" || supplierCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
+   
+    if (tillcode == "" || supplierCode == "" || categoryCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
         alert("Silahkan lengkapi isian terlebih dahulu.");
         return;
     }
     
+    if ($("#cbSp").prop("checked") && specialPrice == "") {
+        alert("Silahkan mengisi special price.");
+        $("#sp").focus();
+        return;
+    }
+    
     var check = new Number(ydsResponsibility) + new Number(supplierResponsibility);
-    if (check != 100) {
+    if (kindOfResponsibility != "-1" && check != 100) {
         alert("Jumlah pertanggungan tidak sama dengan 100.");
         return;
     }
     
-    if (!tillcodeExist(tillcode, supplierCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes)) {
+    if (!tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes)) {
         var row =   "<tr>" + 
                         "<td class='eventTillcode'>" + tillcode + "</td>" +
                         "<td class='eventSupplierCode'>" + supplierCode + "</td>" +
+                        "<td class='eventCategoryCode'>" + categoryCode + "</td>" +
                         "<td class='eventSupplierResponsibility'>" + supplierResponsibility + "</td>" +
                         "<td class='eventYdsResponsibility'>" + ydsResponsibility + "</td>" +
                         "<td class='eventIsPkp'>" + isPkp + "</td>" + 
-                        "<td class='eventMargin'>" + margin + "</td>" + 
+                        "<td class='eventMargin'>" + margin + "</td>" +
+                        "<td class='eventSp'>" + specialPriceF + "</td>" + 
                         "<td class='eventNotes'>" + notes + "</td>" + 
                         "<td>" + 
                             "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
@@ -665,6 +735,7 @@ $("#btnPoolTillcode").click(function() {
         $("#datatableX > tbody:last").append(row);
         
         addDeleteRowEvent("datatableX");
+        $("#tillcode").val("");
         //$(this).closest("#frmAcaraNext").find("input[type=text], select").val("");
     }
     else {
@@ -677,7 +748,8 @@ var FormValidation = function () {
         var handleValidation1 = function() {
                 // for more info visit the official plugin documentation: 
                 // http://docs.jquery.com/Plugins/Validation
-
+                
+                var todo = $("#todo").val();
                 var form1 = $('#frmAcaraNext');
                 var error1 = $('.alert-danger', form1);
                 var success1 = $('.alert-success', form1);
@@ -688,72 +760,10 @@ var FormValidation = function () {
                         focusInvalid: false, // do not focus the last invalid input
                         ignore: "",
                         rules: {
-                                supplierCode: {
-                                    required: true
-                                },
-                                categoryCode: {
-                                    required: true
-                                },
-                                tillcode: {
-                                    required: true
-                                },
-                                supplierResponsibility: {
-                                    required: {
-                                        depends: function(element) {
-                                            // Do what you want to test
-                                            if ($("#kindOfResponsibility option:selected").val() == "0")
-                                                return true;
-                                            else
-                                                return false;
-                                        }
-                                    }
-                                },
-                                ydsResponsibility: {
-                                    required: {
-                                        depends: function(element) {
-                                            // Do what you want to test
-                                            if ($("#kindOfResponsibility option:selected").val() == "0")
-                                                return true;
-                                            else
-                                                return false;
-                                        }
-                                    }
-                                },
-                                kindOfResponsibility: {
-                                    required: true
-                                },
-                                isPkp: {
-                                    required: true
-                                },
-                                margin: {
-                                    required: true
-                                }
+                                
                         },
                         messages: {
-                                supplierCode: {
-                                    required: "Supplier harus diisi."
-                                },
-                                categoryCode: {
-                                    required: "Kategori harus diisi."
-                                },
-                                tillcode: {
-                                    required: "Tillcode harus diisi."
-                                },
-                                supplierResponsibility: {
-                                    required: "Pert. supplier harus diisi."
-                                },
-                                ydsResponsibility: {
-                                    required: "Pert. yogya harus diisi."
-                                },
-                                kindOfResponsibility: {
-                                    required: "Jenis pertanggungan harus diisi."
-                                },
-                                isPkp: {
-                                    required: "Tipe margin harus diisi."
-                                },
-                                margin: {
-                                    required: "Margin harus diisi."
-                                }
+                            
                         },
     
                         invalidHandler: function (event, validator) { //display error alert on form submit              
@@ -788,7 +798,7 @@ var FormValidation = function () {
                                 }
                                 else {
                                     //alert("aye");
-                                    submitEvent();
+                                    submitEvent(todo);
                                 }
                         }
                     

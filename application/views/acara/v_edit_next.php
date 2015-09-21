@@ -26,14 +26,14 @@
 <section id="main-content">
 	<section class="wrapper"> 
 		
-		<h3><i class="fa fa-angle-right"></i> Data Acara</h3>
+		<h3><i class="fa fa-angle-right"></i> Edit Acara</h3>
 		
-		<a class="btn_add btn btn-default btn-sm" href="<?php echo base_url(); ?>acara/add">
+		<a class="btn_add btn btn-default btn-sm" href="<?php echo base_url(); ?>acara/edit/<?php echo $id; ?>">
 		<i class="fa fa-backward "></i> <?php echo BACK_CAPTION; ?></a>
 		
 		<div class="row mt">
 			<div style="padding-left:5px;padding-left:5px" class="col-lg-12">
-				<form method="post" class="form-horizontal style-form" name="frmAcaraNext" id="frmAcaraNext" action="<?php echo base_url(); ?>acara/save"  novalidate="novalidate">
+				<form method="post" class="form-horizontal style-form" name="frmAcaraNext" id="frmAcaraNext" action="<?php echo base_url(); ?>acara/update"  novalidate="novalidate">
 					
 					<div class="alert alert-danger hide">
 						<a class="close" data-dismiss="alert" href="#">&times;</a>
@@ -95,7 +95,6 @@
 								<select id="kindOfResponsibility" name="kindOfResponsibility"  class="form-control">
 									<option value="5050">YDS 50% : Supplier 50%</option>
 									<option value="4060">YDS 40% : Supplier 60%</option>
-									<option value="-1">Tanpa Pertanggungan</option>
 									<option value="0">Custom</option>
 								</select>
 							</div>
@@ -156,7 +155,7 @@
 						
 						<div class="form-group">
 							<div class="col-sm-6">
-								<input type="checkbox" id="sameDate" name="sameDate"> &nbsp; <b>Daftar tanggal berlaku untuk semua tillcode dalam satu surat.</b>
+								<input type="checkbox" id="sameDate" name="sameDate" <?php if ($isSameDate) echo "checked='checked'"; ?>> &nbsp; <b>Daftar tanggal berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
 						
@@ -179,12 +178,7 @@
 										</tr>
 									</thead>
 									<tbody>
-											<tr id="dummyRowY">
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-											</tr>
+											<?php echo $dateRows; ?>
 									</tbody>
 								</table>
 							</div><!-- end div responsive -->
@@ -203,7 +197,7 @@
 									<option value="<?php echo $location->loc_desc; ?>"><?php echo $location->loc_desc; ?></option>
 									<?php
 											echo "<script type='text/javascript'>";
-											echo "arrLocation[\"" . $location->loc_desc . "\"] = \"" . $location->loc_code . "\"";
+											echo "arrLocation['" . $location->loc_desc . "'] = '" . $location->loc_code . "'";
 											echo "</script>";
 										}
 									?>
@@ -219,7 +213,7 @@
 										<option value="<?php echo $store->store_desc; ?>"><?php echo $store->store_desc . " (" . $store->store_init . ")"; ?></option>
 									<?php
 											echo "<script type='text/javascript'>";
-											echo "arrStore[\"" . $store->store_desc . "\"] = \"" . $store->store_code . "\"";
+											echo "arrStore['" . $store->store_desc . "'] = '" . $store->store_code . "'";
 											echo "</script>";
 										}
 									?>
@@ -229,7 +223,7 @@
 						
 						<div class="form-group">
 							<div class="col-sm-6">
-								<input type="checkbox" id="sameLocation" name="sameLocation"> &nbsp; <b>Daftar lokasi berlaku untuk semua tillcode dalam satu surat.</b>
+								<input type="checkbox" id="sameLocation" name="sameLocation" <?php if ($isSameLocation) echo "checked='checked'"; ?>> &nbsp; <b>Daftar lokasi berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
 						
@@ -252,12 +246,7 @@
 										</tr>
 									</thead>
 									<tbody>
-											<tr id="dummyRowZ">
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-											</tr>
+											<?php echo $locationRows; ?>
 									</tbody>
 								</table>
 							</div><!-- end div responsive -->
@@ -291,18 +280,7 @@
 										</tr>
 									</thead>
 									<tbody>
-											<tr id="dummyRowX">
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-												<td>&nbsp;</td>
-											</tr>
+											<?php echo $tillcodeRows; ?>
 									</tbody>
 								</table>
 							</div><!-- end div responsive -->
@@ -333,12 +311,14 @@
 			</div><!-- /col-lg-12 -->			
 			<!--	  </div> /row -->
 			
+			<input type="hidden" name="id" id="id" value="<?php echo $id; ?>">
+			
 		</form>   
 		
 	</div></section>
 
-<input type="hidden" id="todo" value="add">
-<input type="hidden" id="id" value="">
+<input type="hidden" id="todo" value="edit">
+<input type="hidden" id="id" value="<?php echo $id; ?>">
 <input type="hidden" id="division" value="<?php echo $division; ?>">
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/autoNumeric.js"></script>
