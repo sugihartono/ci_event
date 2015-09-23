@@ -1,3 +1,20 @@
+create table mst_md (
+    id serial,
+    cat_code varchar(6),
+    name varchar(20),
+    created_by varchar(20),
+    created_date date,
+    updated_by varchar(20),
+    updated_date date
+);
+alter table mst_md add primary key(id);
+
+insert into mst_md (cat_code, name, created_by, created_date) values
+('D1', 'Stephanie Permata P.', 'system', current_timestamp),
+('D2', 'Silvia Wening', 'system', current_timestamp),
+('D3', 'Esther Septiane', 'system', current_timestamp),
+('D4', 'Esther Septiane', 'system', current_timestamp);
+
 create sequence letter_no_a_seq;
 create sequence letter_no_b_seq;
 create sequence letter_no_c_seq;
@@ -196,6 +213,18 @@ alter table mst_tillcode add foreign key(division_code) references mst_division(
 alter table mst_tillcode add foreign key(brand_code) references mst_brand(brand_code);
 alter table mst_tillcode add article_code varchar(13);
 create index mst_tillcode_idx on mst_tillcode(article_code);
+
+alter table mst_tillcode add cat_code varchar(6);
+alter table mst_tillcode add article_type varchar(10);
+alter table mst_tillcode add disc_label_2 varchar(20);
+alter table mst_tillcode add disc3 real;
+alter table mst_tillcode add supp_code varchar(10);
+alter table mst_tillcode add brand_desc varchar(60);
+alter table mst_tillcode add margin real;
+alter table mst_tillcode add is_pkp integer;
+
+create index mst_tillcode_idx2 on mst_tillcode(cat_code);
+create index mst_tillcode_idx3 on mst_tillcode(supp_code);
 
 create table mst_location (
     loc_code varchar(5),
