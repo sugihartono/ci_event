@@ -378,7 +378,10 @@
 			$y = 0;
 			foreach ($list->result() as $r) {
 				//default sbg contoh harga
+				
 				$hrg = 100000;
+				
+				
 				
 				if($r->is_pkp=='1'){
 					$pmargin = $r->tax.'% PKP';
@@ -426,8 +429,6 @@
 
 
 					}
-
-						
 
 					$yds_res = $yds*$hrg;
 
@@ -657,6 +658,10 @@
 				$yds = $r->yds_responsibility/100*$jml_diskon;
 				$sup = $r->supp_responsibility/100*$jml_diskon;
 
+				if ($r->yds_responsibility=="0"){
+					$res_label = "-";
+				} else $res_label = "YDS ".$r->yds_responsibility."% SUPPLIER ".$r->supp_responsibility."%";
+
 				$yds_price = $yds*$hrg;//0.08*100.000
 
 				$yds_res = $yds*100;
@@ -701,7 +706,7 @@
 									</tr>
 									<tr><td>Pertanggungan</td>
 										<td>:</td>
-										<td>YDS $yds_res% SUPPLIER $supplier_res%</td>
+										<td>$res_label</td>
 									</tr>
 									<tr><td>Margin Yogya</td>
 										<td>:</td>

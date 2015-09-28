@@ -205,7 +205,7 @@
 		
 		//calculate contoh perhitungan
 		function get_calculate($id){	
-			$sql = "SELECT b.*, a.is_pkp, a.tax, a.yds_responsibility
+			$sql = "SELECT b.*, a.is_pkp, a.tax, a.yds_responsibility, a.special_price
 					FROM event_item a JOIN mst_tillcode b ON(a.tillcode=b.tillcode)
 					WHERE a.event_id='$id'
 					";

@@ -95,6 +95,7 @@
 								<select id="kindOfResponsibility" name="kindOfResponsibility"  class="form-control">
 									<option value="5050">YDS 50% : Supplier 50%</option>
 									<option value="4060">YDS 40% : Supplier 60%</option>
+									<option value="-1">Tanpa Pertanggungan</option>
 									<option value="0">Custom</option>
 								</select>
 							</div>
