@@ -3,9 +3,9 @@ create table mst_md (
     cat_code varchar(6),
     name varchar(20),
     created_by varchar(20),
-    created_date date,
+    created_date timestamp,
     updated_by varchar(20),
-    updated_date date
+    updated_date timestamp
 );
 alter table mst_md add primary key(id);
 
@@ -42,9 +42,9 @@ create table event (
     notes varchar(255),
     cc varchar(100),
     created_by varchar(20),
-    created_date date,
+    created_date timestamp,
     updated_by varchar(20),
-    updated_date date
+    updated_date timestamp
 );
 
 alter table event add primary key (id);
@@ -121,9 +121,9 @@ create table mst_template (
     notes text,
     is_active integer, -- 0/1
     created_by varchar(20),
-    created_date date,
+    created_date timestamp,
     updated_by varchar(20),
-    updated_date date
+    updated_date timestamp
 );
 
 alter table mst_template add primary key (tmpl_code);
@@ -141,7 +141,7 @@ create table mst_supplier (
     start_date date,
     end_date date,
     is_active integer, -- 0/1
-    created_date date
+    created_date timestamp
 );
 
 alter table mst_supplier add primary key (supp_code);
@@ -152,7 +152,7 @@ create table mst_brand (
     start_date date,
     end_date date,
     is_active integer, -- 0/1
-    created_date date
+    created_date timestamp
 );
 
 alter table mst_brand add primary key (brand_code);
@@ -166,7 +166,7 @@ create table mst_store (
     zipcode varchar(5),
     regional_code varchar(10),
     is_active integer, -- 0/1
-    created_date date
+    created_date timestamp
 );
 
 alter table mst_store add primary key (store_code);
@@ -175,7 +175,7 @@ create table mst_division (
     division_code varchar(6),
     division_desc varchar(60),
     is_active integer, -- 0/1
-    created_date date
+    created_date timestamp
 );
 
 alter table mst_division add primary key (division_code);
@@ -189,7 +189,7 @@ create table mst_category (
     category_desc varchar(60),
     division_code varchar(6),
     is_active integer, -- 0/1
-    created_date date
+    created_date timestamp
 );
 
 alter table mst_category add primary key (category_code);
@@ -205,7 +205,7 @@ create table mst_tillcode (
     brand_code varchar(10),
     is_sp integer default 0, -- 0/1
     is_active integer, -- 0/1
-    created_date date
+    created_date timestamp
 );
 
 alter table mst_tillcode add primary key (tillcode);
@@ -231,9 +231,9 @@ create table mst_location (
     loc_desc varchar(30),
     is_active integer, -- 0/1
     created_by varchar(20),
-    created_date date,
+    created_date timestamp,
     updated_by varchar(20),
-    updated_date date
+    updated_date timestamp
 );
 
 alter table mst_location add primary key (loc_code);
