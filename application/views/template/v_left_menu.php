@@ -37,7 +37,7 @@
 					<span>Transaksi</span>
 				</a>
 				<ul class="sub">
-					<li><a href="<?php echo base_url(); ?>acara/add" style="<?php if (isset($menu_input_active)){echo $menu_input_active;}else echo ""; ?>">Input Acara</a></li>
+					<li><a href="<?php echo base_url(); ?>acara/add/new" style="<?php if (isset($menu_input_active)){echo $menu_input_active;}else echo ""; ?>">Input Acara</a></li>
 					<li><a href="<?php echo base_url(); ?>acara/list" style="<?php if (isset($menu_daftar_active)){echo $menu_daftar_active;}else echo ""; ?>">Daftar Acara</a></li>
 					
 				</ul>

@@ -87,6 +87,7 @@ $route['acara/list'] = 'Acara_Controller/all_list';
 
 #$route['acara/(:any)'] = 'Acara_Controller/$1';
 $route['acara/add'] = 'Acara_Controller/add';
+$route['acara/add/new'] = 'Acara_Controller/add/new';
 $route['acara/add/next'] = 'Acara_Controller/add/next';
 $route['acara/save'] = 'Acara_Controller/save';
 $route['acara/save/(:num)'] = 'Acara_Controller/save/$1';

@@ -27,6 +27,9 @@
 			$data['right_menu'] = 'acara/v_right_menu';
 			$data['footer'] = 'template/v_footer';
 			
+			# clear acaraHolder
+			$this->session->unset_userdata("acaraHolder");
+			
 			$data['list'] = $this->Event_model->all_list();
 			$this->load->view('acara/v_acara', $data);
 		}
@@ -36,6 +39,23 @@
 			$data['menu_input_active'] = 'color:#FFF';
 			
 			if ($step == null) {
+			
+				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
+				$data['divisions'] = $this->Division->loadAll();
+				$data['templates'] = $this->Acara->loadAllTemplate();
+				$data['today'] = date('d-m-Y');
+				$data['head'] = 'acara/v_head';
+				$data['top_menu'] = 'template/v_top_menu';
+				$data['left_menu'] = 'template/v_left_menu';
+				$data['content'] = 'acara/v_add_new';
+				$data['right_menu'] = 'acara/v_right_menu';
+				$data['footer'] = 'template/v_footer';
+				
+				$this->load->view('acara/v_acara', $data);	
+			}
+			else if ($step == 'new') {	
+				# clear acaraHolder
+				$this->session->unset_userdata("acaraHolder");
 			
 				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
 				$data['divisions'] = $this->Division->loadAll();
