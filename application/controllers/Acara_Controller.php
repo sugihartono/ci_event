@@ -344,9 +344,9 @@
 			return $vlocation;				
 		}
 
-		function get_supplier($id){
+		function get_supplier($id, $tillcode){
 			$vlocation ="";
-			$supp = $this->Event_model->get_supplier($id);
+			$supp = $this->Event_model->get_supplier($id, $tillcode);
 			
 			foreach ($supp->result() as $res) :
 				$supp_code = $res->supp_code;
@@ -759,7 +759,7 @@
 				}
 
 				//get supplier
-				$vlocation .= $this->get_supplier($id);	
+				$vlocation .= $this->get_supplier($id, $r->tillcode);	
 								
 				// cek date
 				$same_date = $this->Event_model->is_same_date($id);
