@@ -116,13 +116,12 @@
 								</select>
 							</div>
 							
-							<!--
-							<div class="col-sm-6 pad-right">
-								<label class="control-label">
-									<input type="checkbox" id="manualSetting" name="manualSetting" <?php #if (isset($acaraHolder["manualSetting"])) echo "checked='checked'"; ?>> Setting promo diskon dilakukan oleh cabang
-								</label>
+							<label class="col-sm-2 control-label-right">Penandatangan I<span class="red-star"> *</span></label>
+							<div class="col-sm-3 pad-right required">
+								<select id="firstSignature" class="form-control" name="firstSignature">
+									<option value="">Pilih MD..</option>
+								</select>
 							</div>
-							-->
 						</div>	
 						
 						<div class="form-group">

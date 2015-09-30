@@ -36,40 +36,13 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Unit Bisnis<span class="red-star"> *</span></label>
 							<div class="col-sm-3 required">
-								<select id="department" class="form-control" name="department">
-									<?php if (isset($acaraHolder["department"])) { ?>
-									  <option <?php if ($acaraHolder["department"] == "Fashion") echo "selected='selected'"; ?> value="Fashion">Fashion</option>
-									  <!--<option <?php //if ($acaraHolder["department"] == "Supermarket") echo "selected='selected'"; ?> value="Supermarket">Supermarket</option>-->
-									<?php } else { ?>
-									  <option <?php if ($event[0]->department == "Fashion") echo "selected='selected'"; ?> value="Fashion">Fashion</option>
-									  <!--<option <?php //if ($event[0]->department == "Supermarket") echo "selected='selected'"; ?> value="Supermarket">Supermarket</option>-->
-									<?php } ?>
-								</select>
+								<input type="hidden" value="<?php echo (isset($event[0]->department) ? $event[0]->department : ""); ?>" id="department" name="department" >
+								<input type="text" class="form-control" readonly="" value="<?php echo (isset($event[0]->department) ? $event[0]->department : ""); ?>" id="departmentLbl" name="departmentLbl" >
 							</div>
 							<label class="col-sm-1 control-label-right">Divisi<span class="red-star"> *</span></label>
 							<div class="col-sm-6 pad-right required">
-								<select id="divisionCode" class="form-control" name="divisionCode">
-									<option value="">Pilih divisi..</option>
-									<?php if (isset($acaraHolder["divisionCode"])) { ?>
-										<?php
-											foreach($divisions as $division) {
-											  if ($acaraHolder["divisionCode"] == $division->division_code) $sel = "selected='selected'"; else $sel = "";
-										?>
-											<option <?php echo $sel; ?> value="<?php echo $division->division_code; ?>"><?php echo $division->division_desc; ?></option>
-										<?php
-											}
-										?>
-									<?php } else { ?>
-										<?php
-											foreach($divisions as $division) {
-											  if ($event[0]->division_code == $division->division_code) $sel = "selected='selected'"; else $sel = "";
-										?>
-											<option <?php echo $sel; ?> value="<?php echo $division->division_code; ?>"><?php echo $division->division_desc; ?></option>
-										<?php
-											}
-										?>
-									<?php } ?>
-								</select>
+								<input type="hidden" value="<?php echo (isset($event[0]->division_code) ? $event[0]->division_code : ""); ?>" id="divisionCode" name="divisionCode" >
+								<input type="text" class="form-control" readonly="" value="<?php echo (isset($divisionDesc) ? $divisionDesc : ""); ?>" id="divisionCodeLbl" name="divisionCodeLbl" >
 							</div>
 						</div>
 						
@@ -140,13 +113,12 @@
 								</select>
 							</div>
 							
-							<!--
-							<div class="col-sm-6 pad-right">
-								<label class="control-label">
-									<input type="checkbox" id="manualSetting" name="manualSetting" <?php #if (isset($acaraHolder["manualSetting"])) echo "checked='checked'"; ?>> Setting promo diskon dilakukan oleh cabang
-								</label>
+							<label class="col-sm-2 control-label-right">Penandatangan I<span class="red-star"> *</span></label>
+							<div class="col-sm-3 pad-right required">
+								<select id="firstSignature" class="form-control" name="firstSignature">
+									<?php echo $opts; ?>
+								</select>
 							</div>
-							-->
 						</div>	
 						
 						<div class="form-group">

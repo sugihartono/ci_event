@@ -7,7 +7,36 @@ $(function() {
                 selectOtherMonths: true,
                 dateFormat: "dd-mm-yy"
         });
-        */      
+        */
+        
+        $("#divisionCode").change(function() {
+                var divisionCode = $("option:selected", this).val();
+                if (divisionCode != "") {
+                        var dataString = "divisionCode=" + divisionCode;
+                        $.ajax({
+                                type: "POST",
+                                url: baseUrl+"acara/loadMdByDivision",
+                                data: dataString,
+                                beforeSend: function() {
+                                    //$("#imgLoading").removeClass("hide");
+                                },
+                                success: function(data) {
+                                    //alert("Input berhasil: " + data);
+                                    $("#firstSignature").html(data);
+                                },
+                                error: function(xhr, textStatus, errorThrown) {
+                                    //alert("Error: " + errorThrown);
+                                },
+                                complete: function(xhr, textStatus) {
+                                    //$("#imgLoading").addClass("hide");
+                                }
+                        });
+                }
+                else {
+                        $("#firstSignature").html('<option value="">Pilih MD..</option>');
+                }
+        });
+        
         FormValidation.init();
 });
 
@@ -44,6 +73,9 @@ var FormValidation = function () {
                                 },
                                 templateCode: {
                                     required: true
+                                },
+                                firstSignature: {
+                                    required: true
                                 }
                         },
                         messages: {
@@ -64,6 +96,9 @@ var FormValidation = function () {
                                 },
                                 templateCode: {
                                     required: "Template harus diisi."
+                                },
+                                firstSignature: {
+                                        required: "Penandatangan I harus diisi."   
                                 }
                         },
     

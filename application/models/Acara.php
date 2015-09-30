@@ -12,6 +12,39 @@ class Acara extends CI_Model {
         
         }
         
+        public function getDivisionName($divisionCode) {	
+                $params = array($divisionCode);
+                $sql = "select division_desc from mst_division where division_code = ?";
+                $query = $this->db->query($sql, $params);
+                
+                if ($query->num_rows() > 0) {
+                        $row = $query->row();
+                        return $row->division_desc;
+                }
+                return "";
+        }
+        
+        public function loadMdByDivision($divisionCode, $arrayMode = false) {
+                $params = array($divisionCode);
+                $sql = "select distinct name from mst_md where is_active = 1 and div_code = ? order by name";
+                $query = $this->db->query($sql, $params);
+                
+                if ($arrayMode) 
+                        return $query->result_array();
+                else
+                        return $query->result();
+        }
+        
+        public function loadAllMd($arrayMode = false) {	
+                $sql = "select distinct name from mst_md where is_active = 1 order by name";
+                $query = $this->db->query($sql);
+                
+                if ($arrayMode) 
+                        return $query->result_array();
+                else
+                        return $query->result();
+        }
+        
         public function loadAllLocation($arrayMode = false) {	
                 $sql = "select loc_code, loc_desc from mst_location where is_active = 1 order by loc_desc";
                 $query = $this->db->query($sql);

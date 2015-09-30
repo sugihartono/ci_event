@@ -18,6 +18,7 @@ insert into mst_md (cat_code, name, created_by, created_date) values
 alter table mst_md add div_code varchar(6);
 create index mst_md_idx on mst_md(div_code);
 update mst_md set div_code = 'D';
+alter table mst_md add is_active integer default 1;
 
 create sequence letter_no_a_seq;
 create sequence letter_no_b_seq;

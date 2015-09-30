@@ -34,6 +34,17 @@
 			$this->load->view('acara/v_acara', $data);
 		}
 		
+		public function loadMdByDivision() {
+			$inputs = $this->input->post();
+			$mds = $this->Acara->loadMdByDivision($inputs["divisionCode"]);
+			
+			$opts = '<option value="">Pilih MD..</option>';
+			foreach($mds as $md) {
+				$opts .= '<option value="' . $md->name . '">' . $md->name . '</option>';
+			}
+			echo $opts;
+		}
+		
 		public function add($step = null) {
 			$data['trans_active'] = 'dcjq-parent active';
 			$data['menu_input_active'] = 'color:#FFF';
@@ -104,10 +115,22 @@
 				$aResult = $this->Acara->load($id);
 				
 				$data["id"] = $id;
-				$data["event"] = $aResult["event"];
+				$event = $aResult["event"];
+				$data["event"] = $event;
+				$divisionCode = isset($event[0]->division_code) ? $event[0]->division_code : "";
+				$firstSignature = isset($event[0]->first_signature) ? $event[0]->first_signature : "";
+				$mds = $this->Acara->loadMdByDivision($divisionCode);
+			    $opts = '<option value="">Pilih MD..</option>';
+			    foreach($mds as $md) {
+				    if ($firstSignature == $md->name) $sel = 'selected="selected"'; else $sel = '';
+					$opts .= '<option ' . $sel . ' value="' . $md->name . '">' . $md->name . '</option>';
+			    }
+				
+				$data["opts"] = $opts;
+				$data["divisionDesc"] = $this->Acara->getDivisionName($divisionCode);
 				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
-				$data['divisions'] = $this->Division->loadAll();
 				$data['templates'] = $this->Acara->loadAllTemplate();
+				//$data['divisions'] = $this->Division->loadAll();
 				$data['today'] = date('d-m-Y');
 				$data['head'] = 'acara/v_head';
 				$data['top_menu'] = 'template/v_top_menu';
@@ -901,7 +924,7 @@
 			if ($id) {
 				$seq = $this->Acara->update($id, $inputs["eventNo"],
 						$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
-						$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
+						$inputs["templateCode"], $inputs["firstSignature"], "", $inputs["notes"], "", $isManualSetting,
 						$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 				);
 				if ($seq) $seq = $id;
@@ -909,7 +932,7 @@
 			else {
 				$seq = $this->Acara->addNew(
 						$inputs["about"], $inputs["purpose"], $inputs["attach"], $inputs["toward"], $inputs["department"], $inputs["divisionCode"], $source,
-						$inputs["templateCode"], "", "", $inputs["notes"], "", $isManualSetting,
+						$inputs["templateCode"], $inputs["firstSignature"], "", $inputs["notes"], "", $isManualSetting,
 						$inputs["letterDate"], $isSameDate, $isSameLocation, $detailEvent, $detailDate, $detailLocation, $usr, $upd
 				);	
 			}
