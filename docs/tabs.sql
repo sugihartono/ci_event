@@ -15,6 +15,10 @@ insert into mst_md (cat_code, name, created_by, created_date) values
 ('D3', 'Esther Septiane', 'system', current_timestamp),
 ('D4', 'Esther Septiane', 'system', current_timestamp);
 
+alter table mst_md add div_code varchar(6);
+create index mst_md_idx on mst_md(div_code);
+update mst_md set div_code = 'D';
+
 create sequence letter_no_a_seq;
 create sequence letter_no_b_seq;
 create sequence letter_no_c_seq;
