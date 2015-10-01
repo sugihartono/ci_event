@@ -119,6 +119,7 @@
 							<label class="col-sm-2 control-label-right">Penandatangan I<span class="red-star"> *</span></label>
 							<div class="col-sm-3 pad-right required">
 								<select id="firstSignature" class="form-control" name="firstSignature">
+									<?php if (isset($opts)) echo $opts; else ?>
 									<option value="">Pilih MD..</option>
 								</select>
 							</div>

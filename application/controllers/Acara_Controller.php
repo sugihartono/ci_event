@@ -50,8 +50,19 @@
 			$data['menu_input_active'] = 'color:#FFF';
 			
 			if ($step == null) {
-			
-				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
+				$acaraHolder = $this->session->userdata("acaraHolder");
+				
+				$divisionCode = isset($acaraHolder["divisionCode"]) ? $acaraHolder["divisionCode"] : "";
+				$firstSignature = isset($acaraHolder["firstSignature"]) ? $acaraHolder["firstSignature"] : "";
+				$mds = $this->Acara->loadMdByDivision($divisionCode);
+			    $opts = '<option value="">Pilih MD..</option>';
+			    foreach($mds as $md) {
+				    if ($firstSignature == $md->name) $sel = 'selected="selected"'; else $sel = '';
+					$opts .= '<option ' . $sel . ' value="' . $md->name . '">' . $md->name . '</option>';
+			    }
+				
+				$data["opts"] = $opts;
+				$data['acaraHolder'] = $acaraHolder;
 				$data['divisions'] = $this->Division->loadAll();
 				$data['templates'] = $this->Acara->loadAllTemplate();
 				$data['today'] = date('d-m-Y');
