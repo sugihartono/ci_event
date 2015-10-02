@@ -132,26 +132,15 @@
 							</div>
 						</div>
 						
-						<!--
 						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">CC</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" id="cc" name="cc" maxlength="100">
+						  <label class="col-sm-2 control-label">&nbsp;</label>
+							<div class="col-sm-5">
+								<input type="checkbox" <?php if ($isSameDate) echo "checked='checked'"; ?> id="isSameDate" name="isSameDate"> Daftar <b>TANGGAL</b> berlaku untuk semua tillcode dalam satu surat.
+							</div>
+							<div class="col-sm-5">
+								<input type="checkbox" <?php if ($isSameLocation) echo "checked='checked'"; ?> id="isSameLocation" name="isSameLocation"> Daftar <b>LOKASI</b> berlaku untuk semua tillcode dalam satu surat.
 							</div>
 						</div>
-						
-						<div class="form-group">
-							<label class="col-sm-2 col-sm-2 control-label">Penanda Tangan I</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" id="firstSignature" name="firstSignature" maxlength="20">
-							</div>
-							
-							<label class="col-sm-2 col-sm-2 control-label-right">Penanda Tangan II</label>
-							<div class="col-sm-3 pad-right">
-								<input type="text" class="form-control" id="secondSignature" name="secondSignature" maxlength="20">
-							</div>
-						</div>
-						-->
 						
 						<div class="divider"></div>
 						

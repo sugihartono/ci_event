@@ -61,6 +61,8 @@
 					$opts .= '<option ' . $sel . ' value="' . $md->name . '">' . $md->name . '</option>';
 			    }
 				
+				$data['isSameDate'] = isset($acaraHolder["isSameDate"]) ? 1 : 0;
+				$data['isSameLocation'] = isset($acaraHolder["isSameLocation"]) ? 1 : 0;
 				$data["opts"] = $opts;
 				$data['acaraHolder'] = $acaraHolder;
 				$data['divisions'] = $this->Division->loadAll();
@@ -78,7 +80,9 @@
 			else if ($step == 'new') {	
 				# clear acaraHolder
 				$this->session->unset_userdata("acaraHolder");
-			
+				
+				$data['isSameDate'] = 0;
+				$data['isSameLocation'] = 0;
 				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
 				$data['divisions'] = $this->Division->loadAll();
 				$data['templates'] = $this->Acara->loadAllTemplate();
@@ -100,7 +104,8 @@
 				}
 				
 				$this->session->set_userdata("acaraHolder", $inputs);
-				
+				$data['isSameDate'] = isset($inputs["isSameDate"]) ? 1 : 0;
+				$data['isSameLocation'] = isset($inputs["isSameLocation"]) ? 1 : 0;
 				$data['categories'] = $this->Acara->loadCategoryByDivision($inputs["divisionCode"]);
 				$data['stores'] = $this->Acara->loadAllStore();
 				$data['locations'] = $this->Acara->loadAllLocation();
@@ -123,6 +128,7 @@
 			$data['menu_input_active'] = 'color:#FFF';
 			
 			if ($step == null) {
+				$acaraHolder = $this->session->userdata("acaraHolder");
 				$aResult = $this->Acara->load($id);
 				
 				$data["id"] = $id;
@@ -137,9 +143,18 @@
 					$opts .= '<option ' . $sel . ' value="' . $md->name . '">' . $md->name . '</option>';
 			    }
 				
+				if (isset($acaraHolder["eventNo"])) {
+					$data['isSameDate'] = isset($acaraHolder["isSameDate"]) ? 1 : 0;
+					$data['isSameLocation'] = isset($acaraHolder["isSameLocation"]) ? 1 : 0;
+				}
+				else {
+					$data['isSameDate'] = isset($event[0]->is_same_date) ? $event[0]->is_same_date : 0;
+					$data['isSameLocation'] = isset($event[0]->is_same_location) ? $event[0]->is_same_location : 0;	
+				}
+				
 				$data["opts"] = $opts;
 				$data["divisionDesc"] = $this->Acara->getDivisionName($divisionCode);
-				$data['acaraHolder'] = $this->session->userdata("acaraHolder");
+				$data['acaraHolder'] = $acaraHolder;
 				$data['templates'] = $this->Acara->loadAllTemplate();
 				//$data['divisions'] = $this->Division->loadAll();
 				$data['today'] = date('d-m-Y');
@@ -160,18 +175,8 @@
 				}
 				
 				$this->session->set_userdata("acaraHolder", $inputs);
-				$aResult = $this->Acara->load($id);
-				
+				$aResult = $this->Acara->load($id);	
 				$eventItem = $aResult["event_item"];
-				
-				if (isset($eventItem[0]) && $eventItem[0]->same_date == "1")
-					$isSameDate = true;
-				else
-					$isSameDate = false;
-				if (isset($eventItem[0]) && $eventItem[0]->same_location == "1")
-					$isSameLocation = true;
-				else
-					$isSameLocation = false;
 				
 				$tillcodeRows = "";
 				foreach($eventItem as $eItem) {
@@ -193,44 +198,83 @@
 										"</tr>";	
 				}
 				
+				$event = $aResult["event"];
+				
+				# values from db
+				$isSameDate = isset($event[0]->is_same_date) ? $event[0]->is_same_date : 0;
+				$isSameLocation = isset($event[0]->is_same_location) ? $event[0]->is_same_location : 0;
+				
+				# load data
 				if ($isSameDate)
 					$eventDate = $aResult["event_same_date"];
 				else
 					$eventDate = $aResult["event_date"];
-					
-				$dateRows = "";
-				foreach($eventDate as $eDate) {
-					$tillcode = ($isSameDate ? "&nbsp;" : $eDate->tillcode);
-					$dateRows .= 	"<tr>" . 
-										"<td class='dateTillcode'>" . $tillcode . "</td>" . 
-										"<td class='dateEventStartDate'>" . $eDate->date_start . "</td>" . 
-										"<td class='dateEventEndDate'>" . $eDate->date_end . "</td>" . 
-										"<td>" . 
-											"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
-												"<i class='fa fa-trash-o'></i> delete" . 
-											"</a>" . 
-										"</td>" . 
-									"</tr>";	
-				}
 				
 				if ($isSameLocation)
 					$eventLocation = $aResult["event_same_location"];
 				else
 					$eventLocation = $aResult["event_location"];
 				
-				$locationRows = "";
-				foreach($eventLocation as $eLocation) {
-					$tillcode = ($isSameLocation ? "&nbsp;" : $eLocation->tillcode);
-					$locationRows .=   "<tr>" . 
-											"<td class='locationTillcode'>" . $tillcode . "</td>" . 
-											"<td class='locationLocationCode'>" . $eLocation->loc_desc . "</td>" . 
-											"<td class='locationStoreCode'>" . $eLocation->store_desc . "</td>" . 
+				# change these values	
+				$isSameDate = isset($inputs["isSameDate"]) ? 1 : 0;
+				$isSameLocation = isset($inputs["isSameLocation"]) ? 1 : 0;
+				
+				$dateRows = "";
+				foreach($eventDate as $eDate) {
+					if ($isSameDate) {
+						$dateRows .= 	"<tr>" . 
+											"<td class='dateEventStartDate'>" . $eDate->date_start . "</td>" . 
+											"<td class='dateEventEndDate'>" . $eDate->date_end . "</td>" . 
 											"<td>" . 
 												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
 													"<i class='fa fa-trash-o'></i> delete" . 
 												"</a>" . 
 											"</td>" . 
 										"</tr>";	
+					}
+					else {
+						$tillcode = ($isSameDate ? "&nbsp;" : (isset($eDate->tillcode) ? $eDate->tillcode : "&nbsp;"));
+						$dateRows .= 	"<tr>" . 
+											"<td class='dateTillcode'>" . $tillcode . "</td>" . 
+											"<td class='dateEventStartDate'>" . $eDate->date_start . "</td>" . 
+											"<td class='dateEventEndDate'>" . $eDate->date_end . "</td>" . 
+											"<td>" . 
+												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+													"<i class='fa fa-trash-o'></i> delete" . 
+												"</a>" . 
+											"</td>" . 
+										"</tr>";
+					}	
+				}
+				
+				
+				
+				$locationRows = "";
+				foreach($eventLocation as $eLocation) {
+					if ($isSameLocation) {
+						$locationRows .=   "<tr>" . 
+												"<td class='locationLocationCode'>" . $eLocation->loc_desc . "</td>" . 
+												"<td class='locationStoreCode'>" . $eLocation->store_desc . "</td>" . 
+												"<td>" . 
+													"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+														"<i class='fa fa-trash-o'></i> delete" . 
+													"</a>" . 
+												"</td>" . 
+											"</tr>";		
+					}
+					else {
+						$tillcode = ($isSameLocation ? "&nbsp;" : (isset($eLocation->tillcode) ? $eLocation->tillcode : "&nbsp;"));
+						$locationRows .=   "<tr>" . 
+												"<td class='locationTillcode'>" . $tillcode . "</td>" . 
+												"<td class='locationLocationCode'>" . $eLocation->loc_desc . "</td>" . 
+												"<td class='locationStoreCode'>" . $eLocation->store_desc . "</td>" . 
+												"<td>" . 
+													"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+														"<i class='fa fa-trash-o'></i> delete" . 
+													"</a>" . 
+												"</td>" . 
+											"</tr>";	
+					}
 				}
 				
 				$data["id"] = $id;
@@ -844,9 +888,6 @@
 		    
 		}
 
-		
-
-		
 		public function save($id = 0) {
 
 			$usr = $this->session->userdata['event_logged_in']['username'];
@@ -858,8 +899,10 @@
 			$source = strtoupper(substr($inputs["templateCode"], 0, 1)) == "Y" ? 1 : 0;
 			$isManualSetting = isset($inputs["manualSetting"]) ? 1 : 0;
 			
-			$isSameDate = $inputDetails["sameDate"];
-			$isSameLocation = $inputDetails["sameLocation"];
+			$isSameDate = $inputDetails["isSameDate"];
+			$isSameLocation = $inputDetails["isSameLocation"];
+			#$isSameDate = isset($inputs["isSameDate"]) ? 1 : 0;
+			#$isSameLocation = isset($inputs["isSameLocation"]) ? 1 : 0;
 			
 			# date
 			$dateTillcode = $inputDetails["dateTillcode"];
@@ -958,6 +1001,17 @@
 			$input = $this->input->post();
 			$ret = $this->Acara->remove($input["id"]);
 			if ($ret) echo "success"; else echo "Gagal menghapus data.";
+		}
+		
+		public function loadStores() {
+			$stores = $this->Acara->loadAllStore();
+			$sto = "";
+			foreach($stores as $store) {
+				//$sto .= $store->store_desc . " (" . $store->store_init . ")|";
+				$sto .= $store->store_desc . "|";
+			}
+			$sto = substr($sto, 0, strlen($sto)-1);
+			echo $sto;
 		}
 		
 		public function loadSuppliers() {

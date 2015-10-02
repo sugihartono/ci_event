@@ -55,6 +55,9 @@ create table event (
 alter table event add primary key (id);
 alter table event add letter_date date;
 
+alter table event add is_same_date integer default 0;
+alter table event add is_same_location integer default 0;
+
 create table event_item (
     event_id integer not null,
     tillcode varchar(13),

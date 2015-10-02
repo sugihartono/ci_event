@@ -154,11 +154,13 @@
 							</div>
 						</div>
 						
+						<!--
 						<div class="form-group">
 							<div class="col-sm-6">
 								<input type="checkbox" id="sameDate" name="sameDate"> &nbsp; <b>Daftar tanggal berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
+						-->
 						
 						<div class="form-group">
 							<div class="col-sm-12" style="float:right;">
@@ -172,7 +174,9 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableY">
 									<thead>
 										<tr>
+										  <?php if (!$isSameDate) { ?>
 											<th>Tillcode</th>
+										  <?php } ?>
 											<th>Tanggal</th>
 											<th>s/d Tanggal</th>
 											<th class="action">Action</th>
@@ -180,7 +184,9 @@
 									</thead>
 									<tbody>
 											<tr id="dummyRowY">
+											  <?php if (!$isSameDate) { ?>
 												<td>&nbsp;</td>
+											  <?php } ?>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>
@@ -211,27 +217,25 @@
 							</div>
 							<label class="col-sm-1 control-label-right">Cabang</label>
 							<div class="col-sm-6 pad-right">
-								<select id="storeCode" class="form-control" name="storeCode">
-									<option value="">Pilih cabang..</option>
+								<input type="text" class="form-control" id="storeCode" name="storeCode">
 									<?php
+										echo "<script type='text/javascript'>";
 										foreach($stores as $store) {
-									?>
-										<option value="<?php echo $store->store_desc; ?>"><?php echo $store->store_desc . " (" . $store->store_init . ")"; ?></option>
-									<?php
-											echo "<script type='text/javascript'>";
-											echo "arrStore[\"" . $store->store_desc . "\"] = \"" . $store->store_code . "\"";
-											echo "</script>";
+											echo "arrStore[\"" . $store->store_desc . "\"] = \"" . $store->store_code . "\";";
 										}
+										echo "</script>";
 									?>
 								</select>
 							</div>
 						</div>
 						
+						<!--
 						<div class="form-group">
 							<div class="col-sm-6">
 								<input type="checkbox" id="sameLocation" name="sameLocation"> &nbsp; <b>Daftar lokasi berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
+						-->
 						
 						<div class="form-group">
 							<div class="col-sm-12" style="float:right;">
@@ -245,7 +249,9 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableZ">
 									<thead>
 										<tr>
+										  <?php if (!$isSameLocation) { ?>
 											<th>Tillcode</th>
+										  <?php } ?>
 											<th>Lokasi</th>
 											<th>Cabang</th>
 											<th class="action">Action</th>
@@ -253,7 +259,9 @@
 									</thead>
 									<tbody>
 											<tr id="dummyRowZ">
+											  <?php if (!$isSameLocation) { ?>
 												<td>&nbsp;</td>
+											  <?php } ?>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>
 												<td>&nbsp;</td>
@@ -340,6 +348,8 @@
 <input type="hidden" id="todo" value="add">
 <input type="hidden" id="id" value="">
 <input type="hidden" id="division" value="<?php echo $division; ?>">
+<input type="hidden" id="isSameDate" value="<?php echo $isSameDate; ?>">
+<input type="hidden" id="isSameLocation" value="<?php echo $isSameLocation; ?>">
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/autoNumeric.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>

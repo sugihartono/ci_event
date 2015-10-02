@@ -154,11 +154,13 @@
 							</div>
 						</div>
 						
+						<!--
 						<div class="form-group">
 							<div class="col-sm-6">
 								<input type="checkbox" id="sameDate" name="sameDate" <?php if ($isSameDate) echo "checked='checked'"; ?>> &nbsp; <b>Daftar tanggal berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
+						-->
 						
 						<div class="form-group">
 							<div class="col-sm-12" style="float:right;">
@@ -172,7 +174,9 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableY">
 									<thead>
 										<tr>
+										  <?php if (!$isSameDate) { ?>
 											<th>Tillcode</th>
+										   <?php } ?>
 											<th>Tanggal</th>
 											<th>s/d Tanggal</th>
 											<th class="action">Action</th>
@@ -222,11 +226,13 @@
 							</div>
 						</div>
 						
+						<!--
 						<div class="form-group">
 							<div class="col-sm-6">
 								<input type="checkbox" id="sameLocation" name="sameLocation" <?php if ($isSameLocation) echo "checked='checked'"; ?>> &nbsp; <b>Daftar lokasi berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
+						-->
 						
 						<div class="form-group">
 							<div class="col-sm-12" style="float:right;">
@@ -240,7 +246,9 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableZ">
 									<thead>
 										<tr>
+										  <?php if (!$isSameLocation) { ?>
 											<th>Tillcode</th>
+										  <?php } ?>
 											<th>Lokasi</th>
 											<th>Cabang</th>
 											<th class="action">Action</th>
@@ -321,6 +329,8 @@
 <input type="hidden" id="todo" value="edit">
 <input type="hidden" id="id" value="<?php echo $id; ?>">
 <input type="hidden" id="division" value="<?php echo $division; ?>">
+<input type="hidden" id="isSameDate" value="<?php echo $isSameDate; ?>">
+<input type="hidden" id="isSameLocation" value="<?php echo $isSameLocation; ?>">
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery-ui-1.9.2.custom.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/autoNumeric.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.validate.js"></script>

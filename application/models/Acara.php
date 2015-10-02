@@ -163,7 +163,7 @@ class Acara extends CI_Model {
                         $aResult["event_item"] = $query->result();
                 
                 $sql = "select event_no, about, purpose, attach, toward, department, division_code, source, template_code, first_signature, second_signature, 
-                        approved_by, approved_date, notes, cc, is_manual_setting, to_char(letter_date, 'dd-mm-yyyy') letter_date from event where id = ?";
+                        approved_by, approved_date, notes, cc, is_manual_setting, to_char(letter_date, 'dd-mm-yyyy') letter_date, is_same_date, is_same_location from event where id = ?";
                 $query = $this->db->query($sql, $params);
                 if ($arrayMode) 
                         $aResult["event"] = $query->result_array();
@@ -218,11 +218,11 @@ class Acara extends CI_Model {
                 
                 # event
                 $params = array($eventNo, $about, $purpose, $attach, $toward, $department, $divisionCode, $source, $templateCode, $firstSignature, $secondSignature,
-                                $notes, $cc, $isManualSetting, $letterDate, $usr, $upd, $id);
+                                $notes, $cc, $isManualSetting, $letterDate, $usr, $upd, $isSameDate, $isSameLocation, $id);
                 
                 $sql = "update event set event_no = ?, about = ?, purpose = ?, attach = ?, toward = ?, department = ?, division_code = ?, source = ?, template_code = ?, " .
-                                "first_signature = ?, second_signature = ?, notes = ?, cc = ?, is_manual_setting = ?, letter_date = to_date(?, 'dd-mm-yyyy'), updated_by = ?, updated_date = ? " .
-                                "where id = ?";
+                                "first_signature = ?, second_signature = ?, notes = ?, cc = ?, is_manual_setting = ?, letter_date = to_date(?, 'dd-mm-yyyy'), updated_by = ?, updated_date = ?, " .
+                                "is_same_date = ?, is_same_location = ? where id = ?";
                 $this->db->query($sql, $params);
                 
                 # items
@@ -360,11 +360,11 @@ class Acara extends CI_Model {
                 
                 # event
                 $params = array($seq, $eventNo, $about, $purpose, $attach, $toward, $department, $divisionCode, $source, $templateCode, $firstSignature, $secondSignature,
-                                $notes, $cc, $isManualSetting, $letterDate, $usr, $upd);
+                                $notes, $cc, $isManualSetting, $letterDate, $usr, $upd, $isSameDate, $isSameLocation);
                 
                 $sql = "insert into event (id, event_no, about, purpose, attach, toward, department, division_code, source, template_code, first_signature, " .
-                                          "second_signature, notes, cc, is_manual_setting, letter_date, created_by, created_date) " .
-                        "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, to_date(?, 'dd-mm-yyyy'), ?, ?)";
+                                          "second_signature, notes, cc, is_manual_setting, letter_date, created_by, created_date, is_same_date, is_same_location) " .
+                        "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, to_date(?, 'dd-mm-yyyy'), ?, ?, ?, ?)";
                 $this->db->query($sql, $params);
                 
                 # items

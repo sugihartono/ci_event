@@ -44,6 +44,7 @@ $(function() {
     
     autocompleteSuppliers();
     autocompleteTillcodes(); 
+    autocompleteStores();
     FormValidation.init();
     
     addDeleteRowEvent("datatableY");
@@ -52,11 +53,34 @@ $(function() {
 
 });
 
+function autocompleteStores() {
+    var stores = loadStores();
+    $("#storeCode").autocomplete({
+         source: stores,
+         minLength: 1
+    });
+}
+
+function loadStores() {
+    var storeList = "";
+    
+    $.ajax({
+        url: baseUrl+'acara/loadStores',
+        type: "POST",
+        async: false,
+        data: { sto: null }
+    }).done(function(store) {
+        storeList = store.split('|');
+    });
+    
+    return storeList;
+}
+
 function autocompleteSuppliers() {
     var suppliers = loadSuppliers();
     $("#supplierCode").autocomplete({
          source: suppliers,
-         minLength: 2
+         minLength: 1
     });
 }
 
@@ -67,7 +91,7 @@ function loadSuppliers() {
         url: baseUrl+'acara/loadSuppliers',
         type: "POST",
         async: false,
-        data: { supp: null}
+        data: { supp: null }
     }).done(function(supplier) {
         supplierList = supplier.split('|');
     });
@@ -79,7 +103,7 @@ function autocompleteTillcodes() {
     var tillcodes = loadTillcodes();
     $("#tillcode").autocomplete({
          source: tillcodes,
-         minLength: 2
+         minLength: 1
     });
 }
 
@@ -91,7 +115,7 @@ function loadTillcodes() {
         url: baseUrl+'acara/loadTillcodes/'+division,
         type: "POST",
         async: false,
-        data: { supp: null}
+        data: { supp: null }
     }).done(function(tillcode) {
         tillcodeList = tillcode.split('|');
     });
@@ -119,8 +143,10 @@ function submitEvent(todo) {
     var eventNotes = "";
     
     var id = $("#id").val(); // for edit
-    var sameDate = $("#sameDate").prop("checked") ? 1 : 0;
-    var sameLocation = $("#sameLocation").prop("checked") ? 1 : 0;
+    //var sameDate = $("#sameDate").prop("checked") ? 1 : 0;
+    //var sameLocation = $("#sameLocation").prop("checked") ? 1 : 0;
+    var isSameDate = $("#isSameDate").val();
+    var isSameLocation = $("#isSameLocation").val();
     
     var pkp = "";
     var loc = "";
@@ -209,7 +235,7 @@ function submitEvent(todo) {
                     "&locationTillcode=" + locationTillcode + "&locationLocationCode=" + locationLocationCode + "&locationStoreCode=" + locationStoreCode +
                     "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventCategoryCode=" + eventCategoryCode +
                     "&eventSupplierResponsibility=" + eventSupplierResponsibility + "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp +
-                    "&eventMargin=" + eventMargin + "&eventSp=" + eventSp + "&eventNotes=" + eventNotes + "&sameLocation=" + sameLocation + "&sameDate=" + sameDate;
+                    "&eventMargin=" + eventMargin + "&eventSp=" + eventSp + "&eventNotes=" + eventNotes + "&isSameLocation=" + isSameLocation + "&isSameDate=" + isSameDate;
     
     var sUrl = baseUrl+"acara/save";
     if (todo == "edit") {
@@ -242,23 +268,42 @@ $("#frmAcaraNext").on("reset", function() {
 });
 
 function resetDetailTables() {
-    var row =   "<tr id='dummyRowY'>" + 
-                    "<td>&nbsp;</td>" + 
-                    "<td>&nbsp;</td>" + 
-                    "<td>&nbsp;</td>" + 
-                    "<td>&nbsp;</td>" + 
-                "</tr>";
+    var isSameDate = $("#isSameDate").val();
+    var isSameLocation = $("#isSameLocation").val();
     
+    if (isSameDate == "1") {
+        var row =   "<tr id='dummyRowY'>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                    "</tr>";    
+    }
+    else {
+        var row =   "<tr id='dummyRowY'>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                    "</tr>";
+    }
     $("#datatableY tr:gt(0)").remove();
     $("#datatableY > tbody:last").append(row);
     
-    var row =   "<tr id='dummyRowZ'>" + 
-                    "<td>&nbsp;</td>" + 
-                    "<td>&nbsp;</td>" + 
-                    "<td>&nbsp;</td>" + 
-                    "<td>&nbsp;</td>" + 
-                "</tr>";
-    
+    if (isSameLocation == "1") {
+        var row =   "<tr id='dummyRowZ'>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                    "</tr>";    
+    }
+    else {
+        var row =   "<tr id='dummyRowZ'>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                        "<td>&nbsp;</td>" + 
+                    "</tr>";
+    }
     $("#datatableZ tr:gt(0)").remove();
     $("#datatableZ > tbody:last").append(row);
     
@@ -274,12 +319,14 @@ function resetDetailTables() {
                     "<td>&nbsp;</td>" + 
                     "<td>&nbsp;</td>" + 
                 "</tr>";
-    
     $("#datatableX tr:gt(0)").remove();
     $("#datatableX > tbody:last").append(row);
 }
 
 function addDeleteRowEvent(id) {
+    var isSameDate = $("#isSameDate").val();
+    var isSameLocation = $("#isSameLocation").val();
+    
     $(".btnRowDelete").click(function() {
         $(this).closest("tr").remove();
         
@@ -287,23 +334,39 @@ function addDeleteRowEvent(id) {
         
         if (rowCount == 1) {
             if (id == "datatableY") {
-               var row =   "<tr id='dummyRowY'>" + 
-                                "<td>&nbsp;</td>" + 
-                                "<td>&nbsp;</td>" + 
-                                "<td>&nbsp;</td>" + 
-                                "<td>&nbsp;</td>" + 
-                            "</tr>";
-                
+                if (isSameDate == "1") {
+                    var row =   "<tr id='dummyRowY'>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                "</tr>";
+                }
+                else {
+                    var row =   "<tr id='dummyRowY'>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                "</tr>";
+                }
                 $("#datatableY > tbody:last").append(row);
             }
             else if (id == "datatableZ") {
-                var row =   "<tr id='dummyRowZ'>" + 
-                                "<td>&nbsp;</td>" + 
-                                "<td>&nbsp;</td>" + 
-                                "<td>&nbsp;</td>" + 
-                                "<td>&nbsp;</td>" + 
-                            "</tr>";
-                
+                if (isSameLocation == "1") {
+                    var row =   "<tr id='dummyRowZ'>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                "</tr>";
+                }
+                else {
+                    var row =   "<tr id='dummyRowZ'>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                    "<td>&nbsp;</td>" + 
+                                "</tr>";
+                }
                 $("#datatableZ > tbody:last").append(row);
             }
             else if (id == "datatableX") {
@@ -326,14 +389,69 @@ function addDeleteRowEvent(id) {
     });
 }
 
+function locationsWithEmptyTillcode() {
+    var check = "";
+    var isSameLocation = $("#isSameLocation").val();
+    var ret = false;
+    
+    if (isSameLocation != "1") {
+        $("#datatableZ > tbody  > tr").each(function() { 
+            $("td", this).each(function (index) {     
+                if (index == 0) {
+                    check = $(this).html().replace("&nbsp;", "");
+                    if (check == "") {
+                        ret = true;
+                        return false;
+                    }
+                }
+                return true;
+            });
+        });
+    }
+    
+    return ret;
+}
+
+function datesWithEmptyTillcode() {
+    var check = "";
+    var isSameDate = $("#isSameDate").val();
+    var ret = false;
+    
+    if (isSameDate != "1") {
+        $("#datatableY > tbody  > tr").each(function() { 
+            $("td", this).each(function (index) {          
+                if (index == 0) {
+                    check = $(this).html().replace("&nbsp;", "");
+                    if (check == "") {
+                        ret = true;
+                        return false;
+                    }
+                }
+                return true;
+            });
+        });
+    }
+    
+    return ret;
+}
+
 function emptyLocations() {
     var check = "";
+    var isSameLocation = $("#isSameLocation").val();
     
     $("#datatableZ > tbody  > tr").each(function() { 
         $("td", this).each(function (index) {
-            if (index < 3) {
-                check += $(this).html().replace("&nbsp;", "");
+            if (isSameLocation == "1") {
+                if (index < 2) {
+                    check += $(this).html().replace("&nbsp;", "");
+                }    
             }
+            else {
+                if (index < 3) {
+                    check += $(this).html().replace("&nbsp;", "");
+                }    
+            }
+            
         });
     });
     
@@ -345,11 +463,19 @@ function emptyLocations() {
 
 function emptyDates() {
     var check = "";
+    var isSameDate = $("#isSameDate").val();
     
     $("#datatableY > tbody  > tr").each(function() { 
         $("td", this).each(function (index) {
-            if (index < 3) {
-                check += $(this).html().replace("&nbsp;", "");
+            if (isSameDate == "1") {
+                if (index < 2) {
+                    check += $(this).html().replace("&nbsp;", "");
+                }    
+            }
+            else {
+                if (index < 3) {
+                    check += $(this).html().replace("&nbsp;", "");
+                }   
             }
         });
     });
@@ -393,7 +519,7 @@ function locationExist(tillcode, sameLocation, locationCode, storeCode) {
         check = "";    
         $("td", this).each(function (index) {
             if (sameLocation) {
-                if (index > 0 && index < 3) {
+                if (index < 2) {
                     check += $(this).html().trim();
                 }
             }
@@ -415,7 +541,7 @@ function locationExist(tillcode, sameLocation, locationCode, storeCode) {
     return ret;
 }
 
-function dateInRange(tillcode, eventStartDate, eventEndDate) {
+function dateInRange(tillcode, isSameDate, eventStartDate, eventEndDate) {
     var ret = false;
     
     var existingStartDate = "";
@@ -446,16 +572,29 @@ function dateInRange(tillcode, eventStartDate, eventEndDate) {
     $("#datatableY > tbody  > tr").each(function() {
     
         $("td", this).each(function (index) {
-            if (index == 0) {
-                existingTillcode = $(this).html().trim();    
+            if (isSameDate == "1") {
+                existingTillcode = "";    
+                if (index == 0) {
+                    existingStartDate = $(this).html().trim();
+                    existingStartDateEn = existingStartDate.substr(6, 4) + "-" + existingStartDate.substr(3, 2) + "-" + existingStartDate.substr(0, 2);
+                }
+                else if (index == 1) {
+                    existingEndDate = $(this).html().trim();
+                    existingEndDateEn = existingEndDate.substr(6, 4) + "-" + existingEndDate.substr(3, 2) + "-" + existingEndDate.substr(0, 2);
+                }    
             }
-            else if (index == 1) {
-                existingStartDate = $(this).html().trim();
-                existingStartDateEn = existingStartDate.substr(6, 4) + "-" + existingStartDate.substr(3, 2) + "-" + existingStartDate.substr(0, 2);
-            }
-            else if (index == 2) {
-                existingEndDate = $(this).html().trim();
-                existingEndDateEn = existingEndDate.substr(6, 4) + "-" + existingEndDate.substr(3, 2) + "-" + existingEndDate.substr(0, 2);
+            else {
+                if (index == 0) {
+                    existingTillcode = $(this).html().trim();    
+                }
+                else if (index == 1) {
+                    existingStartDate = $(this).html().trim();
+                    existingStartDateEn = existingStartDate.substr(6, 4) + "-" + existingStartDate.substr(3, 2) + "-" + existingStartDate.substr(0, 2);
+                }
+                else if (index == 2) {
+                    existingEndDate = $(this).html().trim();
+                    existingEndDateEn = existingEndDate.substr(6, 4) + "-" + existingEndDate.substr(3, 2) + "-" + existingEndDate.substr(0, 2);
+                }
             }
         });
         
@@ -463,7 +602,7 @@ function dateInRange(tillcode, eventStartDate, eventEndDate) {
             objExistingStartDate = new Date(existingStartDateEn);
             objExistingEndDate = new Date(existingEndDateEn);
             objEventStartDate = new Date(eventStartDateEn);
-            if (existingTillcode == tillcode) {
+            if (isSameDate == "1") {
                 time1 = objExistingStartDate.getTime();
                 time2 = objExistingEndDate.getTime();
                 time3 = objEventStartDate.getTime();
@@ -471,13 +610,24 @@ function dateInRange(tillcode, eventStartDate, eventEndDate) {
                     ret = true;
                     return false;
                 }
+            }
+            else {
+                if (existingTillcode == tillcode) {
+                    time1 = objExistingStartDate.getTime();
+                    time2 = objExistingEndDate.getTime();
+                    time3 = objEventStartDate.getTime();
+                    if (time3 >= time1 && time3 <= time2) {
+                        ret = true;
+                        return false;
+                    }
+                }    
             } 
         }
         else if (eventStartDate != "" && eventEndDate != "") {
             objEventStartDate = new Date(eventStartDateEn);
             objEventEndDate = new Date(eventEndDateEn);
             objExistingStartDate = new Date(existingStartDateEn);
-            if (existingTillcode == tillcode) {
+            if (isSameDate == "1") {
                 time1 = objEventStartDate.getTime();
                 time2 = objEventEndDate.getTime();
                 time3 = objExistingStartDate.getTime();
@@ -485,6 +635,17 @@ function dateInRange(tillcode, eventStartDate, eventEndDate) {
                     ret = true;
                     return false;
                 }
+            }
+            else {
+                if (existingTillcode == tillcode) {
+                    time1 = objEventStartDate.getTime();
+                    time2 = objEventEndDate.getTime();
+                    time3 = objExistingStartDate.getTime();
+                    if (time3 >= time1 && time3 <= time2) {
+                        ret = true;
+                        return false;
+                    }
+                }    
             } 
         }
         
@@ -510,7 +671,7 @@ function dateExist(tillcode, sameDate, eventStartDate, eventEndDate) {
         check = "";    
         $("td", this).each(function (index) {
             if (sameDate) {
-                if (index > 0 && index < 3) {
+                if (index < 2) {
                     check += $(this).html().trim();
                 }
             }
@@ -571,35 +732,57 @@ function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibil
 $("#btnAddDate").click(function() {
     var tillcode = $("#tillcode").val(); 
     tillcode = tillcode.substr(0, 8);
-    var sameDate = $("#sameDate").prop("checked");
+    //var sameDate = $("#sameDate").prop("checked");
+    var isSameDate = $("#isSameDate").val();
     var eventStartDate = $("#eventStartDate").val();
     var eventEndDate = $("#eventEndDate").val();
     
-    if (tillcode == "" || (eventStartDate == "" && eventEndDate == "")) {
-        alert("Silahkan mengisi tillcode dan tanggal terlebih dahulu.");
-        return;
+    if (isSameDate == "1") {
+        if (eventStartDate == "" && eventEndDate == "") {
+            alert("Silahkan mengisi tanggal terlebih dahulu.");
+            return;
+        }    
+    }
+    else {
+        if (tillcode == "" || (eventStartDate == "" && eventEndDate == "")) {
+            alert("Silahkan mengisi tillcode dan tanggal terlebih dahulu.");
+            return;
+        }    
     }
     
-    //if (sameDate) tillcode = "";
+    //if (isSameDate == "1") tillcode = "";
     if (eventStartDate == eventEndDate)  eventEndDate = "";
     if (eventStartDate == "" && eventEndDate != "") {
         eventStartDate = eventEndDate;
         eventEndDate = "";
     }
     
-    if (!(dateExist(tillcode, sameDate, eventStartDate, eventEndDate))) {
-        if (!dateInRange(tillcode, eventStartDate, eventEndDate)) {
+    if (!(dateExist(tillcode, isSameDate, eventStartDate, eventEndDate))) {
+        if (!dateInRange(tillcode, isSameDate, eventStartDate, eventEndDate)) {
             if (isValidDateRange(eventStartDate, eventEndDate)) {
-                var row =   "<tr>" + 
-                                "<td class='dateTillcode'>" + tillcode + "</td>" + 
-                                "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
-                                "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
-                                "<td>" + 
-                                    "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
-                                        "<i class='fa fa-trash-o'></i> delete" + 
-                                    "</a>" + 
-                                "</td>" + 
-                            "</tr>";
+                if (isSameDate == "1") {
+                    var row =   "<tr>" + 
+                                    "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
+                                    "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
+                                    "<td>" + 
+                                        "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                            "<i class='fa fa-trash-o'></i> delete" + 
+                                        "</a>" + 
+                                    "</td>" + 
+                                "</tr>";    
+                }
+                else {
+                    var row =   "<tr>" + 
+                                    "<td class='dateTillcode'>" + tillcode + "</td>" + 
+                                    "<td class='dateEventStartDate'>" + eventStartDate + "</td>" + 
+                                    "<td class='dateEventEndDate'>" + eventEndDate + "</td>" + 
+                                    "<td>" + 
+                                        "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                            "<i class='fa fa-trash-o'></i> delete" + 
+                                        "</a>" + 
+                                    "</td>" + 
+                                "</tr>";
+                }
                 
                 if ($("#datatableY tr#dummyRowY").length) {
                     $("#datatableY tr#dummyRowY").remove();
@@ -627,28 +810,50 @@ $("#btnAddDate").click(function() {
 $("#btnAddLocation").click(function() {
     var tillcode = $("#tillcode").val(); 
     tillcode = tillcode.substr(0, 8);
-    var sameLocation = $("#sameLocation").prop("checked");
+    //var sameLocation = $("#sameLocation").prop("checked");
+    var isSameLocation = $("#isSameLocation").val();
     var locationCode = $("#locationCode").val();
     var storeCode = $("#storeCode").val();
     
-    if (tillcode == "" || locationCode == "" || storeCode == "") {
-        alert("Silahkan mengisi tillcode dan lokasi terlebih dahulu.");
-        return;
+    if (isSameLocation == "1") {
+        if (locationCode == "" || storeCode == "") {
+            alert("Silahkan mengisi lokasi terlebih dahulu.");
+            return;
+        }    
+    }
+    else {
+        if (tillcode == "" || locationCode == "" || storeCode == "") {
+            alert("Silahkan mengisi tillcode dan lokasi terlebih dahulu.");
+            return;
+        }   
     }
     
-    //if (sameLocation) tillcode = "";
+    //if (isSameLocation == "1") tillcode = "";
     
-    if (!locationExist(tillcode, sameLocation, locationCode, storeCode)) {
-        var row =   "<tr>" + 
-                        "<td class='locationTillcode'>" + tillcode + "</td>" + 
-                        "<td class='locationLocationCode'>" + locationCode + "</td>" + 
-                        "<td class='locationStoreCode'>" + storeCode + "</td>" + 
-                        "<td>" + 
-                            "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
-                                "<i class='fa fa-trash-o'></i> delete" + 
-                            "</a>" + 
-                        "</td>" + 
-                    "</tr>";
+    if (!locationExist(tillcode, isSameLocation, locationCode, storeCode)) {
+        if (isSameLocation == "1") {
+            var row =   "<tr>" + 
+                            "<td class='locationLocationCode'>" + locationCode + "</td>" + 
+                            "<td class='locationStoreCode'>" + storeCode + "</td>" + 
+                            "<td>" + 
+                                "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                    "<i class='fa fa-trash-o'></i> delete" + 
+                                "</a>" + 
+                            "</td>" + 
+                        "</tr>";    
+        }
+        else {
+            var row =   "<tr>" + 
+                            "<td class='locationTillcode'>" + tillcode + "</td>" + 
+                            "<td class='locationLocationCode'>" + locationCode + "</td>" + 
+                            "<td class='locationStoreCode'>" + storeCode + "</td>" + 
+                            "<td>" + 
+                                "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                    "<i class='fa fa-trash-o'></i> delete" + 
+                                "</a>" + 
+                            "</td>" + 
+                        "</tr>";
+        }
         
         if ($("#datatableZ tr#dummyRowZ").length) {
             $("#datatableZ tr#dummyRowZ").remove();
@@ -795,6 +1000,12 @@ var FormValidation = function () {
                                 }
                                 else if (emptyTillcodes()) {
                                     alert("Tabel tillcode masih kosong.");    
+                                }
+                                else if (datesWithEmptyTillcode()) {
+                                    alert("Ada tillcode yang kosong pada tabel tanggal."); 
+                                }
+                                else if (locationsWithEmptyTillcode()) {
+                                    alert("Ada tillcode yang kosong pada tabel lokasi."); 
                                 }
                                 else {
                                     //alert("aye");
