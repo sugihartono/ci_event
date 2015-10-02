@@ -1153,10 +1153,10 @@
 			$dateEventEndDateArr = explode("#", $dateEventEndDate);
 			
 			$detailDate = array();
-			for ($i = 0; $i < sizeof($dateTillcodeArr); $i++) {
-				$detailDate[$i]["tillcode"] = $dateTillcodeArr[$i];
-				$detailDate[$i]["dateStart"] = $dateEventStartDateArr[$i];
-				$detailDate[$i]["dateEnd"] = $dateEventEndDateArr[$i];
+			for ($i = 0; $i < sizeof($dateEventStartDateArr); $i++) {
+				$detailDate[$i]["tillcode"] = isset($dateTillcodeArr[$i]) ? $dateTillcodeArr[$i] : "";
+				$detailDate[$i]["dateStart"] = isset($dateEventStartDateArr[$i]) ? $dateEventStartDateArr[$i] : "";
+				$detailDate[$i]["dateEnd"] = isset($dateEventEndDateArr[$i]) ? $dateEventEndDateArr[$i] : "";
 			}
 			
 			# location
@@ -1169,10 +1169,10 @@
 			$locationStoreCodeArr = explode("#", $locationStoreCode);
 			
 			$detailLocation = array();
-			for ($i = 0; $i < sizeof($locationTillcodeArr); $i++) {
-				$detailLocation[$i]["tillcode"] = $locationTillcodeArr[$i];
-				$detailLocation[$i]["locationCode"] = $locationLocationCodeArr[$i];
-				$detailLocation[$i]["storeCode"] = $locationStoreCodeArr[$i];
+			for ($i = 0; $i < sizeof($locationLocationCodeArr); $i++) {
+				$detailLocation[$i]["tillcode"] = isset($locationTillcodeArr[$i]) ? $locationTillcodeArr[$i] : "";
+				$detailLocation[$i]["locationCode"] = isset($locationLocationCodeArr[$i]) ? $locationLocationCodeArr[$i] : "";
+				$detailLocation[$i]["storeCode"] = isset($locationStoreCodeArr[$i]) ? $locationStoreCodeArr[$i] : "";
 			}
 			
 			# event
@@ -1198,15 +1198,15 @@
 			
 			$detailEvent = array();
 			for ($i = 0; $i < sizeof($eventTillcodeArr); $i++) {
-				$detailEvent[$i]["tillcode"] = $eventTillcodeArr[$i];
-				$detailEvent[$i]["suppCode"] = $eventSupplierCodeArr[$i];
-				$detailEvent[$i]["categoryCode"] = $eventCategoryCodeArr[$i];
-				$detailEvent[$i]["ydsResponsibility"] = $eventYdsResponsibilityArr[$i];
-				$detailEvent[$i]["suppResponsibility"] = $eventSupplierResponsibilityArr[$i];
-				$detailEvent[$i]["isPkp"] = $eventIsPkpArr[$i];
-				$detailEvent[$i]["margin"] = $eventMarginArr[$i];
-				$detailEvent[$i]["sp"] = $eventSpArr[$i];
-				$detailEvent[$i]["notes"] = $eventNotesArr[$i];
+				$detailEvent[$i]["tillcode"] = isset($eventTillcodeArr[$i]) ? $eventTillcodeArr[$i] : "";
+				$detailEvent[$i]["suppCode"] = isset($eventSupplierCodeArr[$i]) ? $eventSupplierCodeArr[$i] : "";
+				$detailEvent[$i]["categoryCode"] = isset($eventCategoryCodeArr[$i]) ? $eventCategoryCodeArr[$i] : "";
+				$detailEvent[$i]["ydsResponsibility"] = isset($eventYdsResponsibilityArr[$i]) ? $eventYdsResponsibilityArr[$i] : 0;
+				$detailEvent[$i]["suppResponsibility"] = isset($eventSupplierResponsibilityArr[$i]) ? $eventSupplierResponsibilityArr[$i] : 0;
+				$detailEvent[$i]["isPkp"] = isset($eventIsPkpArr[$i]) ? $eventIsPkpArr[$i] : 0;
+				$detailEvent[$i]["margin"] = isset($eventMarginArr[$i]) ? $eventMarginArr[$i] : 0;
+				$detailEvent[$i]["sp"] = isset($eventSpArr[$i]) ? $eventSpArr[$i] : 0;
+				$detailEvent[$i]["notes"] = isset($eventNotesArr[$i]) ? $eventNotesArr[$i] : "";
 			}
 			
 			# remove these variables from inuput

@@ -157,7 +157,7 @@
 						<!--
 						<div class="form-group">
 							<div class="col-sm-6">
-								<input type="checkbox" id="sameDate" name="sameDate" <?php if ($isSameDate) echo "checked='checked'"; ?>> &nbsp; <b>Daftar tanggal berlaku untuk semua tillcode dalam satu surat.</b>
+								<input type="checkbox" id="sameDate" name="sameDate" <?php #if ($isSameDate) echo "checked='checked'"; ?>> &nbsp; <b>Daftar tanggal berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
 						-->
@@ -210,17 +210,13 @@
 							</div>
 							<label class="col-sm-1 control-label-right">Cabang</label>
 							<div class="col-sm-6 pad-right">
-								<select id="storeCode" class="form-control" name="storeCode">
-									<option value="">Pilih cabang..</option>
+								<input type="text" class="form-control" id="storeCode" name="storeCode">
 									<?php
+										echo "<script type='text/javascript'>";
 										foreach($stores as $store) {
-									?>
-										<option value="<?php echo $store->store_desc; ?>"><?php echo $store->store_desc . " (" . $store->store_init . ")"; ?></option>
-									<?php
-											echo "<script type='text/javascript'>";
-											echo "arrStore['" . $store->store_desc . "'] = '" . $store->store_code . "'";
-											echo "</script>";
+											echo "arrStore[\"" . $store->store_desc . "\"] = \"" . $store->store_code . "\";";
 										}
+										echo "</script>";
 									?>
 								</select>
 							</div>
@@ -229,7 +225,7 @@
 						<!--
 						<div class="form-group">
 							<div class="col-sm-6">
-								<input type="checkbox" id="sameLocation" name="sameLocation" <?php if ($isSameLocation) echo "checked='checked'"; ?>> &nbsp; <b>Daftar lokasi berlaku untuk semua tillcode dalam satu surat.</b>
+								<input type="checkbox" id="sameLocation" name="sameLocation" <?php #if ($isSameLocation) echo "checked='checked'"; ?>> &nbsp; <b>Daftar lokasi berlaku untuk semua tillcode dalam satu surat.</b>
 							</div>
 						</div>
 						-->
