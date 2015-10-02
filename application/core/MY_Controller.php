@@ -24,6 +24,11 @@
 			$fmt = date('d M Y', strtotime($date));
 			return $fmt;
 		}
+
+		public function to_date($date){
+			$fmt = date('d', strtotime($date));
+			return $fmt;
+		}
 		
 	}
 ?>

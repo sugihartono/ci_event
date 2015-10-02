@@ -43,9 +43,7 @@
 					WHERE b.id='$id' AND a.is_active='1' ";
 			
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -88,9 +86,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -103,9 +99,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -116,9 +110,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -129,9 +121,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 
@@ -154,9 +144,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 
@@ -167,12 +155,8 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			} else {
-				return array();	
-			}
 			
+			return $ambil->result();
 			
 		}
 		
@@ -183,11 +167,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			} else {
-				return array();	
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -199,9 +179,7 @@
 					";
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -215,12 +193,13 @@
 				$join = " JOIN event_same_date x ON(x.event_id=c.event_id) ";
 			}
 
-			$sql = "SELECT *,(disc1+disc2) as jdisc  FROM 
+			$sql = "SELECT * FROM 
 					(
-						SELECT DISTINCT ON(c.tillcode) c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
+						SELECT DISTINCT ON(c.notes) c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
 						c.event_id, c.tillcode, c.notes, c.brutto_margin, c.net_margin,
-						e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp,
-						x.date_start, s.supp_code
+						e.disc_label, e.disc1, e.disc2, c.special_price, e.price, c.is_sp,
+						x.date_start, s.supp_code,
+						(e.disc1+e.disc2) as jdisc
 						
 						FROM event_item c JOIN event_same_location d ON(d.event_id=c.event_id)
 						JOIN mst_tillcode e ON(c.tillcode=e.tillcode)" . 
@@ -234,21 +213,23 @@
 						
 						GROUP BY c.yds_responsibility, c.supp_responsibility, c.is_pkp, c.tax,
 						c.event_id, c.tillcode, c.notes, c.brutto_margin, c.net_margin,
-						e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp,
+						e.disc_label, e.disc1, e.disc2, c.special_price, e.price, c.is_sp,
 						x.date_start, s.supp_code
 
-						ORDER BY c.tillcode
+						ORDER BY c.notes
 
 					) AS y
+					
+					ORDER BY CASE WHEN y.is_sp=1 THEN 1
+						ELSE 0
+					END, y.supp_code ASC, jdisc ASC, y.date_start ASC
 
-					ORDER BY y.supp_code ASC, jdisc ASC, y.date_start ASC
+
 					";
 					
 			//FROM event b JOIN event_item c ON(b.id=c.event_id)
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
@@ -261,14 +242,15 @@
 			} else {
 				$join = " JOIN event_same_date x ON(x.event_id=c.event_id) ";
 			}
-
-
-			$sql = "SELECT * ,(disc1+disc2) as jdisc  FROM 
+			
+			
+			$sql = "SELECT * FROM 
 					(
-						SELECT DISTINCT ON(c.tillcode) c.yds_responsibility, c.supp_responsibility, c.is_pkp, 
+						SELECT DISTINCT ON(c.notes) c.yds_responsibility, c.supp_responsibility, c.is_pkp, 
 						c.event_id, c.tillcode, c.notes, c.tax, c.brutto_margin, c.net_margin,
-						e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp,
-						x.date_start, s.supp_code
+						e.disc_label, e.disc1, e.disc2, c.special_price, e.price, c.is_sp,
+						x.date_start, s.supp_code,
+						(e.disc1+e.disc2) as jdisc
 						
 						FROM event_item c JOIN event_location d ON(d.event_id=c.event_id)
 						JOIN mst_tillcode e ON(c.tillcode=e.tillcode) " .
@@ -282,35 +264,45 @@
 
 						GROUP BY c.yds_responsibility, c.supp_responsibility, c.is_pkp,
 						c.event_id, c.tillcode, c.notes, c.tax, c.brutto_margin, c.net_margin,
-						e.disc_label, e.disc1, e.disc2, e.special_price, e.price, e.is_sp,
+						e.disc_label, e.disc1, e.disc2, c.special_price, e.price, c.is_sp,
 						x.date_start, s.supp_code
 
-						ORDER BY c.tillcode
+						ORDER BY c.notes
+
 					) AS y
 
-					ORDER BY y.supp_code ASC, jdisc ASC, y.date_start ASC
+					ORDER BY CASE WHEN y.is_sp=1 THEN 1
+						ELSE 0
+					END, y.supp_code ASC, jdisc ASC, y.date_start ASC
 					";	
 			//FROM event b JOIN event_item c ON(b.id=c.event_id)
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		
 		//calculate contoh perhitungan
 		function get_calculate($id){	
 
-			$sql = "SELECT b.*, a.is_pkp, a.tax, a.yds_responsibility, a.special_price, a.supp_responsibility
+			$sql = "SELECT * FROM
+					(
+						SELECT DISTINCT ON(a.notes) b.*,
+							a.is_pkp, a.tax, a.yds_responsibility, 
+							a.special_price, a.supp_responsibility, 
+							a.is_sp AS sp_event,
+							(b.disc1+b.disc2) as jdisc
 
-					FROM event_item a JOIN mst_tillcode b ON(a.tillcode=b.tillcode)
-					WHERE a.event_id='$id'
+						FROM event_item a JOIN mst_tillcode b ON(a.tillcode=b.tillcode)
+						WHERE a.event_id='$id'
+					) AS x
+					ORDER BY CASE WHEN x.sp_event=1 THEN 1
+						ELSE 0
+					END, jdisc, x.disc1 ASC, x.disc2 ASC
 					";
+
 					
 			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			}
+			return $ambil->result();
 			
 		}
 		

@@ -302,8 +302,9 @@
 		
 		function get_template($id){
 			$list = $this->Event_model->get_template($id);
-			
-			foreach($list->result() as $r){
+			$nama_supp = $this->get_supplier_header($id);
+
+			foreach($list as $r){
 				//cek header
 				$rheader =  str_replace(
 					array("#TGL_SURAT","#NOMOR_SURAT_ACARA","#LAMPIRAN",
@@ -311,7 +312,7 @@
 						  "#DPURPOSE", "#KOTA", "#FAX"
 					),
 					array($this->to_dMY($r->letter_date), $r->event_no, $r->attach,
-						  $r->about, $r->toward, $r->supp_desc, " &rarr; ".$r->purpose,
+						  $r->about, $r->toward, $nama_supp, ($r->purpose==""?"":" &rarr; ".$r->purpose),
 						  $r->purpose, $r->city, $r->fax
 					),
 					$r->header
@@ -319,8 +320,8 @@
 				
 				//cek footer
 				$rfooter =  str_replace(
-					array("#NOTES", "#FIRST_SIGNATURE", "#SECOND_SIGNATURE", "#APPROVED_BY", "#CC"),
-					array($r->notes, $r->first_signature,$r->second_signature,$r->approved_by, $r->cc),
+					array("#PARENTNOTES", "#FIRST_SIGNATURE", "#SECOND_SIGNATURE", "#APPROVED_BY", "#CC", "#MD"),
+					array(($r->notes!=""?"Notes : ".$r->notes."<br><br>":""), $r->first_signature,$r->second_signature,$r->approved_by, $r->cc, $r->md_name ),
 					$r->footer
 				);
 				
@@ -340,12 +341,30 @@
 			$date = $this->Event_model->get_event_date($id, $tillcode);
 			
 			$rdate = "";				
-			$vlocation = "";				
-			foreach ($date->result() as $res) :
+			$vlocation = "";			
+			$x=0;
+
+			foreach ($date as $res) :
+				if (($x%2 != 0) && ($x != 1)){
+					$rdate .= "<br>";
+				}
+
 				if (($res->date_end==null) || ($res->date_end=="")){
 					$rdate .= $this->to_dMY($res->date_start).', '; 
-				} else {
-					$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
+				} 
+				else {
+					// cek if same month
+					$last_date = date("Y-m-t", strtotime($res->date_start));
+					$date_start = date("Y-m-d", strtotime($res->date_start));
+					$date_end = date("Y-m-d", strtotime($res->date_end));
+
+					//jika dalam bln yg sama
+					if ($date_end<=$last_date){
+						$rdate .= $this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
+					} else {
+						$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
+					}
+
 				}
 			endforeach;
 			
@@ -353,7 +372,12 @@
 								<td>:</td>
 								<td><b>".rtrim($rdate, ", ")."</b></td>
 							</tr>";
-			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+			
+			
+			$same_location = $this->Event_model->is_same_location($id);
+			if ($same_location=='1'){
+				$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+			} 
 
 			return $vlocation;
 		}
@@ -363,15 +387,42 @@
 			$date = $this->Event_model->get_event_same_date($id);
 			
 			$rdate = "";				
-			$date_tmp = "";				
-			foreach ($date->result() as $res) :
-				$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 	
+			$date_tmp = "";			
+			$x=0;
+
+			foreach ($date as $res) :
+				$x++;
+				if (($x%2 != 0) && ($x != 1)){
+					$rdate .= "<br>";
+				}
+
+				if (($res->date_end==null) || ($res->date_end=="")){
+					$rdate .= $this->to_dMY($res->date_start).', '; 
+				} else {
+					// cek if same month
+					$last_date = date("Y-m-t", strtotime($res->date_start));
+					$date_start = date("Y-m-d", strtotime($res->date_start));
+					$date_end = date("Y-m-d", strtotime($res->date_end));
+
+					//jika dalam bln yg sama
+					if ($date_end<=$last_date){
+						$rdate .= $this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
+					} else {
+						$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
+					}	
+				}
+
 			endforeach;
 			
 			$date_tmp .= "<tr><td>Tanggal</td>
 							<td>:</td>
 							<td><b>".rtrim($rdate, ", ")."</b></td>
 						</tr>";
+			
+			$same_location = $this->Event_model->is_same_location($id);
+			if ($same_location=='1'){
+				$date_tmp .=  "<tr><td colspan='3'><br></td></tr>";	
+			} 
 
 			return $date_tmp;
 		}
@@ -380,22 +431,26 @@
 			$rlocation = $this->Event_model->get_event_location($id, $tillcode);
 
 			$i=0;
-			$tmp_loc = "";
+			$tmp_loc = "<table border=0>";
 			$vlocation = "";
-			foreach ($rlocation->result() as $res) :
+			foreach ($rlocation as $res) :
 				$i++;
-				if ($i%3==0){
-					$tmp_loc .= "<br>";
+				if (($i%2 != 0)){
+					$tmp_loc .= "<tr>";
 				}
-				$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
+				
+				$tmp_loc .= "<td>".$res->loc_desc." <b>".$res->store_desc.",</b></td>";	
+
 			endforeach;
+
+			$tmp_loc .= "</table>";
 
 			$vlocation .= "<tr>
 								<td>Tempat Acara</td>
 								<td>:</td>
-								<td>".rtrim($tmp_loc, ", ")."</td>
+								<td>".str_replace(",</b></td></table>", "</b></td></table>", $tmp_loc)."</td>
 							</tr>
-							<tr><td colspan='3'><br></td></tr>";
+							";
 			return $vlocation;				
 		}
 
@@ -403,7 +458,7 @@
 			$vlocation ="";
 			$supp = $this->Event_model->get_supplier($id, $tillcode);
 			
-			foreach ($supp->result() as $res) :
+			foreach ($supp as $res) :
 				$supp_code = $res->supp_code;
 			endforeach;
 			
@@ -411,29 +466,53 @@
 								<td>:</td>
 								<td>".$supp_code."</td>
 							</tr>";	
-			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+			
+			
+			$same_date = $this->Event_model->is_same_date($id);
+			if ($same_date == '1'){
+				$vlocation .=  "<tr><td colspan='3'><br></td></tr>";				
+			} 
+
 			return $vlocation;
+
+		}
+
+		function get_supplier_header($id){
+			$supp_view ="";
+			$supp = $this->Event_model->get_supplier_header($id);
+			
+			foreach ($supp as $res) :
+				$supp_view .= $res->supp_desc."<br>";
+			endforeach;
+			
+			
+			return $supp_view;
 
 		}
 
 		function get_tillcode($id){
 			$tillcode = $this->Event_model->get_tillcode($id);
 			
-			$rtillcode = "";
+			$rtillcode = "<table border=0>";
 			$vlocation = "";
 			$x = 0;
-			foreach ($tillcode->result() as $res) :
+
+			foreach ($tillcode as $res) :
 				$x++;
 
-				if ($x%3==0){
-					$rtillcode .= "<br>";
+				if (($x%2 != 0)){
+					$rtillcode .= "<tr>";
 				}
-				$rtillcode .= $res->tillcode.' ('.$res->disc_label.'), ';
+				
+				$rtillcode .= "<td>".$res->tillcode." (".$res->disc_label."), </td>";
+
 			endforeach;
 			
+			$rtillcode .= "</table>";
+
 			$vlocation .= "<tr><td>Tillcode</td>
 								<td>:</td>
-								<td>".rtrim($rtillcode, ", ")."</td>
+								<td>".str_replace(", </td></table>", "</td></table>", $rtillcode)."</td>
 							</tr>";	
 			$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 
@@ -445,22 +524,28 @@
 			$rlocation = $this->Event_model->get_event_same_location($id);
 
 			$i=0;
-			$tmp_loc = "";
-			$vlocation = ""; 
-			foreach ($rlocation->result() as $res) :
+			$tmp_loc = "<table border=0>";
+			$vlocation = "";
+
+			foreach ($rlocation as $res) :
 				$i++;
-				if ($i%3==0){
-					$tmp_loc .= "<br>";
-				}
-				$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";	
+				if (($i%2 != 0)){
+					$tmp_loc .= "<tr>";
+				} 
+
+				//$tmp_loc .= $res->loc_desc." <b>".$res->store_desc."</b>, ";
+				$tmp_loc .= "<td>".$res->loc_desc." <b>".$res->store_desc.",</b></td>";				
+
 			endforeach;
 			
+			$tmp_loc .= "</table>";
+
 			$vlocation .= "<tr>
 								<td>Tempat Acara</td>
 								<td>:</td>
-								<td>".rtrim($tmp_loc, ", ")."</td>
+								<td>".str_replace(",</b></td></table>", "</b></td></table>", $tmp_loc)."</td>
 							</tr>
-							<tr><td colspan='3'><br></td></tr>";
+							";
 			return $vlocation;
 
 		}
@@ -474,8 +559,9 @@
 
 			$x = 0;
 			$y = 0;
-			foreach ($list->result() as $r) {
+			foreach ($list as $r) {
 				//default sbg contoh harga
+				
 				
 				$hrg = 100000;
 				
@@ -487,21 +573,24 @@
 					$pmargin = $r->tax.'% NPKP';
 				}
 
+				//cek jika tanpa pert
 				$margin = $hrg*$r->tax/100;
+				
+				
 
 				$after_disc1 = $hrg-($hrg*$r->disc1/100);//harga setelah disc1
 				$after_disc2 = $after_disc1-($after_disc1*$r->disc2/100);//harga setelah disc2 // 72000
 				$cek = 100-($after_disc2/$hrg*100);
 
 				//cek hanya yg kurang dr 30%
-				if ($cek<=30){
+				if ( ($cek<=30)){
 					if ($y==0){
-						$vcalculate = "<table id='vcalculate'>
-								<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
-									<td>:</td>
-								</tr>";	
+						$vcalculate = "<table class='vcalculate' border=0>
+											<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
+												<td>:</td>
+											</tr>";	
 
-						$vcalculate_gold = "<table id='vcalculate_gold'><tr><td colspan='3'>&nbsp;</td></tr>";	
+						$vcalculate_gold = "<table class='vcalculate_gold' border=0><tr><td colspan='3'>&nbsp;</td></tr>";	
 					}
 					
 					$y++;
@@ -513,24 +602,54 @@
 
 					$sel = $hrg - $tmp2;
 
+					
+
 					// cek disc 2
 					if ($r->disc2=="0"){
-						$sel_margin = $sel - $margin;
+						if ($r->yds_responsibility!=0){
+							$sel_margin = $sel - $margin;
+						} else {
+							$sel_margin = $sel - ($sel*$r->tax/100);
+						}
+						
 						$yds2 = 0;
 						$sel2=0;
 					} else {
 						$tambahan = $r->disc2/100*$sel;
 						$sel2 = $sel-$tambahan;
-						$sel_margin = $sel2 - $margin;//jika ada disc +an di kurangin dulu
+						$sel_margin = $sel2 - $margin; //jika ada disc +an di kurangin dulu
 
 						$yds2 = $r->yds_responsibility/100*$tambahan;
 
-
 					}
+
+					//cek jika tanpa pert
+					if ($r->yds_responsibility!=0){
+						$margin = $margin;
+					} else {
+						if ($r->disc2=="0"){
+							$margin = $sel*$r->tax/100;
+						} else {
+							$margin = $sel2*$r->tax/100;
+						}
+						
+					}
+
 
 					$yds_res = $yds*$hrg;
 
-					$bayar = $sel_margin + $yds_res + $yds2;
+					//sel 2 = 72000 , $margin=10800
+					if ($r->yds_responsibility!=0){
+						$bayar = $sel_margin + $yds_res + $yds2;
+					} else {
+						if ($r->disc2!=0){
+							$bayar = $sel2 - $margin;
+						} else {
+							$bayar = $sel_margin + $yds_res + $yds2;
+						}
+						
+					}
+
 
 					if ($r->disc2=="0"){
 						$nett_margin = round((($margin-($yds_res+$yds2)) / ($sel))*100, 2, PHP_ROUND_HALF_UP);
@@ -540,135 +659,200 @@
 					
 							
 					//echo $sel_margin;	
+					//pertanggungan
+					if ($r->yds_responsibility!="0"){
+						$pert_label = "(Pert ".$r->yds_responsibility."% : ".$r->supp_responsibility."%)";
+					} else $pert_label = "";
 					
-					if ($r->is_sp=='0'){
+
+					if ($r->sp_event=='0'){
 						$label1 = $r->disc1;
 						($r->disc2=="0" ? $label2="":$label2="+ ".$r->disc2."%");
 
 						$label = "Disc. ".$label1."% ".$label2;
 
-						$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td></tr>";	
-						$vcalculate .= "<tr><td>Harga Jual</td>
-											<td>Rp. </td>
-											<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
-										</tr>";	
-						$vcalculate .= "<tr><td>Disc. ".$r->disc1."%</td>
-											<td>Rp. </td>
-											<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
-											<td><u> - </u></td>
-										</tr>";	
-						$vcalculate .= "<tr><td>&nbsp;</td>
-											<td>Rp. </td>
-											<td align='right'>".number_format($sel, 0, ",", ".")."</td>
-										</tr>";	
+					//	if ($r->yds_responsibility!="0"){
 
-						////////////////// gold //////////////////////////
-						$vcalculate_gold .= "<tr><td colspan='3'><b><u>".$label." (GOLD)</u></b></td></tr>";	
-						$vcalculate_gold .= "<tr><td>Harga Jual</td>
+
+							$vcalculate .= "<tr><td colspan='3'><b><u>".$label." ".$pert_label." </u></b></td></tr>";	
+							$vcalculate .= "<tr><td>Harga Jual</td>
 												<td>Rp. </td>
 												<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
 											</tr>";	
-						$vcalculate_gold .= "<tr><td>Disc. ".$r->disc1."%</td>
+
+							if ($r->disc1!=0){
+								$vcalculate .= "<tr><td>Disc. ".$r->disc1."%</td>
+													<td>Rp. </td>
+													<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
+													<td><u> - </u></td>
+												</tr>";		
+								$vcalculate .= "<tr><td>&nbsp;</td>
+													<td>Rp. </td>
+													<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+												</tr>";						
+							}				
+							
+							
+							////////////////// gold //////////////////////////
+							if ($r->yds_responsibility!="0"){
+								$vcalculate_gold .= "<tr><td colspan='3'><b><u>".$label." (GOLD)</u></b></td></tr>";	
+								$vcalculate_gold .= "<tr><td>Harga Jual</td>
+														<td>Rp. </td>
+														<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+													</tr>";	
+								if ($r->disc1!=0){
+									$vcalculate_gold .= "<tr><td>Disc. ".$r->disc1."%</td>
+															<td>Rp. </td>
+															<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
+															<td><u> - </u></td>
+														</tr>";	
+									$vcalculate_gold .= "<tr><td>&nbsp;</td>
+															<td>Rp. </td>
+															<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+														</tr>";			
+								}					
+											
+							} else {
+								//$vcalculate_gold .= $vcalculate;
+							}
+
+							if ($r->disc2!="0"){
+								$vcalculate .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
 												<td>Rp. </td>
-												<td align='right'><u>".number_format($tmp2, 0, ",", ".")."</u></td>
+												<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
 												<td><u> - </u></td>
 											</tr>";	
-						$vcalculate_gold .= "<tr><td>&nbsp;</td>
-												<td>Rp. </td>
-												<td align='right'>".number_format($sel, 0, ",", ".")."</td>
-											</tr>";					
-						
-						if ($r->disc2!="0"){
-							$vcalculate .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
-											<td>Rp. </td>
-											<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
-											<td><u> - </u></td>
-										</tr>";	
-							$vcalculate .= "<tr><td>&nbsp;</td>
-												<td>Rp. </td>
-												<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
-											</tr>";
-
-							$vcalculate_gold .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
-													<td>Rp. </td>
-													<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
-													<td><u> - </u></td>
-												</tr>";	
-							$vcalculate_gold .= "<tr><td>&nbsp;</td>
+								$vcalculate .= "<tr><td>&nbsp;</td>
 													<td>Rp. </td>
 													<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
 												</tr>";
 
-							////////////////////// gold //////////////////
-							$margin_gold = round($nett_margin/100*$sel2, -2);	
-							$bayar_gold = $sel2 - $margin_gold;
+								if ($r->yds_responsibility!="0"){
+									$vcalculate_gold .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
+															<td>Rp. </td>
+															<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
+															<td><u> - </u></td>
+														</tr>";	
+									$vcalculate_gold .= "<tr><td>&nbsp;</td>
+															<td>Rp. </td>
+															<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
+														</tr>";
 
-							$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-													<td>Rp. </td>
-													<td align='right'><u>".number_format($margin_gold, 0, ",", ".")."</u></td>
-													<td><u> - </u></td>
-												</tr>";		
+									////////////////////// gold //////////////////
+									$margin_gold = round($nett_margin/100*$sel2, -2);	
+									$bayar_gold = $sel2 - $margin_gold;
 
-							$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
-													<td>Rp. </td>
-													<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
-												</tr>";		
+									$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+															<td>Rp. </td>
+															<td align='right'><u>".number_format($margin_gold, 0, ",", ".")."</u></td>
+															<td><u> - </u></td>
+														</tr>";		
 
-							for ($i=1;$i<=4;$i++){
-								$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
-							}					
-																				
+									$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
+															<td>Rp. </td>
+															<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
+														</tr>";			
+								}	
 
-						}	else {
+								
 
-							//gold
-							$margin_gold = round($nett_margin/100*$sel, -2);	
-							$bayar_gold = $sel - $margin_gold;
+								
+								if ($r->yds_responsibility!="0"){
+									if ($r->disc2 != "0"){	
+										$limit = 5;				
+									} else $limit = 4;
+								} else {
+									if ($r->disc2 != "0"){	
+										$limit = 3;				
+									} else $limit = 2;
+								}
 							
-							$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-														<td>Rp. </td>
-														<td align='right'><u>".number_format($margin_gold, 0, ",", ".")."</u></td>
-														<td><u> - </u></td>
-													</tr>";		
 
-							$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
-													<td>Rp. </td>
-													<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
-												</tr>";	
-							for ($i=1;$i<=4;$i++){
-								$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
-							}						
+								for ($i=1;$i<=$limit;$i++){
+									$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+								}	
+																					
 
-						}
+							}	else {
+
+								//gold
+								if ($r->yds_responsibility!="0"){
+									$margin_gold = round($nett_margin/100*$sel, -2);	
+									$bayar_gold = $sel - $margin_gold;
+									
+									$vcalculate_gold .= "<tr><td>Margin Yogya $nett_margin% &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+																<td>Rp. </td>
+																<td align='right'><u>".number_format($margin_gold, 0, ",", ".")."</u></td>
+																<td><u> - </u></td>
+															</tr>";		
+
+									$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
+															<td>Rp. </td>
+															<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
+														</tr>";	
+
+								}		
+
+									if ($r->yds_responsibility!="0"){
+										if ($r->disc2 != "0"){	
+											$limit = 5;				
+										} else $limit = 4;
+									} else {
+										if ($r->disc2 != "0"){	
+											$limit = 3;				
+										} else $limit = 2;
+									}
+								
+
+									for ($i=1;$i<=$limit;$i++){
+										$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+									}
+
+													
+
+							}
+				//		}// endif yds exist
 
 						$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
 											<td>Rp. </td>
 											<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
 											<td><u> - </u></td>
-										</tr>";									
-						$vcalculate .= "<tr><td></td>
-											<td>Rp. </td>
-											<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
 										</tr>";	
-						$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
-											<td>Rp. </td>
-											<td align='right'>".number_format($yds_res, 0, ",", ".")."</td>
-										</tr>";	
-						
-						if ($r->disc2!="0"){
-							$vcalculate .= "<tr><td>Partisipasi Yogya Disc Tamb.</td>
+						//jgn muncul nol di perhitungan						
+						if ($r->yds_responsibility!=0){
+							$vcalculate .= "<tr><td></td>
 												<td>Rp. </td>
-												<td align='right'><u>".number_format($yds2, 0, ",", ".")."</u></td>
-												<td><u> + </u></td>
-											</tr>";			
+												<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
+											</tr>";	
+							$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
+												<td>Rp. </td>
+												<td align='right'>".number_format($yds_res, 0, ",", ".")."</td>
+											</tr>";		
+						}										
+						
+						
+
+						if ($r->disc2!="0"){
+							if ($r->yds_responsibility!=0){
+								$vcalculate .= "<tr><td>Partisipasi Yogya Disc Tamb.</td>
+													<td>Rp. </td>
+													<td align='right'><u>".number_format($yds2, 0, ",", ".")."</u></td>
+													<td><u> + </u></td>
+												</tr>";	
+							}		
 						}
 
 						$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
 											<td>Rp. </td>
 											<td align='right'>".number_format($bayar, 0, ",", ".")."</td>
-										</tr>";		
-						$vcalculate .= "<tr><td><b>Nett margin = $nett_margin %</b></td></tr>";			
-						$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";
+										</tr>";
+
+						//hanya utk yg ada pert				
+						if ($r->yds_responsibility!=0){
+							$vcalculate .= "<tr><td><b>Nett margin = $nett_margin %</b></td></tr>";			
+						} else $vcalculate .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+
+						$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";	
 
 						
 					} 
@@ -689,22 +873,29 @@
 											<td>Rp. </td>
 											<td align='right'>".number_format($hrg-$margin, 0, ",", ".")."</td>
 										</tr>";									
+						$vcalculate .= "<tr><td colspan='3'>&nbsp;</td></tr>";		
+						
+						for ($i=1;$i<=5;$i++){
+							$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+						}		
 
 					}
 						
 				} else {
-					$vcalculate .="<table id='vcalculate'><tr><td colspan='3'></td></tr>";
-					$vcalculate_gold .="<table id='vcalculate_gold'><tr><td colspan='3'></td></tr>";
+					$vcalculate .="<table class='vcalculate'><tr><td colspan='3'></td></tr>";
+					$vcalculate_gold .="<table class='vcalculate_gold'><tr><td colspan='3'></td></tr>";
 				}
 				
 
+				/*if ($r->yds_responsibility==0){
+					$vcalculate_gold = "";
+				}else $vcalculate_gold .= "";*/
 																
 			}
 			
-			$vcalculate .=  "<tr><td colspan='3'><br><br></td></tr>";
+
 			$vcalculate .= "</table>";
 
-			$vcalculate_gold .=  "<tr><td colspan='3'><br><br></td></tr>";
 			$vcalculate_gold .= "</table>";
 
 			return array(
@@ -743,12 +934,18 @@
 				$list = $this->Event_model->get_diff_location_content($id);
 			}
 
-			foreach ($list->result() as $r) {
+			//cek supp
+			$cek_supp = $this->Event_model->get_jml_supplier($id);
+			
+
+			
+
+			foreach ($list as $r) {
 				//hitung net margin
 				$hrg = 100000;
 
 				$bruto_price = $r->tax/100 * $hrg;
-				
+					
 				$after_disc1 = $hrg-($hrg*$r->disc1/100);//100.000-20.000 = 80.000
 				$after_disc2 = $after_disc1-($after_disc1*$r->disc2/100);//80.000-10.000
 
@@ -756,9 +953,16 @@
 				$yds = $r->yds_responsibility/100*$jml_diskon;
 				$sup = $r->supp_responsibility/100*$jml_diskon;
 
-				if ($r->yds_responsibility=="0"){
-					$res_label = "-";
-				} else $res_label = "YDS ".$r->yds_responsibility."% SUPPLIER ".$r->supp_responsibility."%";
+
+				$pert="";
+				if ($r->yds_responsibility!="0"){
+					$pert = "<tr><td>Pertanggungan</td>
+										<td>:</td>
+										<td> YDS ".$r->yds_responsibility."% SUPPLIER ".$r->supp_responsibility."%</td>
+									</tr>
+									";	
+
+				} // else $res_label = "YDS ".$r->yds_responsibility."% SUPPLIER ".$r->supp_responsibility."%";
 
 				$yds_price = $yds*$hrg;//0.08*100.000
 
@@ -767,54 +971,72 @@
 
 				$net_margin = round(($bruto_price - $yds_price) / $after_disc2*100, 2, PHP_ROUND_HALF_UP);
 				
-				if ($r->notes==""){
-					$acara = $r->disc_label;
+				
+				
+				if ($r->is_sp=="0"){
+					//$acara_final = "DISCOUNT " . $r->disc1."%" . ($r->disc2=="0"?"":" + ".$r->disc2."%") . ($r->notes==""?"":" &rarr; ".$r->notes);
+					$acara_final = $r->notes;
 				} else {
-					$acara = $r->disc_label." &rarr; ".$r->notes;
+					//$acara_final = "SPECIAL PRICE Rp. ".number_format($r->special_price, 0, ",", ".") . ($r->notes==""?"":" &rarr; ".$r->notes);
+					$acara_final = $r->notes;
 				}
-
+				
 				if ($r->is_sp=='1'){
 					if($r->is_pkp=='1'){
 						$margin = $r->tax.'% PKP (netto)';
 					} else {
 						$margin = $r->tax.'% NPKP (netto)';
 					}
-
+					
 					$vlocation .= "<tr><td>Acara</td>
 										<td>:</td>
-										<td>".$acara."</td>
+										<td>".$acara_final."</td>
 									</tr>
 									<tr><td>Margin Yogya</td>
 										<td>:</td>
 										<td>$margin</td>
 									</tr>
+									
 									";	
+								
 				} 
 				else {
 
 					if($r->is_pkp=='1'){
-						$margin = $r->tax.'% PKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
+						$margin = $r->tax.'% PKP (bruto)'.($r->yds_responsibility!='0'?' &rarr; <b> Nett margin = '.$net_margin.'% </b>':'');
 					} else {
-						$margin = $r->tax.'% NPKP (bruto) &rarr; <b> Nett margin = '.$net_margin.'% </b>';
+						$margin = $r->tax.'% NPKP (bruto)'.($r->yds_responsibility!='0'?' &rarr; <b> Nett margin = '.$net_margin.'% </b>':'');
 					}	
 
 					$vlocation .= "<tr><td>Acara</td>
 										<td>:</td>
-										<td>".$acara."</td>
-									</tr>
-									<tr><td>Pertanggungan</td>
-										<td>:</td>
-										<td>$res_label</td>
-									</tr>
-									<tr><td>Margin Yogya</td>
+										<td>".$acara_final."</td>
+									</tr>";
+					$vlocation .= $pert;				
+					$vlocation .= "<tr><td>Margin Yogya</td>
 										<td>:</td>
 										<td>$margin</td>
 									</tr>
+									
 									";		
 				}
 
 				//get supplier
-				$vlocation .= $this->get_supplier($id, $r->tillcode);	
+				//$vlocation .= $this->get_supplier($id, $r->tillcode);
+				
+				if ($cek_supp!=1){
+					$vlocation .= "<tr><td>Supplier</td>
+									<td>:</td>
+									<td>".$r->supp_code."</td>
+								</tr>
+								<tr><td colspan='3'>&nbsp;</td></tr>
+									";	
+				} else {
+					$vlocation .= "<tr><td colspan='3'>&nbsp;</td></tr>";	
+				}
+
+				
+
 								
 				// cek date
 				$same_date = $this->Event_model->is_same_date($id);
@@ -831,8 +1053,25 @@
 
 			} //end foreach
 				
+			$data['last'] = $this->db->last_query();
+
+			//cek is same supp
+			$cek_supp = $this->Event_model->get_jml_supplier($id);
 			
-			
+
+			if ($cek_supp==1){
+				$get_supplier_data = $this->Event_model->get_supplier_data($id);
+				foreach ($get_supplier_data as $r) {
+					$supp_name = $r->supp_desc;
+				}
+				$vlocation .=  "<tr>
+									<td>Supplier</td>
+									<td>:</td>
+									<td>".$supp_name."</td>
+								</tr>";
+				$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
+			} 
+
 			//get tillcode
 			$vlocation .= $this->get_tillcode($id);
 			
@@ -861,29 +1100,29 @@
 			
 			//////////////////////////////////////////////////// create pdf //////////////////////////////////////////
 			
-        	$this->load->helper('dompdf_helper');
+        	$this->load->helper('mpdf_helper');
 
 		    // page info here, db calls, etc.   
 		    $logo = "<img src='".base_url()."assets/img/yg_red.png' /><br />";
-		    $css = "<link type='text/css' href='".base_url()."assets/css/style-surat.css'"." />";
-
-		    $html = $logo. $css.
-		    		$data['rheader'] . 
-		    		"<table class='view_acara'>" .
-		    		$data['vlocation'] .
-		    		"</table>" .
-		    		"<div class='newspaper'>" .
-		    		$data['vcalculate'] .
-		    		$data['vcalculate_gold'] .
-		    		"</div>" .
-		    		$data['rfooter'] .
-		    		$data['rnotes']
-		    		;
 		    
-		   
+		  	$html = $logo.
+		    		$data['rheader'] . 
+	    			"<table class='view_acara'>" .
+						$data['vlocation'] .
+					 "</table>" .
+					
+					"<div class='newspaper' style='width:1000px;'>".
+						"<div class='vcalculate' style='float: left;width: 55%;'>".$data['vcalculate']."</div>" .
+						"<div class='vcalculate_gold' style='float: left;width: 40%;'>".$data['vcalculate_gold']."</div>" .
+					"</div>" .
+					
+					"<div class='pdf_footer'>".$data['rfooter'] ."</div>" .
+					"<div class='pdf_notes'>".$data['rnotes'] ."</div>" 
+		    		
+		    		;
 
 
-		    pdf_create($html, $event_no, false);
+		    pdf_create($html, $event_no);
 		   
 		    
 		}
