@@ -181,6 +181,7 @@
 				$tillcodeRows = "";
 				foreach($eventItem as $eItem) {
 					$tillcodeRows .= 	"<tr>" . 
+											"<td class='eventNotes'>" . $eItem->notes . "</td>" . 
 											"<td class='eventTillcode'>" . $eItem->tillcode . "</td>" .
 											"<td class='eventSupplierCode'>" . $eItem->supp_code . "</td>" .
 											"<td class='eventCategoryCode'>" . $eItem->category_desc . "</td>" .
@@ -189,7 +190,6 @@
 											"<td class='eventIsPkp'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" .
 											"<td class='eventMargin'>" . $eItem->tax . "</td>" . 
 											"<td class='eventSp'>" . ($eItem->special_price == 0 ? "&nbsp;" : $eItem->special_price) . "</td>" . 
-											"<td class='eventNotes'>" . $eItem->notes . "</td>" . 
 											"<td>" . 
 												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
 													"<i class='fa fa-trash-o'></i> delete" . 

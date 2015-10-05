@@ -43,16 +43,19 @@
 					<div style="padding:30px 10px 10px 10px;" class="form-panel">
 						
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Supplier</label>
+							<label class="col-sm-2 control-label">Acara<span class="red-star"> *</span></label>
 							<div class="col-sm-10 required">
-								<input type="text" class="form-control" id="supplierCode" name="supplierCode">
-							</div>	
+								<input type="text" class="form-control" id="notes" name="notes" maxlength="200">
+							</div>
 						</div>
 						
 						<div class="form-group">
-							
-							<label class="col-sm-2 control-label">Kategori<span class="red-star"> *</span></label>
-							<div class="col-sm-3 required">
+							<label class="col-sm-2 control-label">Supplier<span class="red-star"> *</span></label>
+							<div class="col-sm-5 required">
+								<input type="text" class="form-control" id="supplierCode" name="supplierCode">
+							</div>
+							<label class="col-sm-1 control-label-right">Kategori<span class="red-star"> *</span></label>
+							<div class="col-sm-4 pad-right required">
 								<select id="categoryCode" class="form-control" name="categoryCode">
 									<option value="">Pilih kategori..</option>
 									<?php
@@ -67,24 +70,17 @@
 									?>
 								</select>
 							</div>
-							
-							<label class="col-sm-1 control-label-right">Tillcode<span class="red-star"> *</span></label>
-							<div class="col-sm-6 pad-right required">
-								<input type="text" class="form-control" id="tillcode" name="tillcode">
-							</div>
-							
 						</div>
 						
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Note</label>
-							<div class="col-sm-3">
-								<input type="text" class="form-control" id="notes" name="notes" maxlength="50">
+							<label class="col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
+							<div class="col-sm-5 pad-right required">
+								<input type="text" class="form-control" id="tillcode" name="tillcode">
 							</div>
-							
 							<label class="col-sm-1 control-label-right">
 							  SP <input type="checkbox" id="cbSp" name="cbSp">
 							</label>
-							<div class="col-sm-6 pad-right required">
+							<div class="col-sm-4 pad-right required">
 								<input type="text" class="form-control" id="sp" name="sp" disabled="disabled">
 							</div>
 						</div>
@@ -286,6 +282,7 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableX">
 									<thead>
 										<tr>
+											<th>Acara</th>
 											<th>Tillcode</th>
 											<th>Supplier</th>
 											<th>Kategori</th>
@@ -294,7 +291,6 @@
 											<th>Tipe Margin</th>
 											<th>Margin</th>
 											<th>SP</th>
-											<th>Notes</th>
 											<th class="action">Action</th>
 										</tr>
 									</thead>

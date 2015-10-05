@@ -707,11 +707,11 @@ function isValidDateRange(startDate, endDate) {
 function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes) {
     var check = "";
     var ret = false;
-    var row = tillcode + supplierCode + categoryCode + supplierResponsibility + ydsResponsibility + isPkp + margin + notes;
+    var row = notes + tillcode + supplierCode + categoryCode + supplierResponsibility + ydsResponsibility + isPkp + margin;
     
     $("#datatableX > tbody  > tr").each(function() {
     
-        check = "";    
+        check = "";
         $("td", this).each(function (index) {
             if (index < 9) {
                 check += $(this).html().trim();
@@ -898,7 +898,7 @@ $("#btnPoolTillcode").click(function() {
     
     isPkp = isPkp == "1" ? "PKP" : "NPKP";
    
-    if (tillcode == "" || supplierCode == "" || categoryCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
+    if (notes == "" || tillcode == "" || supplierCode == "" || categoryCode == "" || supplierResponsibility == "" || ydsResponsibility == "" || isPkp == "" || margin == "") {
         alert("Silahkan lengkapi isian terlebih dahulu.");
         return;
     }
@@ -916,7 +916,8 @@ $("#btnPoolTillcode").click(function() {
     }
     
     if (!tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes)) {
-        var row =   "<tr>" + 
+        var row =   "<tr>" +
+                        "<td class='eventNotes'>" + notes + "</td>" + 
                         "<td class='eventTillcode'>" + tillcode + "</td>" +
                         "<td class='eventSupplierCode'>" + supplierCode + "</td>" +
                         "<td class='eventCategoryCode'>" + categoryCode + "</td>" +
@@ -925,7 +926,6 @@ $("#btnPoolTillcode").click(function() {
                         "<td class='eventIsPkp'>" + isPkp + "</td>" + 
                         "<td class='eventMargin'>" + margin + "</td>" +
                         "<td class='eventSp'>" + specialPriceF + "</td>" + 
-                        "<td class='eventNotes'>" + notes + "</td>" + 
                         "<td>" + 
                             "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
                                 "<i class='fa fa-trash-o'></i> delete" + 

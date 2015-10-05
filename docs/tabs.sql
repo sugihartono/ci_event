@@ -82,6 +82,9 @@ alter table event_item add is_sp integer default 0;
 alter table event_item add special_price numeric(18, 2) default 0;
 alter table event_item add without_responsibility integer default 0;
 
+alter table event_item alter notes type varchar(200);
+create index event_item_idx4 on event_item(notes);
+
 create table event_location (
     event_id integer not null,
     tillcode varchar(13),
