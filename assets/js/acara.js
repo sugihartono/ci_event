@@ -1,3 +1,5 @@
+var tmpSp;
+
 $(function() {
     var opts = {vMin: '0.00', vMax: '100.00'};
     
@@ -36,9 +38,13 @@ $(function() {
     $("#cbSp").click(function() {
         if ($(this).prop("checked")) {
             $("#sp").prop("disabled", false);
+            $("#sp").val(tmpSp);
+            $("#sp").focus();
         }
         else {
+            tmpSp = $("#sp").val();
             $("#sp").prop("disabled", true);
+            $("#sp").val("");
         }
     });
     
@@ -879,6 +885,7 @@ $("#btnPoolTillcode").click(function() {
     var categoryCode = $("#categoryCode option:selected").val();
     var specialPrice = $("#sp").autoNumeric("get");
     var specialPriceF = $("#sp").val();
+    var isSp = $("#cbSp").prop("checked");
     
     var kindOfResponsibility = $("#kindOfResponsibility option:selected").val();
     if (kindOfResponsibility == "0") {
@@ -903,8 +910,8 @@ $("#btnPoolTillcode").click(function() {
         return;
     }
     
-    if ($("#cbSp").prop("checked") && specialPrice == "") {
-        alert("Silahkan mengisi special price.");
+    if (isSp && specialPrice == "") {
+        alert("Silahkan mengisi SP.");
         $("#sp").focus();
         return;
     }
@@ -916,32 +923,116 @@ $("#btnPoolTillcode").click(function() {
     }
     
     if (!tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibility, ydsResponsibility, isPkp, margin, notes)) {
-        var row =   "<tr>" +
-                        "<td class='eventNotes'>" + notes + "</td>" + 
-                        "<td class='eventTillcode'>" + tillcode + "</td>" +
-                        "<td class='eventSupplierCode'>" + supplierCode + "</td>" +
-                        "<td class='eventCategoryCode'>" + categoryCode + "</td>" +
-                        "<td class='eventSupplierResponsibility'>" + supplierResponsibility + "</td>" +
-                        "<td class='eventYdsResponsibility'>" + ydsResponsibility + "</td>" +
-                        "<td class='eventIsPkp'>" + isPkp + "</td>" + 
-                        "<td class='eventMargin'>" + margin + "</td>" +
-                        "<td class='eventSp'>" + specialPriceF + "</td>" + 
-                        "<td>" + 
-                            "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
-                                "<i class='fa fa-trash-o'></i> delete" + 
-                            "</a>" + 
-                        "</td>" + 
-                    "</tr>";
         
-        if ($("#datatableX tr#dummyRowX").length) {
-            $("#datatableX tr#dummyRowX").remove();
+        if (isSp) {
+            var dataString = "tillcode=" + tillcode;
+            $.ajax({
+                type: "POST",
+                url: baseUrl+"acara/isValidSpArticle",
+                data: dataString,
+                beforeSend: function() {
+                    //$("#imgLoading").removeClass("hide");
+                },
+                success: function(data) {
+                    if (data == "validsp") {
+                        var row =   "<tr>" +
+                                        "<td class='eventNotes'>" + notes + "</td>" + 
+                                        "<td class='eventTillcode'>" + tillcode + "</td>" +
+                                        "<td class='eventSupplierCode'>" + supplierCode + "</td>" +
+                                        "<td class='eventCategoryCode'>" + categoryCode + "</td>" +
+                                        "<td class='eventSupplierResponsibility'>" + supplierResponsibility + "</td>" +
+                                        "<td class='eventYdsResponsibility'>" + ydsResponsibility + "</td>" +
+                                        "<td class='eventIsPkp'>" + isPkp + "</td>" + 
+                                        "<td class='eventMargin'>" + margin + "</td>" +
+                                        "<td class='eventSp'>" + specialPriceF + "</td>" + 
+                                        "<td>" + 
+                                            "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                                "<i class='fa fa-trash-o'></i> delete" + 
+                                            "</a>" + 
+                                        "</td>" + 
+                                    "</tr>";
+                        
+                        if ($("#datatableX tr#dummyRowX").length) {
+                            $("#datatableX tr#dummyRowX").remove();
+                        }
+                        
+                        $("#datatableX > tbody:last").append(row);
+                        
+                        addDeleteRowEvent("datatableX");
+                        $("#tillcode").val("");
+                        $("#cbSp").prop("checked", false);
+                        $("#sp").val("");
+                        $("#sp").prop("disabled", true);
+                        tmpSp = "";
+                    }
+                    else {
+                        alert("Article bukan special price.");
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                },
+                complete: function(xhr, textStatus) {
+                    //$("#imgLoading").addClass("hide");
+                }
+            });
+        }
+        else {
+            
+            var dataString = "tillcode=" + tillcode;
+            $.ajax({
+                type: "POST",
+                url: baseUrl+"acara/isValidSpArticle",
+                data: dataString,
+                beforeSend: function() {
+                    //$("#imgLoading").removeClass("hide");
+                },
+                success: function(data) {
+                    if (data == "validsp" && !isSp) {
+                        alert("Article special price, silahkan mengisi SP.");
+                    }
+                    else {
+                        var row =   "<tr>" +
+                                        "<td class='eventNotes'>" + notes + "</td>" + 
+                                        "<td class='eventTillcode'>" + tillcode + "</td>" +
+                                        "<td class='eventSupplierCode'>" + supplierCode + "</td>" +
+                                        "<td class='eventCategoryCode'>" + categoryCode + "</td>" +
+                                        "<td class='eventSupplierResponsibility'>" + supplierResponsibility + "</td>" +
+                                        "<td class='eventYdsResponsibility'>" + ydsResponsibility + "</td>" +
+                                        "<td class='eventIsPkp'>" + isPkp + "</td>" + 
+                                        "<td class='eventMargin'>" + margin + "</td>" +
+                                        "<td class='eventSp'>" + specialPriceF + "</td>" + 
+                                        "<td>" + 
+                                            "<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" + 
+                                                "<i class='fa fa-trash-o'></i> delete" + 
+                                            "</a>" + 
+                                        "</td>" + 
+                                    "</tr>";
+                        
+                        if ($("#datatableX tr#dummyRowX").length) {
+                            $("#datatableX tr#dummyRowX").remove();
+                        }
+                        
+                        $("#datatableX > tbody:last").append(row);
+                        
+                        addDeleteRowEvent("datatableX");
+                        $("#tillcode").val("");
+                        $("#cbSp").prop("checked", false);
+                        $("#sp").val("");
+                        $("#sp").prop("disabled", true);
+                        tmpSp = "";   
+                    }
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    alert("Error: " + errorThrown);
+                },
+                complete: function(xhr, textStatus) {
+                    //$("#imgLoading").addClass("hide");
+                }
+            });
+           
         }
         
-        $("#datatableX > tbody:last").append(row);
-        
-        addDeleteRowEvent("datatableX");
-        $("#tillcode").val("");
-        //$(this).closest("#frmAcaraNext").find("input[type=text], select").val("");
     }
     else {
         alert("Data tillcode sudah ada.");

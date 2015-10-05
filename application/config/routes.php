@@ -86,6 +86,7 @@ $route['acara'] = 'Acara_Controller';
 $route['acara/list'] = 'Acara_Controller/all_list';
 
 #$route['acara/(:any)'] = 'Acara_Controller/$1';
+$route['acara/isValidSpArticle'] = 'Acara_Controller/isValidSpArticle';
 $route['acara/loadMdByDivision'] = 'Acara_Controller/loadMdByDivision';
 $route['acara/add'] = 'Acara_Controller/add';
 $route['acara/add/new'] = 'Acara_Controller/add/new';

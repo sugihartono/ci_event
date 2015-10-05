@@ -34,6 +34,16 @@
 			$this->load->view('acara/v_acara', $data);
 		}
 		
+		public function isValidSpArticle() {
+			$inputs = $this->input->post();
+			$ret = $this->Acara->isValidSpArticle($inputs["tillcode"]);
+			
+			if ($ret)
+				echo "validsp";
+			else
+				echo "invalidsp";
+		}
+		
 		public function loadMdByDivision() {
 			$inputs = $this->input->post();
 			$mds = $this->Acara->loadMdByDivision($inputs["divisionCode"]);

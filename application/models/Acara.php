@@ -12,6 +12,18 @@ class Acara extends CI_Model {
         
         }
         
+        public function isValidSpArticle($tillcode) {
+                $params = array($tillcode);
+                $sql = "select count(tillcode) cnt from mst_tillcode where tillcode = ? and is_sp = 1";
+                $query = $this->db->query($sql, $params);
+                
+                if ($query->num_rows() > 0) {
+                        $row = $query->row();
+                        return ($row->cnt > 0 ? true : false);
+                }
+                return false;
+        }
+        
         public function getDivisionName($divisionCode) {	
                 $params = array($divisionCode);
                 $sql = "select division_desc from mst_division where division_code = ?";
