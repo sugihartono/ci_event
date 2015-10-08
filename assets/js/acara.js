@@ -716,7 +716,6 @@ function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibil
     var row = notes + tillcode + supplierCode + categoryCode + supplierResponsibility + ydsResponsibility + isPkp + margin;
     
     $("#datatableX > tbody  > tr").each(function() {
-    
         check = "";
         $("td", this).each(function (index) {
             if (index < 9) {
@@ -731,6 +730,27 @@ function tillcodeExist(tillcode, supplierCode, categoryCode, supplierResponsibil
         
         return true;
     });
+    
+    // tambahan
+    if (!ret) {
+        var eventTillcode = "";
+        var isSameDate = $("#isSameDate").val();
+        if (isSameDate == "1") {
+            $("#datatableX .eventTillcode").each(function() {
+                eventTillcode = $(this).html().trim();
+                if (tillcode == eventTillcode) {
+                    ret = true;
+                    return false;
+                }
+                return true;
+            });
+        }
+        else {
+            // check tillcode & date
+            
+        }
+    }
+    // end tambahan
     
     return ret;
 }
