@@ -331,7 +331,7 @@
 				//cek footer
 				$rfooter =  str_replace(
 					array("#PARENTNOTES", "#FIRST_SIGNATURE", "#SECOND_SIGNATURE", "#APPROVED_BY", "#CC", "#MD"),
-					array(($r->notes!=""?"Notes : ".$r->notes."<br><br>":""), $r->first_signature,$r->second_signature,$r->approved_by, $r->cc, $r->md_name ),
+					array(($r->notes!=""?"Notes : ".$r->notes."<br><br>":""), $r->first_signature,$r->second_signature,$r->approved_by, $r->cc, $r->first_signature ),
 					$r->footer
 				);
 				
@@ -375,6 +375,7 @@
 						$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
 					}
 
+						
 				}
 			endforeach;
 			
@@ -572,8 +573,12 @@
 			foreach ($list as $r) {
 				//default sbg contoh harga
 				
+				if ($r->sp_event=='1'){
+					$hrg = $r->sp_event_price;
+				} else {
+					$hrg = 100000;
+				}
 				
-				$hrg = 100000;
 				
 				
 				
@@ -593,7 +598,7 @@
 				$cek = 100-($after_disc2/$hrg*100);
 
 				//cek hanya yg kurang dr 30%
-				if ( ($cek<=30)){
+				if ( ($cek<=100)){
 					if ($y==0){
 						$vcalculate = "<table class='vcalculate' border=0>
 											<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
@@ -916,8 +921,6 @@
 
 		}
 
-		
-
 		function preview($id) {
 			$data['trans_active'] = 'dcjq-parent active';
 			$data['menu_daftar_active'] = 'color:#FFF';
@@ -1072,12 +1075,12 @@
 			if ($cek_supp==1){
 				$get_supplier_data = $this->Event_model->get_supplier_data($id);
 				foreach ($get_supplier_data as $r) {
-					$supp_name = $r->supp_desc;
+					$supp_code = $r->supp_code;
 				}
 				$vlocation .=  "<tr>
 									<td>Supplier</td>
 									<td>:</td>
-									<td>".$supp_name."</td>
+									<td>".$supp_code."</td>
 								</tr>";
 				$vlocation .=  "<tr><td colspan='3'><br></td></tr>";
 			} 
