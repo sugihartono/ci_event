@@ -13,6 +13,12 @@
 	.ui-autocomplete-loading {
 		background: white url('<?php echo base_url(); ?>assets/images/ui-anim_basic_16x16.gif') right center no-repeat;
 	}
+	.al-right {
+		text-align: right;
+	}
+	.al-center {
+		text-align: center;
+	}
 </style>
 
 <link href="<?php echo base_url(); ?>assets/css/themes/cupertino/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
@@ -171,11 +177,11 @@
 									<thead>
 										<tr>
 										  <?php if (!$isSameDate) { ?>
-											<th>Tillcode</th>
+											<th class="al-center">Tillcode</th>
 										   <?php } ?>
-											<th>Tanggal</th>
-											<th>s/d Tanggal</th>
-											<th class="action">Action</th>
+											<th class="al-center">Tanggal</th>
+											<th class="al-center">s/d Tanggal</th>
+											<th colspan="2" class="action al-center" style="width:10%;">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -214,7 +220,6 @@
 										}
 										echo "</script>";
 									?>
-								</select>
 							</div>
 						</div>
 						
@@ -239,11 +244,11 @@
 									<thead>
 										<tr>
 										  <?php if (!$isSameLocation) { ?>
-											<th>Tillcode</th>
+											<th class="al-center">Tillcode</th>
 										  <?php } ?>
-											<th>Lokasi</th>
-											<th>Cabang</th>
-											<th class="action">Action</th>
+											<th class="al-center">Lokasi</th>
+											<th class="al-center">Cabang</th>
+											<th colspan="2" class="action al-center" style="width:10%;">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -268,16 +273,16 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableX">
 									<thead>
 										<tr>
-											<th>Acara</th>
-											<th>Tillcode</th>
-											<th>Supplier</th>
-											<th>Kategori</th>
-											<th>Pert. Supp</th>
-											<th>Pert. Yogya</th>
-											<th>Tipe Margin</th>
-											<th>Margin</th>
-											<th>SP</th>
-											<th class="action">Action</th>
+											<th class="al-center">Acara</th>
+											<th class="al-center">Tillcode</th>
+											<th class="al-center">Supplier</th>
+											<th class="al-center">Kategori</th>
+											<th class="al-center">Pert. Supp</th>
+											<th class="al-center">Pert. Yogya</th>
+											<th class="al-center">Tipe Margin</th>
+											<th class="al-center">Margin</th>
+											<th class="al-center">SP</th>
+											<th colspan="2" class="action al-center" style="width:10%;">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -317,6 +322,206 @@
 		</form>   
 		
 	</div></section>
+
+<!-- date edit form -->
+<div id="editForm3" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlertLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="myModalEditForm3Label" class="modal-title">Edit Data Tanggal</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+					
+					<div class="form-group" id="tillcode3_e_holder">
+						<label class="col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" readonly="readonly" id="tillcode3_e" name="tillcode3_e">
+						</div>
+					</div> 
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Tanggal</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="eventStartDate_e" name="eventStartDate_e"  maxlength="10">
+						</div>
+						<label class="col-sm-1 control-label" style="text-align: center;">s/d</label>
+						<div class="col-sm-3">
+							<input type="text" class="form-control" id="eventEndDate_e" name="eventEndDate_e"  maxlength="10">
+						</div>
+					</div>
+					
+                </p>
+                <p><input type="hidden" name="idToUpdate3" id="idToUpdate3" value="">&nbsp;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary confirmOk3">&nbsp;&nbsp; OK &nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- location edit form -->
+<div id="editForm2" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlertLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="myModalEditForm2Label" class="modal-title">Edit Data Lokasi</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+					
+					<div class="form-group" id="tillcode2_e_holder">
+						<label class="col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" readonly="readonly" id="tillcode2_e" name="tillcode2_e">
+						</div>
+					</div> 
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Lokasi<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<select id="locationCode_e" class="form-control" name="locationCode_e">
+								<option value="">Pilih lokasi..</option>
+								<?php
+									foreach($locations as $location) {
+								?>
+								<option value="<?php echo $location->loc_desc; ?>"><?php echo $location->loc_desc; ?></option>
+								<?php
+									}
+								?>
+							</select>
+						</div>
+					</div>
+			
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Cabang<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" id="storeCode_e" name="storeCode_e">
+						</div>
+					</div>
+					
+                </p>
+                <p><input type="hidden" name="idToUpdate2" id="idToUpdate2" value="">&nbsp;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary confirmOk2">&nbsp;&nbsp; OK &nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- pool tillcode edit form -->
+<div id="editForm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlertLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="myModalEditFormLabel" class="modal-title">Edit Data Tillcode</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Acara<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" id="notes_e" name="notes_e" maxlength="200">
+						</div>
+					</div>
+			
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Supplier<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" id="supplierCode_e" name="supplierCode_e">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label-right">Kategori<span class="red-star"> *</span></label>
+						<div class="col-sm-10 required" style="margin-bottom: 6px;">
+							<select id="categoryCode_e" class="form-control" name="categoryCode_e">
+								<option value="">Pilih kategori..</option>
+								<?php
+									foreach($categories as $category) {
+								?>
+									<option value="<?php echo $category->category_desc; ?>"><?php echo $category->category_desc; ?></option>
+								<?php
+									}
+								?>
+							</select>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
+						<div class="col-sm-6 pad-right required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" readonly="readonly" id="tillcode_e" name="tillcode_e">
+						</div>
+						<label class="col-sm-1 control-label-right">
+						  SP <input type="checkbox" id="cbSp_e" name="cbSp_e">
+						</label>
+						<div class="col-sm-3 pad-right required" style="margin-bottom: 6px;">
+							<input type="text" class="form-control" id="sp_e" name="sp_e" disabled="disabled">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-3 control-label">Jenis Pertanggungan<span class="red-star"> *</span></label>
+						<div class="col-sm-9 required" style="margin-bottom: 6px;">
+							<select id="kindOfResponsibility_e" name="kindOfResponsibility_e"  class="form-control">
+								<option value="5050">YDS 50% : Supplier 50%</option>
+								<option value="4060">YDS 40% : Supplier 60%</option>
+								<option value="-1">Tanpa Pertanggungan</option>
+								<option value="0">Custom</option>
+							</select>
+						</div>
+					</div>
+					
+					<div id="responsibilityHolder_e" style="display:none;">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Pert. Supplier<span class="red-star"> *</span></label>
+							<div class="col-sm-4 required" style="margin-bottom: 6px;">
+								<input type="text" class="form-control" id="supplierResponsibility_e" name="supplierResponsibility_e">
+							</div>
+							
+							<label class="col-sm-2 control-label" style="text-align: right;">Pert. Yogya<span class="red-star"> *</span></label>
+							<div class="col-sm-4 required" style="margin-bottom: 6px;">
+								<input type="text" class="form-control" id="ydsResponsibility_e" name="ydsResponsibility_e">
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label class="col-sm-2 control-label">Tipe Margin<span class="red-star"> *</span> &nbsp;</label>
+						<div class="col-sm-4 required">
+							<select id="isPkp_e"  class="form-control">
+								<option value="1">PKP</option>
+								<option value="0">NPKP</option>
+							</select>
+						</div>
+						
+						<label class="col-sm-2 control-label" style="text-align: right;">Margin<span class="red-star"> *</span> &nbsp;</label>
+						<div class="col-sm-4 required">
+							<input type="text" class="form-control" id="margin_e" name="margin_e">
+						</div>
+					</div>
+					
+                </p>
+                <p><input type="hidden" name="idToUpdate" id="idToUpdate" value="">&nbsp;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary confirmOk">&nbsp;&nbsp; OK &nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"> Cancel </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="cntX" value="<?php echo $cntX; ?>">
+<input type="hidden" id="cntY" value="<?php echo $cntY; ?>">
+<input type="hidden" id="cntZ" value="<?php echo $cntZ; ?>">
 
 <input type="hidden" id="todo" value="edit">
 <input type="hidden" id="id" value="<?php echo $id; ?>">

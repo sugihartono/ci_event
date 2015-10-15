@@ -188,25 +188,47 @@
 				$aResult = $this->Acara->load($id);	
 				$eventItem = $aResult["event_item"];
 				
+				$idx = 0;
 				$tillcodeRows = "";
 				foreach($eventItem as $eItem) {
 					$tillcodeRows .= 	"<tr>" . 
-											"<td class='eventNotes'>" . $eItem->notes . "</td>" . 
-											"<td class='eventTillcode'>" . $eItem->tillcode . "</td>" .
-											"<td class='eventSupplierCode'>" . $eItem->supp_code . "</td>" .
-											"<td class='eventCategoryCode'>" . $eItem->category_desc . "</td>" .
-											"<td class='eventSupplierResponsibility'>" . $eItem->supp_responsibility . "</td>" .
-											"<td class='eventYdsResponsibility'>" . $eItem->yds_responsibility . "</td>" .
-											"<td class='eventIsPkp'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" .
-											"<td class='eventMargin'>" . $eItem->tax . "</td>" . 
-											"<td class='eventSp'>" . ($eItem->special_price == 0 ? "&nbsp;" : $eItem->special_price) . "</td>" . 
-											"<td>" . 
-												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
-													"<i class='fa fa-trash-o'></i> delete" . 
+											"<td class='eventNotes' id='eventNotes-" . $idx . "'>" . $eItem->notes . "</td>" . 
+											"<td class='eventTillcode' id='eventTillcode-" . $idx . "'>" . $eItem->tillcode . "</td>" .
+											"<td class='eventSupplierCode' id='eventSupplierCode-" . $idx . "'>" . $eItem->supp_code . "</td>" .
+											"<td class='eventCategoryCode' id='eventCategoryCode-" . $idx . "'>" . $eItem->category_desc . "</td>" .
+											"<td class='eventSupplierResponsibility al-right' id='eventSupplierResponsibility-" . $idx . "'>" . $eItem->supp_responsibility . "</td>" .
+											"<td class='eventYdsResponsibility al-right' id='eventYdsResponsibility-" . $idx . "'>" . $eItem->yds_responsibility . "</td>" .
+											"<td class='eventIsPkp' id='eventIsPkp-" . $idx . "'>" . ($eItem->is_pkp == 1 ? "PKP" : "NPKP") . "</td>" .
+											"<td class='eventMargin al-right' id='eventMargin-" . $idx . "'>" . $eItem->tax . "</td>" . 
+											"<td class='eventSp al-right' id='eventSp-" . $idx . "'>" . ($eItem->special_price == 0 ? "&nbsp;" : number_format($eItem->special_price, 2, ".", ",")) . "</td>" . 
+											"<td class='al-center'>" . 
+												"<a id=\"edit-" . $idx . "\"
+													data-id=\"" . $idx . "\"
+													data-notes=\"" . $eItem->notes . "\"
+													data-tillcode=\"" . $eItem->tillcode . "\"
+													data-supp_code=\"" . $eItem->supp_code . "\"
+													data-category_desc=\"" . $eItem->category_desc . "\"
+													data-supp_responsibility=\"" . $eItem->supp_responsibility . "\"
+													data-yds_responsibility=\"" . $eItem->yds_responsibility . "\"
+													data-is_pkp=\"" . $eItem->is_pkp . "\"
+													data-tax=\"" . $eItem->tax . "\"
+													data-is_sp=\"" . $eItem->is_sp . "\"
+													data-special_price=\"" . number_format($eItem->special_price, 2, ".", ",") . "\"
+													data-toggle='modal' data-target='#editForm' class='btn_update btn btn-xs editTrigger'>" . 
+													"<i class='fa fa-pencil'></i> edit" . 
 												"</a>" . 
 											"</td>" . 
-										"</tr>";	
+											"<td class='al-center'>" . 
+												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
+													"<i class='fa fa-trash-o'></i> del" . 
+												"</a>" . 
+											"</td>" . 
+										"</tr>";
+					$idx++;
 				}
+				
+				# rowcount for tillcode
+				$cntX = $idx;
 				
 				$event = $aResult["event"];
 				
@@ -229,15 +251,26 @@
 				$isSameDate = isset($inputs["isSameDate"]) ? 1 : 0;
 				$isSameLocation = isset($inputs["isSameLocation"]) ? 1 : 0;
 				
+				$idx = 0;
 				$dateRows = "";
 				foreach($eventDate as $eDate) {
 					if ($isSameDate) {
 						$dateRows .= 	"<tr>" . 
-											"<td class='dateEventStartDate'>" . $eDate->date_start . "</td>" . 
-											"<td class='dateEventEndDate'>" . $eDate->date_end . "</td>" . 
-											"<td>" . 
+											"<td class='dateEventStartDate' id='dateEventStartDate-" . $idx . "'>" . $eDate->date_start . "</td>" . 
+											"<td class='dateEventEndDate' id='dateEventEndDate-" . $idx . "'>" . $eDate->date_end . "</td>" . 
+											"<td class='al-center'>" . 
+												"<a id=\"edit3-" . $idx . "\"
+													data-id=\"" . $idx . "\"
+													data-tillcode=\"\"
+													data-date_start=\"" . $eDate->date_start . "\"
+													data-date_end=\"" . $eDate->date_end . "\"
+													data-toggle='modal' data-target='#editForm3' class='btn_update btn btn-xs editTrigger3'>" . 
+													"<i class='fa fa-pencil'></i> edit" . 
+												"</a>" . 
+											"</td>" . 
+											"<td class='al-center'>" . 
 												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
-													"<i class='fa fa-trash-o'></i> delete" . 
+													"<i class='fa fa-trash-o'></i> del" . 
 												"</a>" . 
 											"</td>" . 
 										"</tr>";	
@@ -245,29 +278,52 @@
 					else {
 						$tillcode = ($isSameDate ? "&nbsp;" : (isset($eDate->tillcode) ? $eDate->tillcode : "&nbsp;"));
 						$dateRows .= 	"<tr>" . 
-											"<td class='dateTillcode'>" . $tillcode . "</td>" . 
-											"<td class='dateEventStartDate'>" . $eDate->date_start . "</td>" . 
-											"<td class='dateEventEndDate'>" . $eDate->date_end . "</td>" . 
-											"<td>" . 
+											"<td class='dateTillcode' id='dateTillcode-" . $idx . "'>" . $tillcode . "</td>" . 
+											"<td class='dateEventStartDate' id='dateEventStartDate-" . $idx . "'>" . $eDate->date_start . "</td>" . 
+											"<td class='dateEventEndDate' id='dateEventEndDate-" . $idx . "'>" . $eDate->date_end . "</td>" . 
+											"<td class='al-center'>" . 
+												"<a id=\"edit3-" . $idx . "\"
+													data-id=\"" . $idx . "\"
+													data-tillcode=\"" . $tillcode . "\"
+													data-date_start=\"" . $eDate->date_start . "\"
+													data-date_end=\"" . $eDate->date_end . "\"
+													data-toggle='modal' data-target='#editForm3' class='btn_update btn btn-xs editTrigger3'>" . 
+													"<i class='fa fa-pencil'></i> edit" . 
+												"</a>" . 
+											"</td>" . 
+											"<td class='al-center'>" . 
 												"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
-													"<i class='fa fa-trash-o'></i> delete" . 
+													"<i class='fa fa-trash-o'></i> del" . 
 												"</a>" . 
 											"</td>" . 
 										"</tr>";
-					}	
+					}
+					$idx++;
 				}
 				
+				# rowcount for date
+				$cntY = $idx;
 				
-				
+				$idx = 0;
 				$locationRows = "";
 				foreach($eventLocation as $eLocation) {
 					if ($isSameLocation) {
 						$locationRows .=   "<tr>" . 
-												"<td class='locationLocationCode'>" . $eLocation->loc_desc . "</td>" . 
-												"<td class='locationStoreCode'>" . $eLocation->store_desc . "</td>" . 
-												"<td>" . 
+												"<td class='locationLocationCode' id='locationLocationCode-" . $idx . "'>" . $eLocation->loc_desc . "</td>" . 
+												"<td class='locationStoreCode' id='locationStoreCode-" . $idx . "'>" . $eLocation->store_desc . "</td>" . 
+												"<td class='al-center'>" . 
+													"<a id=\"edit2-" . $idx . "\"
+														data-id=\"" . $idx . "\"
+														data-tillcode=\"\"
+														data-loc_desc=\"" . $eLocation->loc_desc . "\"
+														data-store_desc=\"" . $eLocation->store_desc . "\"
+														data-toggle='modal' data-target='#editForm2' class='btn_update btn btn-xs editTrigger2'>" . 
+														"<i class='fa fa-pencil'></i> edit" . 
+													"</a>" . 
+												"</td>" . 
+												"<td class='al-center'>" . 
 													"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
-														"<i class='fa fa-trash-o'></i> delete" . 
+														"<i class='fa fa-trash-o'></i> del" . 
 													"</a>" . 
 												"</td>" . 
 											"</tr>";		
@@ -275,18 +331,35 @@
 					else {
 						$tillcode = ($isSameLocation ? "&nbsp;" : (isset($eLocation->tillcode) ? $eLocation->tillcode : "&nbsp;"));
 						$locationRows .=   "<tr>" . 
-												"<td class='locationTillcode'>" . $tillcode . "</td>" . 
-												"<td class='locationLocationCode'>" . $eLocation->loc_desc . "</td>" . 
-												"<td class='locationStoreCode'>" . $eLocation->store_desc . "</td>" . 
-												"<td>" . 
+												"<td class='locationTillcode' id='locationTillcode-" . $idx . "'>" . $tillcode . "</td>" . 
+												"<td class='locationLocationCode' id='locationLocationCode-" . $idx . "'>" . $eLocation->loc_desc . "</td>" . 
+												"<td class='locationStoreCode' id='locationStoreCode-" . $idx . "'>" . $eLocation->store_desc . "</td>" .
+												"<td class='al-center'>" . 
+													"<a id=\"edit2-" . $idx . "\"
+														data-id=\"" . $idx . "\"
+														data-tillcode=\"" . $tillcode . "\"
+														data-loc_desc=\"" . $eLocation->loc_desc . "\"
+														data-store_desc=\"" . $eLocation->store_desc . "\"
+														data-toggle='modal' data-target='#editForm2' class='btn_update btn btn-xs editTrigger2'>" . 
+														"<i class='fa fa-pencil'></i> edit" . 
+													"</a>" . 
+												"</td>" . 
+												"<td class='al-center'>" . 
 													"<a data-id='' data-toggle='modal' data-target='#myModal' class='btn_update btn btn-xs btnRowDelete'>" . 
-														"<i class='fa fa-trash-o'></i> delete" . 
+														"<i class='fa fa-trash-o'></i> del" . 
 													"</a>" . 
 												"</td>" . 
 											"</tr>";	
 					}
+					$idx++;
 				}
 				
+				# rowcount for location
+				$cntZ = $idx;
+				
+				$data["cntX"] = $cntX;
+				$data["cntY"] = $cntY;
+				$data["cntZ"] = $cntZ;
 				$data["id"] = $id;
 				$data["isSameDate"] = $isSameDate;
 				$data["isSameLocation"] = $isSameLocation;
@@ -349,39 +422,72 @@
 		function get_event_date($id, $tillcode){
 			//get tanggal by event id n tillcode
 			$date = $this->Event_model->get_event_date($id, $tillcode);
-			
-			$rdate = "";				
+			$count = $this->Event_model->get_count_event_date($id);
+
+			$rdate = "<table border=0 class='tb_event_date'>";				
 			$vlocation = "";			
 			$x=0;
 
 			foreach ($date as $res) :
-				if (($x%2 != 0) && ($x != 1)){
-					$rdate .= "<br>";
+				$x++;
+				if (($x%2 != 0)){
+					$rdate .= "<tr>";
 				}
+				
+				if ($count>1){
+					if (($res->date_end==null) || ($res->date_end=="")){
 
-				if (($res->date_end==null) || ($res->date_end=="")){
-					$rdate .= $this->to_dMY($res->date_start).', '; 
+						$last_date = date("Y-m-t", strtotime($res->date_start));
+						$date_start = date("Y-m-d", strtotime($res->date_start));
+
+						if ($date_start<=$last_date){
+							$rdate .= '<td>'.$this->to_date($date_start).',</td>'; 
+						} else {
+							$rdate .= '<td>'.$this->to_dMY($date_start).',</td>'; 
+						}
+					} 
+					else {
+						// cek if same month
+						$last_date = date("Y-m-t", strtotime($res->date_start));
+						$date_start = date("Y-m-d", strtotime($res->date_start));
+						$date_end = date("Y-m-d", strtotime($res->date_end));
+
+						//jika dalam bln yg sama
+						if ($date_end<=$last_date){
+							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						} else {
+							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						}		
+					}
 				} 
 				else {
-					// cek if same month
-					$last_date = date("Y-m-t", strtotime($res->date_start));
-					$date_start = date("Y-m-d", strtotime($res->date_start));
-					$date_end = date("Y-m-d", strtotime($res->date_end));
+					if (($res->date_end==null) || ($res->date_end=="")){
+						$rdate .= '<td>'.$this->to_dMY($res->date_start).',</td>'; 
 
-					//jika dalam bln yg sama
-					if ($date_end<=$last_date){
-						$rdate .= $this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
-					} else {
-						$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
+					} 
+					else {
+						// cek if same month
+						$last_date = date("Y-m-t", strtotime($res->date_start));
+						$date_start = date("Y-m-d", strtotime($res->date_start));
+						$date_end = date("Y-m-d", strtotime($res->date_end));
+
+						//jika dalam bln yg sama
+						if ($date_end<=$last_date){
+							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						} else {
+							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						}		
 					}
-
-						
 				}
+				
+
 			endforeach;
 			
+			$rdate .= '</table>';
+
 			$vlocation .= "<tr><td>Tanggal</td>
 								<td>:</td>
-								<td><b>".rtrim($rdate, ", ")."</b></td>
+								<td>".str_replace(",</td></table>", "</td></table>", $rdate)."</td>
 							</tr>";
 			
 			
@@ -391,43 +497,77 @@
 			} 
 
 			return $vlocation;
+				
 		}
 
 		function get_event_same_date($id){
 			//get tanggal by event id
 			$date = $this->Event_model->get_event_same_date($id);
+			$count = $this->Event_model->get_count_event_same_date($id);
 			
-			$rdate = "";				
+			$rdate = "<table border=0 class='tb_event_same_date'>";				
 			$date_tmp = "";			
 			$x=0;
 
 			foreach ($date as $res) :
 				$x++;
-				if (($x%2 != 0) && ($x != 1)){
-					$rdate .= "<br>";
+				if (($x%2 != 0)){
+					$rdate .= "<tr>";
 				}
 
-				if (($res->date_end==null) || ($res->date_end=="")){
-					$rdate .= $this->to_dMY($res->date_start).', '; 
-				} else {
-					// cek if same month
-					$last_date = date("Y-m-t", strtotime($res->date_start));
-					$date_start = date("Y-m-d", strtotime($res->date_start));
-					$date_end = date("Y-m-d", strtotime($res->date_end));
+				if ($count>1){
+					if (($res->date_end==null) || ($res->date_end=="")){
 
-					//jika dalam bln yg sama
-					if ($date_end<=$last_date){
-						$rdate .= $this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
-					} else {
-						$rdate .= $this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).', '; 
-					}	
+						$last_date = date("Y-m-t", strtotime($res->date_start));
+						$date_start = date("Y-m-d", strtotime($res->date_start));
+
+						if ($date_start<=$last_date){
+							$rdate .= '<td>'.$this->to_date($date_start).',</td>'; 
+						} else {
+							$rdate .= '<td>'.$this->to_dMY($date_start).',</td>'; 
+						}
+					} 
+					else {
+						// cek if same month
+						$last_date = date("Y-m-t", strtotime($res->date_start));
+						$date_start = date("Y-m-d", strtotime($res->date_start));
+						$date_end = date("Y-m-d", strtotime($res->date_end));
+
+						//jika dalam bln yg sama
+						if ($date_end<=$last_date){
+							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						} else {
+							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						}		
+					}
+				} 
+				else {
+					if (($res->date_end==null) || ($res->date_end=="")){
+						$rdate .= '<td>'.$this->to_dMY($res->date_start).',</td>'; 
+
+					} 
+					else {
+						// cek if same month
+						$last_date = date("Y-m-t", strtotime($res->date_start));
+						$date_start = date("Y-m-d", strtotime($res->date_start));
+						$date_end = date("Y-m-d", strtotime($res->date_end));
+
+						//jika dalam bln yg sama
+						if ($date_end<=$last_date){
+							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						} else {
+							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
+						}		
+					}
 				}
 
 			endforeach;
 			
+			$rdate .= '</table>';
+
 			$date_tmp .= "<tr><td>Tanggal</td>
 							<td>:</td>
-							<td><b>".rtrim($rdate, ", ")."</b></td>
+							<td>".str_replace(",</td></table>", "</td></table>", $rdate)."</td>
 						</tr>";
 			
 			$same_location = $this->Event_model->is_same_location($id);
@@ -442,7 +582,7 @@
 			$rlocation = $this->Event_model->get_event_location($id, $tillcode);
 
 			$i=0;
-			$tmp_loc = "<table border=0>";
+			$tmp_loc = "<table border=0 class='tb_event_location'>";
 			$vlocation = "";
 			foreach ($rlocation as $res) :
 				$i++;
@@ -461,6 +601,7 @@
 								<td>:</td>
 								<td>".str_replace(",</b></td></table>", "</b></td></table>", $tmp_loc)."</td>
 							</tr>
+							<tr><td colspan='3'>&nbsp;</td></tr>
 							";
 			return $vlocation;				
 		}
@@ -504,7 +645,7 @@
 		function get_tillcode($id){
 			$tillcode = $this->Event_model->get_tillcode($id);
 			
-			$rtillcode = "<table border=0>";
+			$rtillcode = "<table border=0 class='tb_tillcode'>";
 			$vlocation = "";
 			$x = 0;
 
@@ -535,7 +676,7 @@
 			$rlocation = $this->Event_model->get_event_same_location($id);
 
 			$i=0;
-			$tmp_loc = "<table border=0>";
+			$tmp_loc = "<table border=0 class='tb_event_same_location'>";
 			$vlocation = "";
 
 			foreach ($rlocation as $res) :
@@ -839,15 +980,26 @@
 												<td>Rp. </td>
 												<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
 											</tr>";	
-							$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
-												<td>Rp. </td>
-												<td align='right'>".number_format($yds_res, 0, ",", ".")."</td>
-											</tr>";		
+							if ($r->disc2!="0"){
+								$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
+													<td>Rp. </td>
+													<td align='right'>".number_format($yds_res, 0, ",", ".")."</td>
+												</tr>";			
+							} else {
+								$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
+													<td>Rp. </td>
+													<td align='right'><u>".number_format($yds_res, 0, ",", ".")."</u></td>
+													<td><u> + </u></td>
+												</tr>";	
+
+							}				
+							
 						}										
 						
 						
 
 						if ($r->disc2!="0"){
+
 							if ($r->yds_responsibility!=0){
 								$vcalculate .= "<tr><td>Partisipasi Yogya Disc Tamb.</td>
 													<td>Rp. </td>
@@ -994,11 +1146,20 @@
 					$acara_final = $r->notes;
 				}
 				
+				if ($r->is_sp==0){
+					if ($jml_diskon>0.3){
+						$jenis_margin = "(netto)";
+					}else {
+						$jenis_margin = "(bruto)";
+					}	
+				} else $jenis_margin = "(netto)";
+				
+
 				if ($r->is_sp=='1'){
 					if($r->is_pkp=='1'){
-						$margin = $r->tax.'% PKP (netto)';
+						$margin = $r->tax.'% PKP '.$jenis_margin;
 					} else {
-						$margin = $r->tax.'% NPKP (netto)';
+						$margin = $r->tax.'% NPKP '.$jenis_margin;
 					}
 					
 					$vlocation .= "<tr><td>Acara</td>
@@ -1009,16 +1170,16 @@
 										<td>:</td>
 										<td>$margin</td>
 									</tr>
-									
 									";	
-								
+
+						
 				} 
 				else {
 
 					if($r->is_pkp=='1'){
-						$margin = $r->tax.'% PKP (bruto)'.($r->yds_responsibility!='0'?' &rarr; <b> Nett margin = '.$net_margin.'% </b>':'');
+						$margin = $r->tax.'% PKP '.$jenis_margin.($r->yds_responsibility!='0'?' &rarr; <b> Nett margin = '.$net_margin.'% </b>':'');
 					} else {
-						$margin = $r->tax.'% NPKP (bruto)'.($r->yds_responsibility!='0'?' &rarr; <b> Nett margin = '.$net_margin.'% </b>':'');
+						$margin = $r->tax.'% NPKP '.$jenis_margin.($r->yds_responsibility!='0'?' &rarr; <b> Nett margin = '.$net_margin.'% </b>':'');
 					}	
 
 					$vlocation .= "<tr><td>Acara</td>
@@ -1029,9 +1190,9 @@
 					$vlocation .= "<tr><td>Margin Yogya</td>
 										<td>:</td>
 										<td>$margin</td>
-									</tr>
-									
-									";		
+									</tr>";
+						
+											
 				}
 
 				//get supplier

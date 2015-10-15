@@ -13,6 +13,12 @@
 	.ui-autocomplete-loading {
 		background: white url('<?php echo base_url(); ?>assets/images/ui-anim_basic_16x16.gif') right center no-repeat;
 	}
+	.al-right {
+		text-align: right;
+	}
+	.al-center {
+		text-align: center;
+	}
 </style>
 
 <link href="<?php echo base_url(); ?>assets/css/themes/cupertino/jquery-ui-1.8.21.custom.css" rel="stylesheet" type="text/css" />
@@ -171,11 +177,11 @@
 									<thead>
 										<tr>
 										  <?php if (!$isSameDate) { ?>
-											<th>Tillcode</th>
+											<th class="al-center">Tillcode</th>
 										  <?php } ?>
-											<th>Tanggal</th>
-											<th>s/d Tanggal</th>
-											<th class="action">Action</th>
+											<th class="al-center">Tanggal</th>
+											<th class="al-center">s/d Tanggal</th>
+											<th class="action al-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -221,7 +227,6 @@
 										}
 										echo "</script>";
 									?>
-								</select>
 							</div>
 						</div>
 						
@@ -246,11 +251,11 @@
 									<thead>
 										<tr>
 										  <?php if (!$isSameLocation) { ?>
-											<th>Tillcode</th>
+											<th class="al-center">Tillcode</th>
 										  <?php } ?>
-											<th>Lokasi</th>
-											<th>Cabang</th>
-											<th class="action">Action</th>
+											<th class="al-center">Lokasi</th>
+											<th class="al-center">Cabang</th>
+											<th class="action al-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -282,16 +287,16 @@
 								<table class="table table-bordered table-striped table-condensed" id="datatableX">
 									<thead>
 										<tr>
-											<th>Acara</th>
-											<th>Tillcode</th>
-											<th>Supplier</th>
-											<th>Kategori</th>
-											<th>Pert. Supp</th>
-											<th>Pert. Yogya</th>
-											<th>Tipe Margin</th>
-											<th>Margin</th>
-											<th>SP</th>
-											<th class="action">Action</th>
+											<th class="al-center">Acara</th>
+											<th class="al-center">Tillcode</th>
+											<th class="al-center">Supplier</th>
+											<th class="al-center">Kategori</th>
+											<th class="al-center">Pert. Supp</th>
+											<th class="al-center">Pert. Yogya</th>
+											<th class="al-center">Tipe Margin</th>
+											<th class="al-center">Margin</th>
+											<th class="al-center">SP</th>
+											<th class="action al-center">Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -340,6 +345,10 @@
 		</form>   
 		
 	</div></section>
+
+<input type="hidden" id="cntX" value="0">
+<input type="hidden" id="cntY" value="0">
+<input type="hidden" id="cntZ" value="0">
 
 <input type="hidden" id="todo" value="add">
 <input type="hidden" id="id" value="">

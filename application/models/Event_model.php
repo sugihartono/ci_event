@@ -160,6 +160,18 @@
 			
 		}
 		
+		function get_count_event_date($id){	
+			$sql = "SELECT * 
+					FROM event_date
+					WHERE event_id='$id'  
+					";
+					
+			$ambil = $this->db->query($sql);
+			
+			return $ambil->num_rows();
+			
+		}
+
 		function get_event_same_date($id){	
 			$sql = "SELECT * 
 					FROM event_same_date
@@ -171,6 +183,18 @@
 			
 		}
 		
+		function get_count_event_same_date($id){	
+			$sql = "SELECT * 
+					FROM event_same_date
+					WHERE event_id='$id'  
+					";
+					
+			$ambil = $this->db->query($sql);
+			
+			return $ambil->num_rows();
+			
+		}
+
 		function get_tillcode($id){	
 			$sql = "SELECT a.* 
 					FROM mst_tillcode a JOIN event_item b ON(a.tillcode=b.tillcode)
@@ -288,7 +312,7 @@
 					(
 						SELECT DISTINCT ON(a.notes) b.*,
 							a.is_pkp, a.tax, a.yds_responsibility, 
-							a.special_price, a.supp_responsibility, 
+							a.special_price AS sp_event_price, a.supp_responsibility, 
 							a.is_sp AS sp_event,
 							(b.disc1+b.disc2) as jdisc
 
