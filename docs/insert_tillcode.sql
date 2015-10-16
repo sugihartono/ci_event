@@ -1,0 +1,31 @@
+insert into mst_tillcode
+(tillcode, disc_label, disc1, disc2, special_price, division_code, brand_code, is_sp, is_active, created_date, article_code, cat_code, article_type, disc_label_2, disc3, supp_code, brand_desc, margin, is_pkp)
+values
+('93000802', 'COLETTE, DISCOUNT 0%', 0, 0, null, 'D', null, 0, 1, current_timestamp, '0000000156687', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93025348', 'COLETTE, DISCOUNT 10%', 10, 0, null, 'D', null, 0, 1, current_timestamp, '0000000354537', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93032407', 'COLETTE, DISCOUNT 100%', 100, 0, null, 'D', null, 0, 1, current_timestamp, '0000000654072', 'D2', 'NORMAL', null, 0, 'L272', 'COLETTE', 20, 1),
+('93025386', 'COLETTE, DISCOUNT 15%', 15, 0, null, 'D', null, 0, 1, current_timestamp, '0000000354565', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+--('93000819', 'COLETTE, DISCOUNT 20%', 20, 0, null, 'D', null, 0, 1, current_timestamp, '0000000156688', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93006361', 'COLETTE, DISCOUNT 20% + 10%', 20, 10, null, 'D', null, 0, 1, current_timestamp, '0000000219929', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93032506', 'COLETTE, DISCOUNT 20% + 5%', 20, 5, null, 'D', null, 0, 1, current_timestamp, '0000000652976', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+--('93008884', 'COLETTE, DISCOUNT 30%', 30, 0, null, 'D', null, 0, 1, current_timestamp, '0000000354179', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93037877', 'COLETTE, DISCOUNT 40%', 40, 0, null, 'D', null, 0, 1, current_timestamp, '0000000690762', 'D2', 'OBRAL', null, 0, 'L272', 'COLETTE', 20, 0),
+--('93000826', 'COLETTE, DISCOUNT 50%', 50, 0, null, 'D', null, 0, 1, current_timestamp, '0000000156610', 'D2', 'OBRAL', null, 0, 'L272', 'COLETTE', 20, 0),
+('93023665', 'COLETTE, DISCOUNT 50%+10%', 50, 10, null, 'D', null, 0, 1, current_timestamp, '0000000351266', 'D2', 'OBRAL', null, 0, 'L272', 'COLETTE', 20, 0),
+('93036832', 'COLETTE, DISCOUNT HUT YOGYA', 0, 0, null, 'D', null, 0, 1, current_timestamp, '000000677400', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93009096', 'COLETTE, PROGRAM KHUSUS', 0, 0, null, 'D', null, 0, 1, current_timestamp, '0000000355406', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+--('93029490', 'COLETTE, SPECIAL PRICE', 0, 0, null, 'D', null, 1, 1, current_timestamp, '0000000482058', 'D2', 'OBRAL', null, 0, 'L272', 'COLETTE', 20, 0),
+('93012638', 'COLETTE,DISC 20%+15%', 20, 15, null, 'D', null, 0, 1, current_timestamp, '0000000310650', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93012669', 'COLETTE,DISC 20%+20%', 20, 20, null, 'D', null, 0, 1, current_timestamp, '0000000310670', 'D2', 'NORMAL', null, 0, 'G256', 'COLETTE', 35, 1),
+('93000833', 'COLETTEKID, DISCOUNT 0%', 0, 0, null, 'D', null, 0, 1, current_timestamp, '0000000156614', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93025355', 'COLETTEKID, DISCOUNT 10%', 10, 0, null, 'D', null, 0, 1, current_timestamp, '0000000354538', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93025393', 'COLETTEKID, DISCOUNT 15%', 15, 0, null, 'D', null, 0, 1, current_timestamp, '0000000354566', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93000840', 'COLETTEKID, DISCOUNT 20%', 20, 0, null, 'D', null, 0, 1, current_timestamp, '0000000156689', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93006378', 'COLETTEKID, DISCOUNT 20% + 10%', 20, 10, null, 'D', null, 0, 1, current_timestamp, '0000000170285', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93012645', 'COLETTEKID, DISCOUNT 20+15%', 20, 15, null, 'D', null, 0, 1, current_timestamp, '0000000354890', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93012676', 'COLETTEKID, DISCOUNT 20+20%', 20, 20, null, 'D', null, 0, 1, current_timestamp, '0000000354893', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93008877', 'COLETTEKID, DISCOUNT 30%', 30, 0, null, 'D', null, 0, 1, current_timestamp, '0000000354178', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1),
+('93000857', 'COLETTEKID, DISCOUNT 50%', 50, 0, null, 'D', null, 0, 1, current_timestamp, '0000000156690', 'D3', 'OBRAL', null, 0, 'L272', 'COLETTEKID', null, 0),
+('93023672', 'COLETTEKID, DISCOUNT 50%+10%', 50, 10, null, 'D', null, 0, 1, current_timestamp, '0000000351269', 'D3', 'OBRAL', null, 0, 'L272', 'COLETTEKID', null, 0),
+('93009119', 'COLETTEKID, P.KHUSUS', 0, 0, null, 'D', null, 0, 1, current_timestamp, '0000000348270', 'D3', 'NORMAL', null, 0, 'G256', 'COLETTEKID', null, 1)
+;

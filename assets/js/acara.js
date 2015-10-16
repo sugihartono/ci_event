@@ -219,10 +219,10 @@ function getMissingTillcode() {
                 }
             }
             if (!found) {
-                dateNotPulled += arrDateTillcode[i] + " | "; 
+                dateNotPulled += arrDateTillcode[i] + ", "; 
             }
         }
-        dateNotPulled = dateNotPulled.substr(0, dateNotPulled.length-3);
+        dateNotPulled = dateNotPulled.substr(0, dateNotPulled.length-2);
     }
     
     // location not pool yet
@@ -236,10 +236,10 @@ function getMissingTillcode() {
                 }
             }
             if (!found) {
-                locationNotPulled += arrLocationTillcode[i] + " | "; 
+                locationNotPulled += arrLocationTillcode[i] + ", "; 
             }
         }
-        locationNotPulled = locationNotPulled.substr(0, locationNotPulled.length-3);
+        locationNotPulled = locationNotPulled.substr(0, locationNotPulled.length-2);
     }
     
     // pooled tillcode not exist in date/location
@@ -255,7 +255,7 @@ function getMissingTillcode() {
                     }
                 }
                 if (!found) {
-                    missDate += arrTillcode[i] + " | "; 
+                    missDate += arrTillcode[i] + ", "; 
                 }    
             }
             
@@ -268,13 +268,13 @@ function getMissingTillcode() {
                     }
                 }
                 if (!found) {
-                    missLocation += arrTillcode[i] + " | "; 
+                    missLocation += arrTillcode[i] + ", "; 
                 }    
             }
             
         }
-        missDate = missDate.substr(0, missDate.length-3);
-        missLocation = missLocation.substr(0, missLocation.length-3);
+        missDate = missDate.substr(0, missDate.length-2);
+        missLocation = missLocation.substr(0, missLocation.length-2);
     }
     
     return {"dateNotPulled": dateNotPulled, "locationNotPulled": locationNotPulled, "missDate": missDate, "missLocation": missLocation};
