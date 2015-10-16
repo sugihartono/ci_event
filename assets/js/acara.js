@@ -117,6 +117,29 @@ $(function() {
     $("#storeCode_e").focus(function() {
         $(this).select();
     });
+    
+    $("#btnBack").click(function(event) {
+        if (needBackConfirmation()) {
+            event.preventDefault();
+            //alert('aye');
+            $("#backConfirmation").modal('show');    
+        }
+    });
+    
+    $(".backConfirmOk").click(function() {
+        var todo = $("#todo").val();
+        var id = $("#id").val();
+        
+        $("#backConfirmation").modal('hide');
+        
+        if (todo == "edit") {
+            location.href=baseUrl+"acara/edit/"+id;
+        }
+        else {
+            location.href=baseUrl+"acara/add";    
+        }
+        
+    });
         
     autocompleteSuppliers();
     autocompleteTillcodes(); 
@@ -129,6 +152,133 @@ $(function() {
     addDeleteRowEvent("datatableX");
 
 });
+
+function needBackConfirmation() {
+    var dateLengthDummy = $("#datatableY tr#dummyRowY").length;
+    var locationLengthDummy = $("#datatableZ tr#dummyRowZ").length;
+    var tillcodeLengthDummy = $("#datatableX tr#dummyRowX").length;
+    
+    var dateLength = $("#datatableY tr").length;
+    var locationLength = $("#datatableZ tr").length;
+    var tillcodeLength = $("#datatableX tr").length;
+    
+    if (dateLengthDummy == 0 && dateLength > 0) {
+        return true;
+    }
+    else if (locationLengthDummy == 0 && locationLength > 0) {
+        return true;
+    }
+    else if (tillcodeLengthDummy == 0 && tillcodeLength > 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+    
+}
+
+function getMissingTillcode() {
+    var isSameDate = $("#isSameDate").val();
+    var isSameLocation = $("#isSameLocation").val();
+    
+    var dateNotPulled = "";
+    var locationNotPulled = "";
+    var missDate = "";
+    var missLocation = "";
+    
+    var arrDateTillcode = [];
+    var arrLocationTillcode = [];
+    var arrTillcode = [];
+    
+    var found = false;
+    
+    $("#datatableX .eventTillcode").each(function() {
+        arrTillcode.push($(this).html());
+    });
+    
+    if (isSameDate == "0") {
+        $("#datatableY .dateTillcode").each(function() {
+            arrDateTillcode.push($(this).html());
+        });
+    }
+    
+    if (isSameLocation == "0") {
+        $("#datatableZ .locationTillcode").each(function() {
+            arrLocationTillcode.push($(this).html());
+        });
+    }
+    
+    // date not pool yet
+    if (arrDateTillcode.length > 0) {
+        for (i = 0; i < arrDateTillcode.length; i++) {
+            found = false;
+            for (j = 0; j < arrTillcode.length; j++) {
+                if (arrDateTillcode[i] == arrTillcode[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                dateNotPulled += arrDateTillcode[i] + " | "; 
+            }
+        }
+        dateNotPulled = dateNotPulled.substr(0, dateNotPulled.length-3);
+    }
+    
+    // location not pool yet
+    if (arrLocationTillcode.length > 0) {
+        for (i = 0; i < arrLocationTillcode.length; i++) {
+            found = false;
+            for (j = 0; j < arrTillcode.length; j++) {
+                if (arrLocationTillcode[i] == arrTillcode[j]) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                locationNotPulled += arrLocationTillcode[i] + " | "; 
+            }
+        }
+        locationNotPulled = locationNotPulled.substr(0, locationNotPulled.length-3);
+    }
+    
+    // pooled tillcode not exist in date/location
+    if (arrTillcode.length > 0) {
+        for (i = 0; i < arrTillcode.length; i++) {
+            
+            if (arrDateTillcode.length > 0) {
+                found = false;
+                for (j = 0; j < arrDateTillcode.length; j++) {
+                    if (arrTillcode[i] == arrDateTillcode[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    missDate += arrTillcode[i] + " | "; 
+                }    
+            }
+            
+            if (arrLocationTillcode.length > 0) {
+                found = false;
+                for (j = 0; j < arrLocationTillcode.length; j++) {
+                    if (arrTillcode[i] == arrLocationTillcode[j]) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    missLocation += arrTillcode[i] + " | "; 
+                }    
+            }
+            
+        }
+        missDate = missDate.substr(0, missDate.length-3);
+        missLocation = missLocation.substr(0, missLocation.length-3);
+    }
+    
+    return {"dateNotPulled": dateNotPulled, "locationNotPulled": locationNotPulled, "missDate": missDate, "missLocation": missLocation};
+}
 
 function editDate() {
     var isSameDate = $("#isSameDate").val();
@@ -2023,7 +2173,29 @@ var FormValidation = function () {
                                 }
                                 else {
                                     //alert("aye");
-                                    submitEvent(todo);
+                                    
+                                    //{"dateNotPulled": dateNotPulled, "locationNotPulled": locationNotPulled, "missDate": missDate, "missLocation": missLocation};
+                                    var obj = getMissingTillcode();
+                                    var dateNotPulled = obj.dateNotPulled;
+                                    var locationNotPulled = obj.locationNotPulled;
+                                    var missDate = obj.missDate;
+                                    var missLocation = obj.missLocation;
+                                    
+                                    if (dateNotPulled != "") {
+                                        alert("Tillcode (tanggal) berikut belum di-pool.\n" + dateNotPulled);
+                                    }
+                                    else if (locationNotPulled != "") {
+                                        alert("Tillcode (lokasi) berikut belum di-pool.\n" + locationNotPulled);
+                                    }
+                                    else if (missDate != "") {
+                                        alert("Tillcode berikut belum ada di tabel tanggal.\n" + missDate);
+                                    }
+                                    else if (missLocation != "") {
+                                        alert("Tillcode berikut belum ada di tabel lokasi.\n" + missLocation);
+                                    }
+                                    else {
+                                        submitEvent(todo);    
+                                    }
                                 }
                         }
                     

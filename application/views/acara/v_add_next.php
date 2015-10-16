@@ -34,7 +34,7 @@
 		
 		<h3><i class="fa fa-angle-right"></i> Data Acara</h3>
 		
-		<a class="btn_add btn btn-default btn-sm" href="<?php echo base_url(); ?>acara/add">
+		<a id="btnBack" class="btn_add btn btn-default btn-sm" href="<?php echo base_url(); ?>acara/add">
 		<i class="fa fa-backward "></i> <?php echo BACK_CAPTION; ?></a>
 		
 		<div class="row mt">
@@ -345,6 +345,30 @@
 		</form>   
 		
 	</div></section>
+
+<!-- back confirmation -->
+<div id="backConfirmation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalAlertLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 480px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 id="backConfirmationLabel" class="modal-title">Alert</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+					<b>Data belum disimpan!</b> <br><br>
+					Dengan menekan tombol 'Back' anda akan kehilangan data yang belum disimpan. <br>
+					Apakah anda ingin melanjutkan?
+                </p>
+                <p>&nbsp;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary backConfirmOk">&nbsp;&nbsp; Yes &nbsp;&nbsp;</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">&nbsp;&nbsp; No &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <input type="hidden" id="cntX" value="0">
 <input type="hidden" id="cntY" value="0">

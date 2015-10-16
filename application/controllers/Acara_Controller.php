@@ -396,7 +396,7 @@
 					),
 					array($this->to_dMY($r->letter_date), $r->event_no, $r->attach,
 						  $r->about, $r->toward, $nama_supp, ($r->purpose==""?"":" &rarr; ".$r->purpose),
-						  $r->purpose, $r->city, $r->fax
+						  $r->purpose, ($r->city==""?"":"<br>".$r->city), ($r->fax==""?"":" - ".$r->fax)
 					),
 					$r->header
 				);
@@ -419,10 +419,160 @@
 					);
 		}
 
+		function format_tanggal_event_date($id, $date_start, $date_end, $tillcode){
+			$max_date_start = date("Y-m-d", strtotime($this->Event_model->get_max_datestart_event_date($id, $tillcode)));//25-01-2015
+			$max_date_end = date("Y-m-d", strtotime($this->Event_model->get_max_dateend_event_date($id, $tillcode)));//27-01-2015
+			$count = $this->Event_model->get_count_event_date($id, $tillcode);
+			$count_all = $this->Event_model->get_count_event_date_all($id, $tillcode);
+
+			if ($max_date_end < $max_date_start){
+				$max_date = $max_date_start;
+			} else {
+				$max_date = $max_date_end;
+			}
+
+			$last_date = date("Y-m-t", strtotime($max_date));
+			$date_start_fmt = date("Y-m-d", strtotime($date_start));
+
+			if (($date_end==null) || ($date_end=="")){
+				$date_end_fmt = null;
+			} else {
+				$date_end_fmt = date("Y-m-d", strtotime($date_end));
+			}
+
+			
+			$date = "";
+			if ($count_all>1){	
+				if (($date_end_fmt==null) || ($date_end_fmt=="")){
+					if ($date_start_fmt<=$last_date){
+
+						if ($count>1){
+							$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+						} else {
+							$date .= '<td>'.$this->to_date($date_start_fmt).',</td>'; 
+						}
+
+					} else {
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+					}
+				} 
+
+				else {
+
+					if ($date_start_fmt<=$date_end_fmt){
+						$date .= '<td>'.$this->to_date($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					} else{
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					}
+					
+
+
+				}
+			}
+			else {
+				if (($date_end_fmt==null) || ($date_end_fmt=="")){
+					
+
+					
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+					
+				} 
+
+				else {
+
+					if ($date_start_fmt<=$date_end_fmt){
+						$date .= '<td>'.$this->to_date($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					} else{
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					}
+					
+
+
+				}
+			}	
+			return $date;
+
+		}
+
+		function format_tanggal_event_same_date($id, $date_start, $date_end){
+			$max_date_start = date("Y-m-d", strtotime($this->Event_model->get_max_datestart_event_same_date($id)));//25-01-2015
+			$max_date_end = date("Y-m-d", strtotime($this->Event_model->get_max_dateend_event_same_date($id)));//27-01-2015
+			$count = $this->Event_model->get_count_event_same_date($id);
+			$count_all = $this->Event_model->get_count_event_same_date_all($id);
+
+			if ($max_date_end < $max_date_start){
+				$max_date = $max_date_start;
+			} else {
+				$max_date = $max_date_end;
+			}
+
+			$last_date = date("Y-m-t", strtotime($max_date));
+			$date_start_fmt = date("Y-m-d", strtotime($date_start));
+
+			if (($date_end==null) || ($date_end=="")){
+				$date_end_fmt = null;
+			} else {
+				$date_end_fmt = date("Y-m-d", strtotime($date_end));
+			}
+
+			
+			$date = "";
+			if ($count_all>1){	
+				if (($date_end_fmt==null) || ($date_end_fmt=="")){
+					if ($date_start_fmt<=$last_date){
+
+						if ($count>1){
+							//01,03,05 dari date start
+							$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+						} else {
+							$date .= '<td>'.$this->to_date($date_start_fmt).',</td>'; 
+						}
+
+					} else {
+						$date .= '<td>ytyty'.$this->to_dMY($date_start_fmt).',</td>'; 
+					}
+				} 
+
+				else {
+
+					if ($date_start_fmt<=$date_end_fmt){
+						$date .= '<td>'.$this->to_date($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					} else{
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					}
+					
+
+
+				}
+
+			} else {
+				if (($date_end_fmt==null) || ($date_end_fmt=="")){
+					
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+					
+				} 
+
+				else {
+
+					if ($date_start_fmt<=$date_end_fmt){
+						$date .= '<td>'.$this->to_date($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					} else{
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
+					}
+					
+
+
+				}
+			}	
+
+			return $date;
+
+		}
+
 		function get_event_date($id, $tillcode){
 			//get tanggal by event id n tillcode
 			$date = $this->Event_model->get_event_date($id, $tillcode);
-			$count = $this->Event_model->get_count_event_date($id);
+			//$count = $this->Event_model->get_count_event_date($id);
 
 			$rdate = "<table border=0 class='tb_event_date'>";				
 			$vlocation = "";			
@@ -434,53 +584,7 @@
 					$rdate .= "<tr>";
 				}
 				
-				if ($count>1){
-					if (($res->date_end==null) || ($res->date_end=="")){
-
-						$last_date = date("Y-m-t", strtotime($res->date_start));
-						$date_start = date("Y-m-d", strtotime($res->date_start));
-
-						if ($date_start<=$last_date){
-							$rdate .= '<td>'.$this->to_date($date_start).',</td>'; 
-						} else {
-							$rdate .= '<td>'.$this->to_dMY($date_start).',</td>'; 
-						}
-					} 
-					else {
-						// cek if same month
-						$last_date = date("Y-m-t", strtotime($res->date_start));
-						$date_start = date("Y-m-d", strtotime($res->date_start));
-						$date_end = date("Y-m-d", strtotime($res->date_end));
-
-						//jika dalam bln yg sama
-						if ($date_end<=$last_date){
-							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						} else {
-							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						}		
-					}
-				} 
-				else {
-					if (($res->date_end==null) || ($res->date_end=="")){
-						$rdate .= '<td>'.$this->to_dMY($res->date_start).',</td>'; 
-
-					} 
-					else {
-						// cek if same month
-						$last_date = date("Y-m-t", strtotime($res->date_start));
-						$date_start = date("Y-m-d", strtotime($res->date_start));
-						$date_end = date("Y-m-d", strtotime($res->date_end));
-
-						//jika dalam bln yg sama
-						if ($date_end<=$last_date){
-							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						} else {
-							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						}		
-					}
-				}
-				
-
+				$rdate .= $this->format_tanggal_event_date($id, $res->date_start, $res->date_end, $res->tillcode);
 			endforeach;
 			
 			$rdate .= '</table>';
@@ -503,7 +607,7 @@
 		function get_event_same_date($id){
 			//get tanggal by event id
 			$date = $this->Event_model->get_event_same_date($id);
-			$count = $this->Event_model->get_count_event_same_date($id);
+			//$count = $this->Event_model->get_count_event_same_date($id);
 			
 			$rdate = "<table border=0 class='tb_event_same_date'>";				
 			$date_tmp = "";			
@@ -515,51 +619,7 @@
 					$rdate .= "<tr>";
 				}
 
-				if ($count>1){
-					if (($res->date_end==null) || ($res->date_end=="")){
-
-						$last_date = date("Y-m-t", strtotime($res->date_start));
-						$date_start = date("Y-m-d", strtotime($res->date_start));
-
-						if ($date_start<=$last_date){
-							$rdate .= '<td>'.$this->to_date($date_start).',</td>'; 
-						} else {
-							$rdate .= '<td>'.$this->to_dMY($date_start).',</td>'; 
-						}
-					} 
-					else {
-						// cek if same month
-						$last_date = date("Y-m-t", strtotime($res->date_start));
-						$date_start = date("Y-m-d", strtotime($res->date_start));
-						$date_end = date("Y-m-d", strtotime($res->date_end));
-
-						//jika dalam bln yg sama
-						if ($date_end<=$last_date){
-							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						} else {
-							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						}		
-					}
-				} 
-				else {
-					if (($res->date_end==null) || ($res->date_end=="")){
-						$rdate .= '<td>'.$this->to_dMY($res->date_start).',</td>'; 
-
-					} 
-					else {
-						// cek if same month
-						$last_date = date("Y-m-t", strtotime($res->date_start));
-						$date_start = date("Y-m-d", strtotime($res->date_start));
-						$date_end = date("Y-m-d", strtotime($res->date_end));
-
-						//jika dalam bln yg sama
-						if ($date_end<=$last_date){
-							$rdate .= '<td>'.$this->to_date($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						} else {
-							$rdate .= '<td>'.$this->to_dMY($res->date_start).' - '.$this->to_dMY($res->date_end).',</td>'; 
-						}		
-					}
-				}
+				$rdate .= $this->format_tanggal_event_same_date($id, $res->date_start, $res->date_end);
 
 			endforeach;
 			
