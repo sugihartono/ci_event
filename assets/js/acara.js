@@ -844,7 +844,7 @@ function submitEvent(todo) {
                     "&locationTillcode=" + locationTillcode + "&locationLocationCode=" + locationLocationCode + "&locationStoreCode=" + locationStoreCode +
                     "&eventTillcode=" + eventTillcode + "&eventSupplierCode=" + eventSupplierCode + "&eventCategoryCode=" + eventCategoryCode +
                     "&eventSupplierResponsibility=" + eventSupplierResponsibility + "&eventYdsResponsibility=" + eventYdsResponsibility + "&eventIsPkp=" + eventIsPkp +
-                    "&eventMargin=" + eventMargin + "&eventSp=" + eventSp + "&eventNotes=" + eventNotes + "&isSameLocation=" + isSameLocation + "&isSameDate=" + isSameDate;
+                    "&eventMargin=" + eventMargin + "&eventSp=" + eventSp + "&eventNotes=" + encodeURIComponent(eventNotes) + "&isSameLocation=" + isSameLocation + "&isSameDate=" + isSameDate;
     
     var sUrl = baseUrl+"acara/save";
     if (todo == "edit") {

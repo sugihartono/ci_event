@@ -6,12 +6,17 @@
 			date_default_timezone_set("Asia/Jakarta");
 		}
 		
+		// modified by jerry@22-Oct-15
 		function all_list(){	
+			/*
 			$sql = "SELECT a.tillcode, a.disc_label, a.created_date, a.article_code, b.brand_desc
 					FROM mst_tillcode a JOIN mst_brand b ON(a.brand_code=b.brand_code)
 					WHERE a.is_active='1' 
 				";
-
+			*/
+			
+			$sql = "select tillcode, disc_label, to_char(created_date, 'dd Mon yyyy') created_date, article_code, brand_desc, disc1, disc2, disc3, is_sp from mst_tillcode where is_active = 1";
+			
 			$ambil = $this->db->query($sql);
 			if ($ambil->num_rows() > 0){
 				foreach ($ambil->result() as $data){
@@ -104,8 +109,14 @@
 			$r = $q->curr_value;
 			return $r;
 		}
-
 		
+		// added by jerry@22-Oct-15
+		function update($tillcode, $disc1, $disc2, $disc3, $issp, $usr, $upd) {
+			$params = array($disc1, $disc2, $disc3, $issp, $usr, $upd, $tillcode);
+			
+			$sql = "update mst_tillcode set disc1 = ?, disc2 = ?, disc3 = ?, is_sp = ?, updated_by = ?, updated_date = ? where tillcode = ?";
+			return $this->db->query($sql, $params);
+		}
 
 
 	}

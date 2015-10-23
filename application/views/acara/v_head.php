@@ -42,9 +42,8 @@
     <script src="<?php echo base_url(); ?>assets/js/sparkline-chart.js"></script>    
     <script src="<?php echo base_url(); ?>assets/js/zabuto_calendar.js"></script>   
     
-    <!-- dom 
-    <link href="<?php echo base_url(); ?>assets/css/style-surat.css" rel="stylesheet">
--->
+
+
     <script type="text/javascript">
         var baseUrl = "<?php echo base_url(); ?>"; 
 		var oTable;
@@ -58,12 +57,55 @@
 						"targets": [0],
 						"visible": false,
 						"searchable": false
-					}
+					},
+                    {
+                        "targets": [1],
+                        "width": "18%"
+                    },
+                    {
+                        "targets": [2],
+                        "width": "20%"
+                    },
+                    {
+                        "targets": [3],
+                        "width": "45%"
+                    },
+                    {
+                        "targets": [4],
+                        "width": "10%"
+                    },
+                    {
+                        "targets": [5],
+                        "width": "7%",
+                        "sortable" : false,
+                        "searchable": false
+                    }
 				]
             });	
 
             
+            $('#btn_refresh').click(function(){
+                $('#refresh_icon').attr('class', 'fa fa-spinner fa-spin');
+                
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url();?>"+"Acara_Controller/refresh_minified", 
+                //  data: post_data,
+                    success: function(msg) {
+                        $("#datas").fadeOut(100, function(){
+                            $("#datas").html(msg).fadeIn().delay(0);
+                            $('#refresh_icon').attr('class', 'fa fa-refresh');
+                        });
 
+                       
+
+                    }
+                }); 
+
+            });
+
+
+            
         });
 		
     </script>

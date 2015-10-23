@@ -15,8 +15,7 @@
 		
 		function is_logged_in(){
 			if(!isset($this->session->userdata['event_logged_in']['username']) || $this->session->userdata['event_logged_in']['username'] != true) {
-				show_404();
-				//echo 'silakan login dahulu .	';
+				redirect("login");
 			}
 		}
 		
@@ -30,5 +29,9 @@
 			return $fmt;
 		}
 		
+		public function my_404(){
+			$this->load->view('errors/html/error_test');
+		}
+
 	}
 ?>

@@ -26,6 +26,16 @@
 			}
 			
 		}
+
+		function get_preview(){	
+			$sql = "SELECT id, event_no, about 
+					FROM event 
+					ORDER BY id DESC
+					LIMIT 10 
+				";
+			$ambil = $this->db->query($sql);
+			return $ambil->result();
+		}
 		
 		function get_template($id){	
 			$sql = "SELECT a.tmpl_code, a.tmpl_name, a.header, a.footer, a.notes AS template_notes,
@@ -48,34 +58,24 @@
 		}
 		
 		function is_same_location($id){
-			$this->db->select('same_location');
-			$this->db->from('event_item');
-			$this->db->where('event_id', $id);
+			$this->db->select('is_same_location');
+			$this->db->from('event');
+			$this->db->where('id', $id);
 			
 			$q = $this->db->get()->row();
-			$r = $q->same_location;
+			$r = $q->is_same_location;
 			return $r;		
 		}
 		
 		function is_same_date($id){
-			$this->db->select('same_date');
-			$this->db->from('event_item');
-			$this->db->where('event_id', $id);
+			$this->db->select('is_same_date');
+			$this->db->from('event');
+			$this->db->where('id', $id);
 			
 			$q = $this->db->get()->row();
-			$r = $q->same_date;
+			$r = $q->is_same_date;
 			return $r;
 			
-			/* if ($r=='1'){
-				$sql = "SELECT * FROM event_same_date WHERE event_id='$id' ";
-			} else {
-				$sql = "SELECT * FROM event_date WHERE event_id='$id' ";
-			}
-			
-			$ambil = $this->db->query($sql);
-			if ($ambil->num_rows() > 0){
-				return $ambil;
-			} */
 		}
 		
 		function get_event_same_location($id){	
@@ -160,10 +160,22 @@
 			
 		}
 		
-		function get_count_event_date($id){	
+		function get_count_event_date($id, $tillcode){	
 			$sql = "SELECT * 
 					FROM event_date
-					WHERE event_id='$id'  
+					WHERE event_id='$id' AND tillcode='$tillcode'  AND date_end IS null
+					";
+					
+			$ambil = $this->db->query($sql);
+			
+			return $ambil->num_rows();
+			
+		}
+
+		function get_count_event_date_all($id, $tillcode){	
+			$sql = "SELECT * 
+					FROM event_date
+					WHERE event_id='$id' AND tillcode='$tillcode'
 					";
 					
 			$ambil = $this->db->query($sql);
@@ -183,10 +195,63 @@
 			
 		}
 		
+		function get_max_datestart_event_same_date($id){
+			$sql = "SELECT MAX(date_start) as max_date_start
+					FROM event_same_date
+					WHERE event_id='$id' 
+					";
+					
+			$ambil = $this->db->query($sql)->row();
+			return $ambil->max_date_start;
+		}
+
+		function get_max_dateend_event_same_date($id){
+			$sql = "SELECT MAX(date_end) as max_date_end
+					FROM event_same_date
+					WHERE event_id='$id' 
+					";
+					
+			$ambil = $this->db->query($sql)->row();
+			return $ambil->max_date_end;
+		}
+
+		function get_max_datestart_event_date($id, $tillcode){
+			$sql = "SELECT MAX(date_start) as max_date_start
+					FROM event_date
+					WHERE event_id='$id' AND tillcode='$tillcode'
+					";
+					
+			$ambil = $this->db->query($sql)->row();
+			return $ambil->max_date_start;
+		}
+
+		function get_max_dateend_event_date($id, $tillcode){
+			$sql = "SELECT MAX(date_end) as max_date_end
+					FROM event_date
+					WHERE event_id='$id' AND tillcode='$tillcode'
+					";
+					
+			$ambil = $this->db->query($sql)->row();
+			return $ambil->max_date_end;
+		}
+
+
 		function get_count_event_same_date($id){	
 			$sql = "SELECT * 
 					FROM event_same_date
-					WHERE event_id='$id'  
+					WHERE event_id='$id'  and date_end IS null
+					";
+					
+			$ambil = $this->db->query($sql);
+			
+			return $ambil->num_rows();
+			
+		}
+
+		function get_count_event_same_date_all($id){	
+			$sql = "SELECT * 
+					FROM event_same_date
+					WHERE event_id='$id' 
 					";
 					
 			$ambil = $this->db->query($sql);

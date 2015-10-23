@@ -89,7 +89,7 @@ class Acara extends CI_Model {
         
         public function loadTillcodeByDivision($divisionCode, $arrayMode = false) {	
                 $params = array($divisionCode);
-                $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and is_active = 1 order by disc_label";
+                $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and is_active = 1 and disc1 is not null order by disc_label";
                 $query = $this->db->query($sql, $params);
                 
                 if ($arrayMode) 

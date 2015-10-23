@@ -234,6 +234,9 @@ alter table mst_tillcode add brand_desc varchar(60);
 alter table mst_tillcode add margin real;
 alter table mst_tillcode add is_pkp integer;
 
+alter table mst_tillcode add updated_by varchar(20);
+alter table mst_tillcode add updated_date timestamp;
+
 create index mst_tillcode_idx2 on mst_tillcode(cat_code);
 create index mst_tillcode_idx3 on mst_tillcode(supp_code);
 

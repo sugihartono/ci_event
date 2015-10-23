@@ -30,13 +30,20 @@
 
 										foreach ((array)$list as $r) :
 
-											
+										if (strlen($r->about)>70){
+											$about = substr($r->about, 0, 70)."...";
+										} else 	$about = $r->about;
+
+										if (strlen($r->toward)>30){
+											$toward = substr($r->toward, 0, 30)."...";
+										} else 	$toward = $r->toward;
+
 									?>
 										<tr>
 											<td><?php echo $r->id; ?></td>
 											<td><?php echo $r->event_no; ?></td>
-											<td><?php echo $r->toward; ?></td>
-											<td><?php echo $r->about; ?></td>
+											<td title="<?php echo $r->toward; ?>"><?php echo $toward; ?></td>
+											<td title="<?php echo $r->about; ?>"><?php echo $about; ?></td>
 											<td><?php echo $r->created_date; ?></td>
 											<td>
 												<a href="<?php echo base_url(); ?>acara/edit/<?php echo $r->id; ?>" class='btn_update btn btn-xs' title="edit">

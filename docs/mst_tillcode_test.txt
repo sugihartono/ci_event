@@ -1,0 +1,33 @@
+create table mst_tillcode_test (
+    tillcode varchar(13),
+    disc_label varchar(60),
+    disc1 real,
+    disc2 real,
+    special_price numeric(18, 2),
+    division_code varchar(6),
+    brand_code varchar(10),
+    is_sp integer default 0, -- 0/1
+    is_active integer, -- 0/1
+    created_date timestamp
+);
+
+alter table mst_tillcode_test add primary key (tillcode);
+alter table mst_tillcode_test add foreign key(division_code) references mst_division(division_code);
+alter table mst_tillcode_test add foreign key(brand_code) references mst_brand(brand_code);
+alter table mst_tillcode_test add article_code varchar(13);
+create index mst_tillcode_test_idx on mst_tillcode_test(article_code);
+
+alter table mst_tillcode_test add cat_code varchar(6);
+alter table mst_tillcode_test add article_type varchar(10);
+alter table mst_tillcode_test add disc_label_2 varchar(20);
+alter table mst_tillcode_test add disc3 real;
+alter table mst_tillcode_test add supp_code varchar(10);
+alter table mst_tillcode_test add brand_desc varchar(60);
+alter table mst_tillcode_test add margin real;
+alter table mst_tillcode_test add is_pkp integer;
+
+alter table mst_tillcode_test add updated_by varchar(20);
+alter table mst_tillcode_test add updated_date timestamp;
+
+create index mst_tillcode_test_idx2 on mst_tillcode_test(cat_code);
+create index mst_tillcode_test_idx3 on mst_tillcode_test(supp_code);

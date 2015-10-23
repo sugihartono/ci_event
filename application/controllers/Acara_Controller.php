@@ -419,7 +419,8 @@
 					);
 		}
 
-		function format_tanggal_event_date($id, $date_start, $date_end, $tillcode){
+
+		function format_tanggal_event_date($id, $date_start, $date_end, $tillcode, $index){
 			$max_date_start = date("Y-m-d", strtotime($this->Event_model->get_max_datestart_event_date($id, $tillcode)));//25-01-2015
 			$max_date_end = date("Y-m-d", strtotime($this->Event_model->get_max_dateend_event_date($id, $tillcode)));//27-01-2015
 			$count = $this->Event_model->get_count_event_date($id, $tillcode);
@@ -447,7 +448,12 @@
 					if ($date_start_fmt<=$last_date){
 
 						if ($count>1){
-							$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+							//cek jika max dmy
+							if ($count==$index){
+								$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>';
+							} else {
+								$date .= '<td>'.$this->to_date($date_start_fmt).',</td>';
+							}
 						} else {
 							$date .= '<td>'.$this->to_date($date_start_fmt).',</td>'; 
 						}
@@ -494,7 +500,7 @@
 
 		}
 
-		function format_tanggal_event_same_date($id, $date_start, $date_end){
+		function format_tanggal_event_same_date($id, $date_start, $date_end, $index){
 			$max_date_start = date("Y-m-d", strtotime($this->Event_model->get_max_datestart_event_same_date($id)));//25-01-2015
 			$max_date_end = date("Y-m-d", strtotime($this->Event_model->get_max_dateend_event_same_date($id)));//27-01-2015
 			$count = $this->Event_model->get_count_event_same_date($id);
@@ -522,14 +528,20 @@
 					if ($date_start_fmt<=$last_date){
 
 						if ($count>1){
-							//01,03,05 dari date start
-							$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+							if ($count==$index){
+								$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+							} else {
+								$date .= '<td>'.$this->to_date($date_start_fmt).',</td>'; 
+							}
 						} else {
-							$date .= '<td>'.$this->to_date($date_start_fmt).',</td>'; 
+							
+							$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
+							
+							
 						}
 
 					} else {
-						$date .= '<td>ytyty'.$this->to_dMY($date_start_fmt).',</td>'; 
+						$date .= '<td>'.$this->to_dMY($date_start_fmt).',</td>'; 
 					}
 				} 
 
@@ -541,8 +553,6 @@
 						$date .= '<td>'.$this->to_dMY($date_start_fmt).' - '.$this->to_dMY($date_end_fmt).',</td>'; 
 					}
 					
-
-
 				}
 
 			} else {
@@ -584,7 +594,7 @@
 					$rdate .= "<tr>";
 				}
 				
-				$rdate .= $this->format_tanggal_event_date($id, $res->date_start, $res->date_end, $res->tillcode);
+				$rdate .= $this->format_tanggal_event_date($id, $res->date_start, $res->date_end, $res->tillcode, $x);
 			endforeach;
 			
 			$rdate .= '</table>';
@@ -619,7 +629,7 @@
 					$rdate .= "<tr>";
 				}
 
-				$rdate .= $this->format_tanggal_event_same_date($id, $res->date_start, $res->date_end);
+				$rdate .= $this->format_tanggal_event_same_date($id, $res->date_start, $res->date_end, $x);
 
 			endforeach;
 			
@@ -763,8 +773,8 @@
 		}
 
 		function get_perhitungan($id){
-			$vcalculate = "";
-			$vcalculate_gold = "";
+			$vcalculate = "<div class='div_calc' style='float:left;overflow:auto'>";
+			$vcalculate_gold = "<div class='div_gold' style='float:left;'>";
 
 			//calculate disc
 			$list = $this->Event_model->get_calculate($id);
@@ -779,8 +789,6 @@
 				} else {
 					$hrg = 100000;
 				}
-				
-				
 				
 				
 				if($r->is_pkp=='1'){
@@ -799,15 +807,18 @@
 				$cek = 100-($after_disc2/$hrg*100);
 
 				//cek hanya yg kurang dr 30%
-				if ( ($cek<=100)){
+				$x++;
+				if (($cek<=100)){
+					$vcalculate .= "<table class='vcalculate'>";	
+					$vcalculate_gold .= "<table class='vcalculate_gold'>";	
+					
 					if ($y==0){
-						$vcalculate = "<table class='vcalculate' border=0>
-											<tr><td colspan='2'>Adapun contoh perhitungannya adalah</td>
-												<td>:</td>
-											</tr>";	
+						$vcalculate .= "<tr><td colspan='4'>Adapun contoh perhitungannya adalah :</td></tr>";
+						$vcalculate_gold .= "<tr><td colspan='4'>&nbsp;</td></tr>";					
+					} else {
 
-						$vcalculate_gold = "<table class='vcalculate_gold' border=0><tr><td colspan='3'>&nbsp;</td></tr>";	
 					}
+
 					
 					$y++;
 
@@ -890,10 +901,11 @@
 					//	if ($r->yds_responsibility!="0"){
 
 
-							$vcalculate .= "<tr><td colspan='3'><b><u>".$label." ".$pert_label." </u></b></td></tr>";	
+							$vcalculate .= "<tr><td colspan='4'><b><u>".$label." ".$pert_label." </u></b></td></tr>";	
 							$vcalculate .= "<tr><td>Harga Jual</td>
 												<td>Rp. </td>
 												<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+												<td>&nbsp;</td>
 											</tr>";	
 
 							if ($r->disc1!=0){
@@ -905,16 +917,18 @@
 								$vcalculate .= "<tr><td>&nbsp;</td>
 													<td>Rp. </td>
 													<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+													<td>&nbsp;</td>
 												</tr>";						
 							}				
 							
 							
 							////////////////// gold //////////////////////////
 							if ($r->yds_responsibility!="0"){
-								$vcalculate_gold .= "<tr><td colspan='3'><b><u>".$label." (GOLD)</u></b></td></tr>";	
+								$vcalculate_gold .= "<tr><td colspan='4'><b><u>".$label." (GOLD)</u></b></td></tr>";	
 								$vcalculate_gold .= "<tr><td>Harga Jual</td>
 														<td>Rp. </td>
 														<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+														<td>&nbsp;</td>
 													</tr>";	
 								if ($r->disc1!=0){
 									$vcalculate_gold .= "<tr><td>Disc. ".$r->disc1."%</td>
@@ -925,6 +939,7 @@
 									$vcalculate_gold .= "<tr><td>&nbsp;</td>
 															<td>Rp. </td>
 															<td align='right'>".number_format($sel, 0, ",", ".")."</td>
+															<td>&nbsp;</td>
 														</tr>";			
 								}					
 											
@@ -934,13 +949,14 @@
 
 							if ($r->disc2!="0"){
 								$vcalculate .= "<tr><td>Disc. tambahan ".$r->disc2."%</td>
-												<td>Rp. </td>
-												<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
-												<td><u> - </u></td>
-											</tr>";	
+													<td>Rp. </td>
+													<td align='right'><u>".number_format($tambahan, 0, ",", ".")."</u></td>
+													<td><u> - </u></td>
+												</tr>";	
 								$vcalculate .= "<tr><td>&nbsp;</td>
 													<td>Rp. </td>
 													<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
+													<td>&nbsp;</td>
 												</tr>";
 
 								if ($r->yds_responsibility!="0"){
@@ -952,6 +968,7 @@
 									$vcalculate_gold .= "<tr><td>&nbsp;</td>
 															<td>Rp. </td>
 															<td align='right'>".number_format($sel2, 0, ",", ".")."</td>
+															<td>&nbsp;</td>
 														</tr>";
 
 									////////////////////// gold //////////////////
@@ -967,7 +984,9 @@
 									$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
 															<td>Rp. </td>
 															<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
-														</tr>";			
+															<td>&nbsp;</td>
+														</tr>";	
+																	
 								}	
 
 								
@@ -985,9 +1004,11 @@
 							
 
 								for ($i=1;$i<=$limit;$i++){
-									$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+									$vcalculate_gold .= "<tr><td colspan='4'>&nbsp;</td></tr>";	
 								}	
-																					
+								///
+									//$vcalculate_gold .= "</table>";	
+									///													
 
 							}	else {
 
@@ -1005,7 +1026,9 @@
 									$vcalculate_gold .= "<tr><td>Yang dibayar Yogya</td>
 															<td>Rp. </td>
 															<td align='right'>".number_format($bayar_gold, 0, ",", ".")."</td>
+															<td>&nbsp;</td>
 														</tr>";	
+														
 
 								}		
 
@@ -1021,14 +1044,17 @@
 								
 
 									for ($i=1;$i<=$limit;$i++){
-										$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
+										$vcalculate_gold .= "<tr><td colspan='4'>&nbsp;</td></tr>";	
 									}
 
+									///
+									//	
+									///	
 													
 
 							}
 				//		}// endif yds exist
-
+						$vcalculate_gold .= "</table>";
 						$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
 											<td>Rp. </td>
 											<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
@@ -1039,11 +1065,13 @@
 							$vcalculate .= "<tr><td></td>
 												<td>Rp. </td>
 												<td align='right'>".number_format($sel_margin, 0, ",", ".")."</td>
+												<td>&nbsp;</td>
 											</tr>";	
 							if ($r->disc2!="0"){
 								$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
 													<td>Rp. </td>
 													<td align='right'>".number_format($yds_res, 0, ",", ".")."</td>
+													<td>&nbsp;</td>
 												</tr>";			
 							} else {
 								$vcalculate .= "<tr><td>Partisipasi Yogya ".$label."&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -1072,48 +1100,66 @@
 						$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
 											<td>Rp. </td>
 											<td align='right'>".number_format($bayar, 0, ",", ".")."</td>
+											<td>&nbsp;</td>
 										</tr>";
 
 						//hanya utk yg ada pert				
 						if ($r->yds_responsibility!=0){
-							$vcalculate .= "<tr><td><b>Nett margin = $nett_margin %</b></td></tr>";			
-						} else $vcalculate .= "<tr><td colspan=3>&nbsp;</td></tr>";	
-
-						$vcalculate .=  "<tr><td colspan='3'><br></td></tr>";	
-
+							$vcalculate .= "<tr><td colspan='4'><b>Nett margin = $nett_margin %</b></td></tr>";		
+							///
+							//$vcalculate .= "</table>";	
+							///	
+						} else {
+							$vcalculate .= "<tr><td colspan=4>&nbsp;</td></tr>";
+							///
+								
+							
+							///		
+						}	
+						$vcalculate .=  "<tr><td colspan='4'>&nbsp;</td></tr>";	
+						$vcalculate .= "</table>";
 						
 					} 
 					else {
 						$label = "SPECIAL PRICE";
 
-						$vcalculate .= "<tr><td colspan='3'><b><u>".$label."</u></b></td></tr>";	
+						$vcalculate .= "<tr><td colspan='4'><b><u>".$label."</u></b></td></tr>";	
 						$vcalculate .= "<tr><td>Harga special</td>
 											<td>Rp. </td>
-											<td align='right'>".number_format($hrg, 0, ",", ".")."</td>
+											<td align='right'>&nbsp;&nbsp;".number_format($hrg, 0, ",", ".")."</td>
+											<td>&nbsp;</td>
 										</tr>";	
-						$vcalculate .= "<tr><td>Margin Yogya ".$pmargin."</td>
+						$vcalculate .= "<tr><td width='168px'>Margin Yogya ".$pmargin."</td>
 											<td>Rp. </td>
-											<td align='right'><u>".number_format($margin, 0, ",", ".")."</u></td>
+											<td align='right'>&nbsp;&nbsp;<u>".number_format($margin, 0, ",", ".")."</u></td>
 											<td><u> - </u></td>
 										</tr>";	
 						$vcalculate .= "<tr><td>Yang dibayar Yogya</td>
 											<td>Rp. </td>
-											<td align='right'>".number_format($hrg-$margin, 0, ",", ".")."</td>
+											<td align='right'>&nbsp;&nbsp;".number_format($hrg-$margin, 0, ",", ".")."</td>
+											<td>&nbsp;</td>
 										</tr>";									
-						$vcalculate .= "<tr><td colspan='3'>&nbsp;</td></tr>";		
+						$vcalculate .= "<tr><td colspan='4'>&nbsp;</td></tr>";		
 						
-						for ($i=1;$i<=5;$i++){
-							$vcalculate_gold .= "<tr><td colspan=3>&nbsp;</td></tr>";	
-						}		
+						///
+						$vcalculate .= "</table>";	
+						///
 
+						for ($i=1;$i<=5;$i++){
+							$vcalculate_gold .= "<tr><td colspan='4'>&nbsp;</td></tr>";	
+							
+						}		
+///
+							
+							///
 					}
 						
 				} else {
-					$vcalculate .="<table class='vcalculate'><tr><td colspan='3'></td></tr>";
-					$vcalculate_gold .="<table class='vcalculate_gold'><tr><td colspan='3'></td></tr>";
+					//$vcalculate .="<table class='vcalculate'><tr><td colspan='4'></td></tr>";
+					//$vcalculate_gold .="<table class='vcalculate_gold'><tr><td colspan='4'></td></tr>";
 				}
 				
-
+				$vcalculate_gold .= "</table>";	
 				/*if ($r->yds_responsibility==0){
 					$vcalculate_gold = "";
 				}else $vcalculate_gold .= "";*/
@@ -1121,9 +1167,9 @@
 			}
 			
 
-			$vcalculate .= "</table>";
+			$vcalculate .= "</div>";
 
-			$vcalculate_gold .= "</table>";
+			$vcalculate_gold .= "</div>";
 
 			return array(
 					    'vcalculate' => $vcalculate,
@@ -1131,7 +1177,9 @@
 					);
 
 
-		}
+	}
+
+
 
 		function preview($id) {
 			$data['trans_active'] = 'dcjq-parent active';
@@ -1140,7 +1188,7 @@
 			$data['top_menu'] = 'template/v_top_menu';
 			$data['left_menu'] = 'template/v_left_menu';
 			$data['content'] = 'acara/v_preview';
-			$data['right_menu'] = 'acara/v_right_menu';
+			$data['right_menu'] = 'acara/v_right_menu_preview';
 			$data['footer'] = 'template/v_footer';
 			
 			//get template
@@ -1330,6 +1378,26 @@
 			$event_no = $this->Event_model->get_event_no($id);
 		    $data['file'] = str_replace("/", "_", $event_no);
 
+		    //get minifieed preview
+		    $vminified = "";
+		    $preview = $this->Event_model->get_preview();
+		    foreach ($preview as $r) {
+		    	$vminified .= "<div class='desc'>
+							      <div class='thumb'>
+							        <span class='badge bg-theme'><i class='fa fa-envelope-o'></i></span>
+							      </div>
+								  <a href='".base_url()."acara/preview/".$r->id."'>
+							        <div class='details'>
+							          <p><muted>".$r->event_no."</muted><br/>".$r->about."</p>
+							        </div>
+								  </a>
+							     </div>
+							    ";
+
+		    }
+
+		    $data['vminified'] = $vminified;
+
 			$this->load->view('acara/v_acara', $data);
 			
 			//////////////////////////////////////////////////// create pdf //////////////////////////////////////////
@@ -1345,9 +1413,9 @@
 						$data['vlocation'] .
 					 "</table>" .
 					
-					"<div class='newspaper' style='width:1000px;'>".
-						"<div class='vcalculate' style='float: left;width: 55%;'>".$data['vcalculate']."</div>" .
-						"<div class='vcalculate_gold' style='float: left;width: 40%;'>".$data['vcalculate_gold']."</div>" .
+					"<div class='newspaper' style='width:1000px;vertical-align:top;'>".
+						"<div class='vcalculate' style='float: left;width: 50%;'>".$data['vcalculate']."</div>" .
+						"<div class='vcalculate_gold' style='float: left;width: 45%;'>".$data['vcalculate_gold']."</div>" .
 					"</div>" .
 					
 					"<div class='pdf_footer'>".$data['rfooter'] ."</div>" .
@@ -1361,6 +1429,29 @@
 		    
 		}
 
+		public function refresh_minified(){
+			//get minifieed preview
+		    $vminified = "";
+		    $preview = $this->Event_model->get_preview();
+		    foreach ($preview as $r) {
+		    	$vminified .= "<div class='desc'>
+							      <div class='thumb'>
+							        <span class='badge bg-theme'><i class='fa fa-envelope-o'></i></span>
+							      </div>
+								  <a href='".base_url()."acara/preview/".$r->id."'>
+							        <div class='details'>
+							          <p><muted>".$r->event_no."</muted><br/>".$r->about."</p>
+							        </div>
+								  </a>
+							     </div>
+							    ";
+
+		    }
+
+		    echo $vminified;
+		    
+		}
+		
 		public function save($id = 0) {
 
 			$usr = $this->session->userdata['event_logged_in']['username'];

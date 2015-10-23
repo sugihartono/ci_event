@@ -50,7 +50,18 @@
 			$this->load->view('tillcode/v_tillcode', $data);
 		}
 		
-		
+		// added by jerry@22-Oct-15
+		function update() {
+			$usr = $this->session->userdata['event_logged_in']['username'];
+			$upd = date("Y-m-d H:i:s");
+			
+			$inputs = $this->input->post();
+			$ret = $this->Tillcode_model->update($inputs["tillcode"], $inputs["disc1"], $inputs["disc2"], $inputs["disc3"], $inputs["issp"], $usr, $upd);
+			if ($ret)
+				echo "success";
+			else
+				echo "failed";
+		}
 		
 		
 	}

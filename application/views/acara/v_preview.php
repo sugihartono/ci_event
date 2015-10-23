@@ -13,10 +13,10 @@
 		</div>
 		
 		<div class="row mt">
-			<div class="col-lg-12" style="padding-left:5px;">
+			<div class="col-lg-9" style="padding-left:5px;">
 				<div class="form-panel" style="padding:10px;">
 					<div style="width:65%;">
-
+					<?php // $this->output->enable_profiler(TRUE);; ?>
 
 						<div>
 							<?php
@@ -27,18 +27,18 @@
 									echo $vlocation;
 								echo "</table>";
 								
-								echo "<div class='newspaper'>";
+								echo "<div class='newspaper' style='vertical-align:top;'>";
 									echo $vcalculate;
 									echo $vcalculate_gold;
-								echo "</div>";
-
+								echo "</div><br>";
+								
 								echo $rfooter;
 								echo $rnotes;
 							?>				
 						</div><!-- /printable -->	
-
+						
 					</div>			
-
+					
 				</div><!-- /content-panel -->
 			</div><!-- /col-lg-12 -->			
 		<!--</div> /row -->
