@@ -87,10 +87,37 @@ class Acara extends CI_Model {
                         return $query->result();
         }
         
-        public function loadTillcodeByDivision($divisionCode, $arrayMode = false) {	
-                $params = array($divisionCode);
-                $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and is_active = 1 and disc1 is not null order by disc_label";
-                $query = $this->db->query($sql, $params);
+        public function loadAllBrand($arrayMode = false) {	
+                $sql = "select brand_code, brand_desc from mst_brand where is_active = 1 order by brand_desc";
+                $query = $this->db->query($sql);
+                
+                if ($arrayMode) 
+                        return $query->result_array();
+                else
+                        return $query->result();
+        }
+        
+        public function loadTillcodeByDivision($divisionCode, $supplierCode = "", $brandCode = "", $arrayMode = false) {	
+                if ($supplierCode == "" && $brandCode == "") {
+                        $params = array($divisionCode);
+                        $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and is_active = 1 and disc1 is not null order by disc_label";
+                        $query = $this->db->query($sql, $params);        
+                }
+                else if ($supplierCode != "" && $brandCode == "") {
+                        $params = array($divisionCode, $supplierCode);
+                        $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and supp_code = ? and is_active = 1 and disc1 is not null order by disc_label";
+                        $query = $this->db->query($sql, $params);        
+                }
+                else if ($supplierCode == "" && $brandCode != "") {
+                        $params = array($divisionCode, $brandCode);
+                        $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and brand_code = ? and is_active = 1 and disc1 is not null order by disc_label";
+                        $query = $this->db->query($sql, $params);        
+                }
+                else {
+                        $params = array($divisionCode, $supplierCode, $brandCode);
+                        $sql = "select tillcode, disc_label, brand_code from mst_tillcode where division_code = ? and supp_code = ? and brand_code = ? and is_active = 1 and disc1 is not null order by disc_label";
+                        $query = $this->db->query($sql, $params);  
+                }
                 
                 if ($arrayMode) 
                         return $query->result_array();

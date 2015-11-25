@@ -60,8 +60,16 @@
 							<div class="col-sm-5 required">
 								<input type="text" class="form-control" id="supplierCode" name="supplierCode">
 							</div>
-							<label class="col-sm-1 control-label-right">Kategori<span class="red-star"> *</span></label>
+							<label class="col-sm-1 control-label-right">Brand</label>
 							<div class="col-sm-4 pad-right required">
+								<input type="text" class="form-control" id="brandCode" name="brandCode">
+							</div>
+							
+						</div>
+						
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Kategori<span class="red-star"> *</span></label>
+							<div class="col-sm-3 required">
 								<select id="categoryCode" class="form-control" name="categoryCode">
 									<option value="">Pilih kategori..</option>
 									<?php
@@ -76,18 +84,9 @@
 									?>
 								</select>
 							</div>
-						</div>
-						
-						<div class="form-group">
-							<label class="col-sm-2 control-label">Tillcode<span class="red-star"> *</span></label>
-							<div class="col-sm-5 pad-right required">
+							<label class="col-sm-1 control-label-right">Tillcode<span class="red-star"> *</span></label>
+							<div class="col-sm-6 pad-right required">
 								<input type="text" class="form-control" id="tillcode" name="tillcode">
-							</div>
-							<label class="col-sm-1 control-label-right">
-							  SP <input type="checkbox" id="cbSp" name="cbSp">
-							</label>
-							<div class="col-sm-4 pad-right required">
-								<input type="text" class="form-control" id="sp" name="sp" disabled="disabled">
 							</div>
 						</div>
 						
@@ -95,14 +94,14 @@
 							<label class="col-sm-2 control-label">Jenis Pertanggungan<span class="red-star"> *</span></label>
 							<div class="col-sm-3 required">
 								<select id="kindOfResponsibility" name="kindOfResponsibility"  class="form-control">
-									<option value="5050">YDS 50% : Supplier 50%</option>
-									<option value="4060">YDS 40% : Supplier 60%</option>
+									<option value="5050" <?php if ($responsibilityDefault == "5050") echo "selected='selected'"; ?>>YDS 50% : Supplier 50%</option>
+									<option value="4060" <?php if ($responsibilityDefault == "4060") echo "selected='selected'"; ?>>YDS 40% : Supplier 60%</option>
 									<option value="-1">Tanpa Pertanggungan</option>
 									<option value="0">Custom</option>
 								</select>
 							</div>
 							
-							<label class="col-sm-2 control-label-right">Tipe Margin<span class="red-star"> *</span> &nbsp;</label>
+							<label class="col-sm-1 control-label-right">Tipe Margin<span class="red-star"> *</span> &nbsp;</label>
 							<div class="col-sm-1 required">
 								<select id="isPkp"  class="form-control">
 									<option value="1">PKP</option>
@@ -110,9 +109,16 @@
 								</select>
 							</div>
 							
-							<label class="col-sm-2 control-label-right">Margin<span class="red-star"> *</span> &nbsp;</label>
-							<div class="col-sm-2 pad-right required">
+							<label class="col-sm-1 control-label-right">Margin<span class="red-star"> *</span> &nbsp;</label>
+							<div class="col-sm-1 pad-right required">
 								<input type="text" class="form-control" id="margin" name="margin">
+							</div>
+							
+							<label class="col-sm-1 control-label-right">
+							  SP <input type="checkbox" id="cbSp" name="cbSp">
+							</label>
+							<div class="col-sm-2 pad-right required">
+								<input type="text" class="form-control" id="sp" name="sp" disabled="disabled">
 							</div>
 							
 						</div>

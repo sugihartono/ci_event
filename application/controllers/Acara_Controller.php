@@ -114,6 +114,12 @@
 				}
 				
 				$this->session->set_userdata("acaraHolder", $inputs);
+				$tmplSrc = substr($inputs["templateCode"], 0, 1);
+				if ($tmplSrc == "S" || $tmplSrc == "C")
+					$responsibilityDefault = "4060";	
+				else
+					$responsibilityDefault = "5050";
+				
 				$data['isSameDate'] = isset($inputs["isSameDate"]) ? 1 : 0;
 				$data['isSameLocation'] = isset($inputs["isSameLocation"]) ? 1 : 0;
 				$data['categories'] = $this->Acara->loadCategoryByDivision($inputs["divisionCode"]);
@@ -121,6 +127,7 @@
 				$data['locations'] = $this->Acara->loadAllLocation();
 				$data['division'] = $inputs["divisionCode"];
 				$data['today'] = date('d-m-Y');
+				$data['responsibilityDefault'] = $responsibilityDefault;
 				$data['head'] = 'acara/v_head';
 				$data['top_menu'] = 'template/v_top_menu';
 				$data['left_menu'] = 'template/v_left_menu';
@@ -185,6 +192,11 @@
 				}
 				
 				$this->session->set_userdata("acaraHolder", $inputs);
+				$tmplSrc = substr($inputs["templateCode"], 0, 1);
+				if ($tmplSrc == "S" || $tmplSrc == "C")
+					$responsibilityDefault = "4060";	
+				else
+					$responsibilityDefault = "5050";
 				$aResult = $this->Acara->load($id);	
 				$eventItem = $aResult["event_item"];
 				
@@ -371,6 +383,7 @@
 				$data['locations'] = $this->Acara->loadAllLocation();
 				$data['division'] = $inputs["divisionCode"];
 				$data['today'] = date('d-m-Y');
+				$data['responsibilityDefault'] = $responsibilityDefault;
 				$data['head'] = 'acara/v_head';
 				$data['top_menu'] = 'template/v_top_menu';
 				$data['left_menu'] = 'template/v_left_menu';
@@ -1588,8 +1601,48 @@
 			echo $supp;
 		}
 		
+		public function loadBrands() {
+			$brands = $this->Acara->loadAllBrand();
+			$bran = "";
+			foreach($brands as $brand) {
+				$bran .= $brand->brand_desc . " (" . $brand->brand_code . ")|";
+			}
+			$bran = substr($bran, 0, strlen($bran)-1);
+			echo $bran;
+		}
+		
 		public function loadTillcodes($division) {
 			$tillcodes = $this->Acara->loadTillcodeByDivision($division);
+			$till = "";
+			foreach($tillcodes as $tillcode) {
+				$till .= $tillcode->tillcode . " (" . $tillcode->disc_label . ")|";
+			}
+			$till = substr($till, 0, strlen($till)-1);
+			echo $till;
+		}
+		
+		public function loadTillcodesBySupplier($division, $supplier) {
+			$tillcodes = $this->Acara->loadTillcodeByDivision($division, $supplier);
+			$till = "";
+			foreach($tillcodes as $tillcode) {
+				$till .= $tillcode->tillcode . " (" . $tillcode->disc_label . ")|";
+			}
+			$till = substr($till, 0, strlen($till)-1);
+			echo $till;
+		}
+		
+		public function loadTillcodesByBrand($division, $brand) {
+			$tillcodes = $this->Acara->loadTillcodeByDivision($division, "", $brand);
+			$till = "";
+			foreach($tillcodes as $tillcode) {
+				$till .= $tillcode->tillcode . " (" . $tillcode->disc_label . ")|";
+			}
+			$till = substr($till, 0, strlen($till)-1);
+			echo $till;
+		}
+		
+		public function loadTillcodesBySupplierAndBrand($division, $supplier, $brand) {
+			$tillcodes = $this->Acara->loadTillcodeByDivision($division, $supplier, $brand);
 			$till = "";
 			foreach($tillcodes as $tillcode) {
 				$till .= $tillcode->tillcode . " (" . $tillcode->disc_label . ")|";

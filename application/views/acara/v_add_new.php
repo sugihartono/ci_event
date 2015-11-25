@@ -75,7 +75,7 @@
 						<div class="form-group">
 							<label class="col-sm-2 control-label">Lampiran</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["attach"]) ? $acaraHolder["attach"] : ""); ?>" id="attach" name="attach" maxlength="50">
+								<input type="text" class="form-control" value="<?php echo (isset($acaraHolder["attach"]) ? $acaraHolder["attach"] : "-"); ?>" id="attach" name="attach" maxlength="50">
 							</div>
 						</div>
 						

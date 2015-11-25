@@ -118,6 +118,10 @@ $(function() {
         $(this).select();
     });
     
+	$("#notes").focus(function() {
+        $(this).select();
+    });
+	
     $("#btnBack").click(function(event) {
         if (needBackConfirmation()) {
             event.preventDefault();
@@ -142,6 +146,7 @@ $(function() {
     });
         
     autocompleteSuppliers();
+	autocompleteBrands();
     autocompleteTillcodes(); 
     autocompleteStores();
     
@@ -679,7 +684,10 @@ function autocompleteSuppliers() {
     var suppliers = loadSuppliers();
     $("#supplierCode").autocomplete({
          source: suppliers,
-         minLength: 1
+         minLength: 1,
+		 change: function() {
+			autocompleteTillcodes();
+		 }
     });
     $("#supplierCode_e").autocomplete({
          source: suppliers,
@@ -702,6 +710,32 @@ function loadSuppliers() {
     return supplierList;
 }
 
+function autocompleteBrands() {
+    var brands = loadBrands();
+    $("#brandCode").autocomplete({
+         source: brands,
+         minLength: 1,
+		 change: function() {
+			autocompleteTillcodes();
+		 }
+    });
+}
+
+function loadBrands() {
+    var brandList = "";
+    
+    $.ajax({
+        url: baseUrl+'acara/loadBrands',
+        type: "POST",
+        async: false,
+        data: { brand: null }
+    }).done(function(brand) {
+        brandList = brand.split('|');
+    });
+    
+    return brandList;
+}
+
 function autocompleteTillcodes() {
     var tillcodes = loadTillcodes();
     $("#tillcode").autocomplete({
@@ -718,17 +752,54 @@ function autocompleteTillcodes() {
 
 function loadTillcodes() {
     var division = $("#division").val();
+	var supplier = $("#supplierCode").val();
+	supplierCode = supplier.slice(-5).substr(0, 4);
+	var brand = $("#brandCode").val();
+	brandCode = brand.slice(-5).substr(0, 4);
+	
     var tillcodeList = "";
     
-    $.ajax({
-        url: baseUrl+'acara/loadTillcodes/'+division,
-        type: "POST",
-        async: false,
-        data: { supp: null }
-    }).done(function(tillcode) {
-        tillcodeList = tillcode.split('|');
-    });
-    
+	if (supplierCode == "" && brandCode == "") {
+		$.ajax({
+			url: baseUrl+'acara/loadTillcodes/'+division,
+			type: "POST",
+			async: false,
+			data: { supp: null }
+		}).done(function(tillcode) {
+			tillcodeList = tillcode.split('|');
+		});	
+	}
+	else if (supplierCode != "" && brandCode == "") {
+		$.ajax({
+			url: baseUrl+'acara/loadTillcodesBySupplier/'+division+'/'+supplierCode,
+			type: "POST",
+			async: false,
+			data: { supp: null }
+		}).done(function(tillcode) {
+			tillcodeList = tillcode.split('|');
+		});	
+	}
+	else if (supplierCode == "" && brandCode != "") {
+		$.ajax({
+			url: baseUrl+'acara/loadTillcodesByBrand/'+division+'/'+brandCode,
+			type: "POST",
+			async: false,
+			data: { supp: null }
+		}).done(function(tillcode) {
+			tillcodeList = tillcode.split('|');
+		});	
+	}
+	else {
+		$.ajax({
+			url: baseUrl+'acara/loadTillcodesBySupplierAndBrand/'+division+'/'+supplierCode+'/'+brandCode,
+			type: "POST",
+			async: false,
+			data: { supp: null }
+		}).done(function(tillcode) {
+			tillcodeList = tillcode.split('|');
+		});	
+	}
+	
     return tillcodeList;
 }
 
@@ -1987,7 +2058,7 @@ $("#btnPoolTillcode").click(function() {
                         $("#cntX").val(cntX+1);
                         
                         addDeleteRowEvent("datatableX");
-                        $("#notes").val("");
+                        //$("#notes").val("");
                         $("#tillcode").val("");
                         $("#cbSp").prop("checked", false);
                         $("#sp").val("");
@@ -2088,7 +2159,7 @@ $("#btnPoolTillcode").click(function() {
                         $("#cntX").val(cntX+1);
                         
                         addDeleteRowEvent("datatableX");
-                        $("#notes").val("");
+                        //$("#notes").val("");
                         $("#tillcode").val("");
                         $("#cbSp").prop("checked", false);
                         $("#sp").val("");
